@@ -9,9 +9,9 @@ public class Book {
     private String title;
     private String callNumber;
     private String publisher;
-    private String yearOfPub;
+    private int yearOfPub;
     private String location;
-    private String noOfCopy;
+    private int noOfCopy;
     private String status;
     private String keywords;
 
@@ -48,13 +48,6 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public String getYearOfPub() {
-        return yearOfPub;
-    }
-
-    public void setYearOfPub(String yearOfPub) {
-        this.yearOfPub = yearOfPub;
-    }
 
     public String getLocation() {
         return location;
@@ -64,11 +57,19 @@ public class Book {
         this.location = location;
     }
 
-    public String getNoOfCopy() {
+    public int getYearOfPub() {
+        return yearOfPub;
+    }
+
+    public void setYearOfPub(int yearOfPub) {
+        this.yearOfPub = yearOfPub;
+    }
+
+    public int getNoOfCopy() {
         return noOfCopy;
     }
 
-    public void setNoOfCopy(String noOfCopy) {
+    public void setNoOfCopy(int noOfCopy) {
         this.noOfCopy = noOfCopy;
     }
 
