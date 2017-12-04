@@ -1,5 +1,6 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.google.firebase.database.DatabaseReference;
@@ -41,25 +43,82 @@ public class AddUpdateBook extends AppCompatActivity {
     }
 
     public void addBook(View view) {
-//        Book book = new Book();
-//        book.setAuthor(String.valueOf(authorET.getText()));
-//        book.setTitle(String.valueOf(titleET.getText()));
-//        book.setCallNumber(String.valueOf(callNumberET.getText()));
-//        book.setPublisher(String.valueOf(publisherET.getText()));
-//        book.setYearOfPub(String.valueOf(yearOfPubET.getText()));
-//        book.setLocation(String.valueOf(locationET.getText()));
-//        book.setNoOfCopy(String.valueOf(noOfCopyET.getText()));
-//        book.setStatus(String.valueOf(statusET.getText()));
-//        book.setKeywords(String.valueOf(keywordsET.getText()));
+        Book book = new Book();
+        book.setAuthor(String.valueOf(authorET.getText()).trim());
+        if(book.getAuthor()==null || book.getAuthor().trim().equals("")){
+            showToast("Enter Author");
+            return;
+        }
+        book.setTitle(String.valueOf(titleET.getText()).trim());
+        if(book.getTitle()==null || book.getTitle().trim().equals("")){
+            showToast("Enter Title");
+            return;
+        }
+        book.setCallNumber(String.valueOf(callNumberET.getText()).trim());
+        if(book.getCallNumber()==null || book.getCallNumber().trim().equals("")){
+            showToast("Enter Call Number");
+            return;
+        }
+        book.setPublisher(String.valueOf(publisherET.getText()).trim());
+        if(book.getPublisher()==null || book.getPublisher().trim().equals("")){
+            showToast("Enter Publisher");
+            return;
+        }
+
+        String publicationYear=String.valueOf(yearOfPubET.getText()).trim();
+        if(publicationYear==null || publicationYear.trim().equals("")){
+            showToast("Enter Publication Year");
+            return;
+        }else{
+            publicationYear=publicationYear.trim();
+            try {
+                book.setYearOfPub(Integer.parseInt(publicationYear));
+            }catch (NumberFormatException e){
+                showToast("Enter Valid Publication Year");
+                return;
+            }
+        }
+
+
+        book.setLocation(String.valueOf(locationET.getText()).trim());
+        if(book.getLocation()==null || book.getLocation().trim().equals("")){
+            showToast("Enter Location in Library");
+            return;
+        }
+
+
+        String numberOfCopies=String.valueOf(noOfCopyET.getText()).trim();
+        if(numberOfCopies==null || numberOfCopies.trim().equals("")){
+            showToast("Enter Number Of Copies");
+            return;
+        }else{
+            numberOfCopies=numberOfCopies.trim();
+            try {
+                book.setNoOfCopy(Integer.parseInt(numberOfCopies));
+            }catch (NumberFormatException e){
+                showToast("Enter Valid Number Of Copies");
+                return;
+            }
+        }
+
+        book.setStatus(String.valueOf(statusET.getText()).trim());
+        if(book.getStatus()==null || book.getStatus().trim().equals("")){
+            showToast("Enter Status");
+            return;
+        }
+
+        book.setKeywords(String.valueOf(keywordsET.getText()).trim());
+
+
 
         FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference mRef=database.getReference().child("book");
-        mRef.child("book").child("2").setValue("man");
-//        mDatabase = FirebaseDatabase.getInstance();
-//        mDatabase.getReference().child("Users").push();
-//        //mDatabase.setValue("11");
-        //mDatabase.child("1").setValue("Agarwal");
-        System.out.println("AddBook Called"+authorET.getText());
+        DatabaseReference mRef=database.getReference().child("books");
+        mRef.push().setValue(book);
+    }
+    public void showToast(String text){
+        Context context = getApplicationContext();
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 }
