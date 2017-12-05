@@ -115,26 +115,22 @@ public class AddUpdateBook extends AppCompatActivity {
         FirebaseDatabase database=FirebaseDatabase.getInstance();
 
         DatabaseReference mRef=database.getReference().child("books-pk");
-//        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                bookPK=Integer.parseInt(dataSnapshot.getValue().toString());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        bookPK++;
-//        book.setBookID(bookPK);
-//        mRef=database.getReference();
-//        mRef.child("books").child(String.valueOf(bookPK)).setValue(book);
-//        mRef.child("books-pk").setValue(String.valueOf(bookPK));
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                bookPK=Integer.parseInt(dataSnapshot.getValue().toString());
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-//        DatabaseReference mRef1=database.getReference().child("books-pk");
-//        mRef1.addValueEventListener(postListener);
+            }
+        });
+        bookPK++;
+        book.setBookID(bookPK);
+        mRef=database.getReference();
+        mRef.child("books").child(String.valueOf(bookPK)).setValue(book);
+        mRef.child("books-pk").setValue(String.valueOf(bookPK));
 
     }
     public void showToast(String text){
