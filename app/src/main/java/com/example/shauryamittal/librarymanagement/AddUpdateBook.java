@@ -29,6 +29,7 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText statusET;
     private EditText keywordsET;
     private DatabaseReference mDatabase;
+    private int bookPK=0;
     // ...
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +113,24 @@ public class AddUpdateBook extends AppCompatActivity {
         }
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference mRef=database.getReference().child("books");
-        mRef.push().setValue(book);
+
+        DatabaseReference mRef=database.getReference().child("books-pk");
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                bookPK=Integer.parseInt(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        bookPK++;
+        book.setBookID(bookPK);
+        mRef=database.getReference();
+        mRef.child("books").child(String.valueOf(bookPK)).setValue(book);
+        mRef.child("books-pk").setValue(String.valueOf(bookPK));
 
 
 //        DatabaseReference mRef1=database.getReference().child("books-pk");
