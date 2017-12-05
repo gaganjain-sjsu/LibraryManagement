@@ -3,10 +3,10 @@ package com.example.shauryamittal.librarymanagement;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class BookDetailActivity extends AppCompatActivity {
     private TextView bookTitle;
@@ -30,7 +30,12 @@ public class BookDetailActivity extends AppCompatActivity {
         bookAuthor=findViewById(R.id.book_author_name);
         bookCallNum=findViewById(R.id.book_call);
         Intent intent = getIntent();
-        bookId = Integer.parseInt(intent.getStringExtra("bookId"));
+        //bookId = Integer.parseInt(intent.getStringExtra("bookId"));
+        bookId = 4;
+        FirebaseDatabase database=FirebaseDatabase.getInstance();
+        DatabaseReference mRef=database.getReference().child("books");
+        
+
 
     }
 
