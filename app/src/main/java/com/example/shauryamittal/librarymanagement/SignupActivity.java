@@ -17,6 +17,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        getSupportActionBar().hide();
 
         sjsuId = (EditText) findViewById(R.id.sjsu_id);
         email = (EditText) findViewById(R.id.email_signup);
