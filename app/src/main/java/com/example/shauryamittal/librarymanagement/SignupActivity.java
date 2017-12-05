@@ -1,5 +1,6 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText editText_email;
     EditText editText_password;
     Button signup;
+    Button toLogin;
     ProgressBar spinner;
 
     private FirebaseAuth mAuth;
@@ -43,8 +45,7 @@ public class SignupActivity extends AppCompatActivity {
         editText_password = (EditText) findViewById(R.id.signup_password);
 
         signup = (Button) findViewById(R.id.signup);
-
-
+        toLogin = (Button) findViewById(R.id.go_to_login);
 
 
         signup.setOnClickListener(new View.OnClickListener() {
@@ -86,21 +87,31 @@ public class SignupActivity extends AppCompatActivity {
 
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
+                        spinner.setVisibility(View.GONE);
 
                         if(task.isSuccessful()){
                             Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
-                            spinner.setVisibility(View.GONE);
                         }
                         else {
-                            spinner.setVisibility(View.GONE);
                             if(task.getException() instanceof FirebaseAuthUserCollisionException){
                                 Toast.makeText(SignupActivity.this, "Email Already Registered", Toast.LENGTH_SHORT).show();
+                            }
+
+                            else{
+                                Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                     }
                 });
 
+            }
+        });
+
+        toLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             }
         });
 

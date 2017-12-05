@@ -92,7 +92,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="26dp"
             android:background="@drawable/signup_button"
-            android:text="SIGN UP"
+            android:text="SIGN IN"
             android:textColor="@color/safe_mode_text"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
