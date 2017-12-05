@@ -6,13 +6,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AddUpdateBook extends AppCompatActivity {
     private EditText authorET;
@@ -106,14 +110,15 @@ public class AddUpdateBook extends AppCompatActivity {
             showToast("Enter Status");
             return;
         }
-
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-
-
-
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference mRef=database.getReference().child("books");
         mRef.push().setValue(book);
+
+
+//        DatabaseReference mRef1=database.getReference().child("books-pk");
+//        mRef1.addValueEventListener(postListener);
+
     }
     public void showToast(String text){
         Context context = getApplicationContext();
