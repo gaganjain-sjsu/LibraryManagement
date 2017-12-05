@@ -15,7 +15,7 @@ public class Book {
     private String status;
     private String keywords;
     private int bookID;
-
+    private String librarianName;
 
     public String getAuthor() {
         return author;
@@ -96,5 +96,13 @@ public class Book {
 
     public void setBookID(int bookID) {
         this.bookID = bookID;
+    }
+
+    public String getLibrarianName() {
+        return librarianName;
+    }
+
+    public void setLibrarianName(String librarianName) {
+        this.librarianName = librarianName;
     }
 }

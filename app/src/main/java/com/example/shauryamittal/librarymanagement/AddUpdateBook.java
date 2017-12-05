@@ -128,6 +128,7 @@ public class AddUpdateBook extends AppCompatActivity {
         });
         bookPK++;
         book.setBookID(bookPK);
+        book.setLibrarianName("Harshit");
         mRef=database.getReference();
         mRef.child("books").child(String.valueOf(bookPK)).setValue(book);
         mRef.child("books-pk").setValue(String.valueOf(bookPK));
