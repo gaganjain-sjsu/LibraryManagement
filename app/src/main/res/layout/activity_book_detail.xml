@@ -34,7 +34,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:layout_below="@+id/relativeLayout"
                 android:id="@+id/bookImage"
                 android:src="@drawable/sampleimage"
@@ -42,7 +42,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="250dp"
                     android:layout_below="@id/bookImage">
                     <TextView
                         android:layout_width="match_parent"
@@ -116,6 +116,97 @@
                         android:layout_toEndOf="@id/book_publisher_label"
                         android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_copies_label"
+                        android:text="No. of Copies:"
+                        android:layout_below="@id/book_publisher_label"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_copies"
+                        android:text="20"
+                        android:layout_below="@id/book_publisher"
+                        android:textSize="15sp"
+                        android:layout_toEndOf="@id/book_copies_label"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_call_label"
+                        android:text="Call Number:"
+                        android:layout_below="@id/book_copies_label"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_call"
+                        android:text="First Floor"
+                        android:layout_below="@id/book_copies"
+                        android:textSize="15sp"
+                        android:layout_toEndOf="@id/book_call_label"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_status_label"
+                        android:text="Status:"
+                        android:layout_below="@id/book_call_label"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_status"
+                        android:text="Available"
+                        android:layout_below="@id/book_call"
+                        android:textSize="15sp"
+                        android:layout_toEndOf="@id/book_status_label"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        />
+                    <Button
+                        android:id="@+id/renew"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginStart="100dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/login_background"
+                        android:text="RENEW"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:layout_below="@id/book_status_label"
+                        />
+
+                    <Button
+                        android:id="@+id/add_to_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/login_background"
+                        android:text="RETURN"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:layout_below="@id/book_status"
+                        android:layout_toEndOf="@id/renew"
                         />
                 </RelativeLayout>
 
