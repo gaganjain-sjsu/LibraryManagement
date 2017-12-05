@@ -37,15 +37,35 @@
                 android:layout_height="200dp"
                 android:layout_below="@+id/relativeLayout"
                 android:id="@+id/bookImage"
-                android:src="@drawable/SampleImage"
+                android:src="@drawable/sampleimage"
                 android:layout_marginTop="10dp"/>
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/bookImage"
-                android:layout_margin="10dp">
 
-            </android.support.v7.widget.RecyclerView>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@id/bookImage">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_title"
+                        android:text="Head First Android Tutorial"
+                        android:textSize="20sp"
+                        android:textAlignment="center"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/book_author"
+                        android:text="Author:"
+                        android:layout_below="@id/book_title"
+                        android:textSize="15sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+                </RelativeLayout>
+
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

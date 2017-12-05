@@ -10,12 +10,8 @@
     <color name="transparent">#00000000</color>
     <color name="background_dark">#ff000000</color>
     <color name="background_light">#ffffffff</color>
-    <color name="bright_foreground_dark">@android:color/background_light</color>
-    <color name="bright_foreground_light">@android:color/background_dark</color>
     <color name="bright_foreground_dark_disabled">#80ffffff</color>
     <color name="bright_foreground_light_disabled">#80000000</color>
-    <color name="bright_foreground_dark_inverse">@android:color/bright_foreground_light</color>
-    <color name="bright_foreground_light_inverse">@android:color/bright_foreground_dark</color>
     <color name="dim_foreground_dark">#bebebe</color>
     <color name="dim_foreground_dark_disabled">#80bebebe</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
