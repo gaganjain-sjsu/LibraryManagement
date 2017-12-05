@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shauryamittal.librarymanagement">
+<manifest package="com.example.shauryamittal.librarymanagement"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -11,33 +11,44 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
+<<<<<<< HEAD
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+=======
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+>>>>>>> 949dadeb96d61370522e97f5befbb98f4f3af757
             </intent-filter>
         </activity>
         <activity android:name=".LibrarianBookSearch">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch" />
+                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity android:name=".AddUpdateBook">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook" />
+                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.SignupActivity" />
+                <action android:name="com.example.shauryamittal.librarymanagement.SignupActivity"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".BookDetailActivity"></activity>
+=======
+        <activity android:name=".LoginActivity">
+        </activity>
+>>>>>>> 949dadeb96d61370522e97f5befbb98f4f3af757
     </application>
 
 </manifest>

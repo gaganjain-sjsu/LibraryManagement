@@ -31,7 +31,7 @@
             app:srcCompat="@drawable/logo"/>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/login_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -47,31 +47,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"/>
 
+
         <EditText
-            android:id="@+id/sjsu_id"
+            android:id="@+id/email_login"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="36dp"
-            android:background="@color/background_light"
-            android:ems="10"
-            android:hint="SJSU ID"
-            android:inputType="number"
-            android:paddingLeft="10dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"/>
-
-        <EditText
-            android:id="@+id/email_signup"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
             android:background="@color/background_light"
             android:ems="10"
             android:hint="Email Address"
@@ -81,10 +64,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sjsu_id"/>
+            app:layout_constraintTop_toBottomOf="@+id/login_textView"/>
 
         <EditText
-            android:id="@+id/signup_password"
+            android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginEnd="24dp"
@@ -92,17 +75,17 @@
             android:layout_marginTop="12dp"
             android:background="@color/background_light"
             android:ems="10"
-            android:hint="Password (At least 6 characters)"
+            android:hint="Password"
             android:inputType="textPassword"
             android:paddingLeft="10dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_signup"/>
+            app:layout_constraintTop_toBottomOf="@+id/email_login"/>
 
 
         <Button
-            android:id="@+id/signup"
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginEnd="24dp"
@@ -114,25 +97,25 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup_password"/>
+            app:layout_constraintTop_toBottomOf="@+id/login_password"/>
 
         <Button
-            android:id="@+id/go_to_login"
+            android:id="@+id/go_to_signup"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/signup_button"
-            android:text="Already a User? SIGN IN"
+            android:text="NOt A USER? SIGN UP"
             android:textColor="@color/safe_mode_text"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup"/>
+            app:layout_constraintTop_toBottomOf="@+id/login"/>
 
         <ProgressBar
-            android:id="@+id/progressBar2"
+            android:id="@+id/login_progressBar"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginEnd="8dp"
@@ -141,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/go_to_login"/>
+            app:layout_constraintTop_toBottomOf="@+id/go_to_signup"/>
 
 
     </android.support.constraint.ConstraintLayout>
