@@ -34,6 +34,7 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private int bookPK=0;
+    private FirebaseAuth mAuth;
     // ...
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,8 @@ public class AddUpdateBook extends AppCompatActivity {
         noOfCopyET=findViewById(R.id.NumOfCopies);
         statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public void addBook(View view) {
@@ -160,11 +163,20 @@ public class AddUpdateBook extends AppCompatActivity {
         switch (id){
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
                 finish();
+                startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuth == null){
+            finish();
+            startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
+        }
     }
 }

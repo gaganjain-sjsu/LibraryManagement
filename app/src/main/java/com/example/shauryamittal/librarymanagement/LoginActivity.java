@@ -16,9 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -103,11 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "Authentication Failed",
                                         Toast.LENGTH_SHORT).show();
                             }
-
-
                         }
-
-
                     }
                 });
 
@@ -121,5 +116,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+
+            Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
+            startActivity(intent);
+        }
     }
 }
