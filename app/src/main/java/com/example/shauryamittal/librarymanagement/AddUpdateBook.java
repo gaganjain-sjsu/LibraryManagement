@@ -114,7 +114,7 @@ public class AddUpdateBook extends AppCompatActivity {
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         FirebaseDatabase database=FirebaseDatabase.getInstance();
 
-        DatabaseReference mRef=database.getReference().child("books-pk");
+        DatabaseReference mRef=database.getReference().child("books");
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
