@@ -16,6 +16,7 @@ public class LibrarianBookSearch extends AppCompatActivity {
         setContentView(R.layout.activity_librarian_book_search);
         librarionSpinner = (Spinner) findViewById(R.id.librarionSpinner);
         List<String> list = new ArrayList<String>();
+        list.add("Select Librarian");
         list.add("list 1");
         list.add("list 2");
         list.add("list 3");
