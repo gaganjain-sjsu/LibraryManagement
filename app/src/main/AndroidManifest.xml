@@ -10,17 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            <intent-filter>
-<<<<<<< HEAD
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-=======
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
->>>>>>> 949dadeb96d61370522e97f5befbb98f4f3af757
-            </intent-filter>
         </activity>
         <activity android:name=".LibrarianBookSearch">
             <intent-filter>
@@ -43,12 +33,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-<<<<<<< HEAD
         <activity android:name=".BookDetailActivity"></activity>
-=======
+
         <activity android:name=".LoginActivity">
         </activity>
->>>>>>> 949dadeb96d61370522e97f5befbb98f4f3af757
+
     </application>
 
 </manifest>
