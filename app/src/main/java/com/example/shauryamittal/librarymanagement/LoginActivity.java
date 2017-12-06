@@ -12,12 +12,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,8 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     Button toSignup;
     ProgressBar spinner;
 
-
     private FirebaseAuth mAuth;
+
+    static final String USER_COLLECTION = "users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,10 +131,24 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
 
-            Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            finish();
-            startActivity(intent);
+            FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(USER_COLLECTION + "/" + loggedInUser.getUid());
+
+            currentUserDocument.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                    CurrentUser.setCurrentUser(documentSnapshot);
+                    Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                    startActivity(intent);
+
+                }
+            });
+
+
         }
     }
 }

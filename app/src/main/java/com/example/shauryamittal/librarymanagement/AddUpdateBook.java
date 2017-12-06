@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,6 +53,8 @@ public class AddUpdateBook extends AppCompatActivity {
         keywordsET=findViewById(R.id.Keywords);
 
         mAuth = FirebaseAuth.getInstance();
+
+        showToast(CurrentUser.NAME);
     }
 
     public void addBook(View view) {
@@ -164,6 +167,7 @@ public class AddUpdateBook extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
+                CurrentUser.destroyCurrentUser();
                 startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
         }
 
@@ -176,6 +180,7 @@ public class AddUpdateBook extends AppCompatActivity {
         super.onStart();
         if(mAuth == null){
             finish();
+            CurrentUser.destroyCurrentUser();
             startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
         }
     }
