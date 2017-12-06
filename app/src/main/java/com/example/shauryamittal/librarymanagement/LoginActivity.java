@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,9 +39,10 @@ public class LoginActivity extends AppCompatActivity {
     ProgressBar spinner;
 
     private FirebaseAuth mAuth;
+    //private List<Book> bookList = new ArrayList<>();
 
     static final String USER_COLLECTION = "users";
-
+    private static final String TAG = "LoginActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +105,21 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                                     CurrentUser.setCurrentUser(documentSnapshot);
+
+                                    /*FirebaseFirestore.getInstance().collection("books")
+                                            .get()
+                                            .a
+
+
+                                    Log.d(TAG, "size of bookList" + bookList.size());
+                                    */
                                     Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
+                                    //Intent intent = new Intent(LoginActivity.this, ViewBooksActivity.class);
+                                    //intent.putExtra("BookList", (Serializable)bookList);
+
+
+
+                                    //Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     finish();
                                     startActivity(intent);
@@ -154,7 +175,32 @@ public class LoginActivity extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                     CurrentUser.setCurrentUser(documentSnapshot);
+
+                    /*FirebaseFirestore.getInstance().collection("books")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    //BookFactory factory = BookFactory.get(getActivity());
+
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Book book = document.toObject(Book.class);
+                                            bookList.add(book);
+                                        }
+                                    } else {
+                                        //Log.d(TAG, "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+
+
+                    Log.d(TAG, "size of bookList" + bookList.size());
+                    */
+
                     Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
+                    //Intent intent = new Intent(LoginActivity.this, ViewBooksActivity.class);
+                    //intent.putExtra("BookList", (Serializable)bookList);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();
                     startActivity(intent);

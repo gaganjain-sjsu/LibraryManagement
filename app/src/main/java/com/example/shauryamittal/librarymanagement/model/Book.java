@@ -1,10 +1,15 @@
 package com.example.shauryamittal.librarymanagement.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Harshit on 12/3/17.
  */
 
-public class Book {
+public class Book implements Serializable {
     private String author;
     private String title;
     private String callNumber;
@@ -96,4 +101,24 @@ public class Book {
     public void setLibrarianId(String librarianId) {
         this.librarianId = librarianId;
     }
+
+
+    /*@Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(author);
+        parcel.writeString(title);
+        parcel.writeString(callNumber);
+        parcel.writeString(publisher);
+        parcel.writeInt(yearOfPub);
+        parcel.writeString(location);
+        parcel.writeInt(noOfCopy);
+        parcel.writeString(status);
+        parcel.writeString(keywords);
+        parcel.writeString(librarianId);
+    }*/
 }

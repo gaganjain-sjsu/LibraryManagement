@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.BookFactory;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +47,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class ViewBooksActivity extends AppCompatActivity {
@@ -118,12 +129,16 @@ public class ViewBooksActivity extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+
+        private static final String TAG = "PlaceholderFragment";
+        private BookFactory factory;
         private Book book;
         private RecyclerView mBookRecyclerView;
-
+        private BookAdapter mAdapter;
         private ImageView mBookCover;
         private TextView mBookTitle;
         private TextView mBookAuthor;
+        private DatabaseReference mDatabase;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -152,8 +167,73 @@ public class ViewBooksActivity extends AppCompatActivity {
             mBookRecyclerView = rootView
                     .findViewById(R.id.book_recycler_view);
             mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+            Log.d(TAG, "inside onCreateView");
+            updateUI();
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            //getCurrentLocation(getActivity());
+            //Log.d(TAG, "inside onResume()");
+            updateUI();
+        }
+
+        private void updateUI() {
+
+            Log.d(TAG, "inside updateUI()");
+            //factory = BookFactory.get(getActivity());
+            Intent i = getActivity().getIntent();
+            List<Book> list = (List<Book>)i.getSerializableExtra("Booklist");
+            //FirebaseFirestore database= FirebaseFirestore.getInstance();
+            //CollectionReference mRef=database.collection("books");
+//            mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if(task.isSuccessful()){
+//                        DocumentSnapshot doc = task.getResult();
+//                        bookAuthor.setText(doc.getString("author"));
+//                        bookCallNum.setText(doc.getString("callNumber"));
+//                        bookTitle.setText(doc.getString("title"));
+//                        bookYear.setText(doc.getString("yearOfPub"));
+//                        bookPublisher.setText(doc.getString("publisher"));
+//                        bookStatus.setText(doc.getString("status"));
+//
+//                    }
+//                }
+//            });
+
+
+            /*database.collection("books")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            //BookFactory factory = BookFactory.get(getActivity());
+
+                            if (task.isSuccessful()) {
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    Book book = document.toObject(Book.class);
+                                    factory.addBook(book);
+                                }
+                            } else {
+                                //Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });*/
+
+
+            //List<Book> bookList = factory.getBookList();
+            //Log.d(TAG, "size of bookList" + bookList.size());
+            if (mAdapter == null) {
+                mAdapter = new BookAdapter(list);
+                mBookRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+
+
         }
 
 
@@ -178,6 +258,8 @@ public class ViewBooksActivity extends AppCompatActivity {
                 /*
                 Set up the widgets text here using DB call
                 */
+                mBookTitle.setText(book.getTitle());
+                mBookAuthor.setText(book.getAuthor());
             }
 
             @Override
@@ -272,7 +354,7 @@ public class ViewBooksActivity extends AppCompatActivity {
             @Override
             public int getCount() {
                 // Show 3 total pages.
-                return 3;
+                return 2;
             }
         }
     }
