@@ -25,8 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.shauryamittal.librarymanagement.model.Book;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,8 +118,12 @@ public class ViewBooksActivity extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+        private Book book;
+        private RecyclerView mBookRecyclerView;
 
-        private RecyclerView mCityRecyclerView;
+        private ImageView mBookCover;
+        private TextView mBookTitle;
+        private TextView mBookAuthor;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -142,159 +149,56 @@ public class ViewBooksActivity extends AppCompatActivity {
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;*/
             View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
-            mCityRecyclerView = (RecyclerView) rootView
-                    .findViewById(R.id.city_recycler_view);
-            mCityRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mBookRecyclerView = rootView
+                    .findViewById(R.id.book_recycler_view);
+            mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+            return rootView;
         }
 
-        private class CityHolder extends RecyclerView.ViewHolder
+
+        private class BookHolder extends RecyclerView.ViewHolder
+
                 implements View.OnClickListener, View.OnLongClickListener {
 
 
-            public CityHolder(LayoutInflater inflater, ViewGroup parent) {
-                super(inflater.inflate(R.layout.list_item_city, parent, false));
+            public BookHolder(LayoutInflater inflater, ViewGroup parent) {
+                super(inflater.inflate(R.layout.list_item_book, parent, false));
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
 
-                //mCurrentTimeView = (TextView) itemView.findViewById(R.id.current_time);
-                //mCityNameView = (TextView) itemView.findViewById(R.id.city_name);
-                //mCurrentTemperatureView = (TextView) itemView.findViewById(R.id.city_temperature);
+                mBookCover = (ImageView) itemView.findViewById(R.id.book_cover);
+                mBookTitle = (TextView) itemView.findViewById(R.id.book_title);
+                mBookAuthor = (TextView) itemView.findViewById(R.id.book_author_name);
 
             }
 
-            public void bind(City city) {
+            public void bind(Book book) {
 
-
-                SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE);
-
-                String scale = sharedPref.getString("TemperatureScale", "imperial");
-
-                Log.d(TAG, "Scale Value :" + scale);
-
-
-                mCity = city;
-                Log.d(TAG, "Before binding :" + city.toString());
-                Log.d(TAG, "inside getWeatherData()" + "Latitude :" + city.getLatitude() + "Longitude :" + city.getLongitude());
-                String apiKey = "9c358b9bde40e6e012c0c19c37f752d3";
-
-                RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String temperature_url ="http://api.openweathermap.org/data/2.5/weather?lat=" + city.getLatitude() + "&lon=" + city.getLongitude() + "&units="+scale+"&APPID=" + apiKey;
-                Log.d(TAG, "URL " + temperature_url);
-                //http://api.openweathermap.org/data/2.5/weather?lat=37.3382082&lon=-121.8863286&units=imperial&APPID=9c358b9bde40e6e012c0c19c37f752d3
-
-
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.GET, temperature_url, null, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d(TAG, "Response from URL: " + response);
-                                CurrentWeather weather = new CurrentWeather(response);
-                                Log.d(TAG, "Current Temp: " + weather.getCurrentTemp());
-                                mCurrentTemperatureView.setText(String.valueOf(weather.getCurrentTemp()) + "°");
-                                //mCurrentTemperature = String.valueOf(weather.getCurrentTemp());
-                                Log.v("City ", weather.getCityName());
-                                Log.v("Current Temp ", weather.getCurrentTemp() + "");
-                                Log.v("Low Temp ", weather.getLowTemp() + "");
-                                Log.v("High Temp ", weather.getHighTemp() + "");
-                                Log.v("Weather Condition", weather.getWeatherCondition());
-                                Log.v("Humidity", weather.getHumidity() + "");
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO Auto-generated method stub
-
-                                Log.v("ERROR:", error.toString());
-
-                            }
-                        });
-
-                queue.add(jsObjRequest);
-
-                UTCTimestamp = new GregorianCalendar().getTimeInMillis()/1000;
-
-                String localtime_url ="https://maps.googleapis.com/maps/api/timezone/json?location=" + city.getLatitude() + ","+ city.getLongitude() +"&timestamp="+UTCTimestamp+"&key=AIzaSyBb31ykX-88UrhoTTyyJhZjcestZyKGINQ";
-                Log.d(TAG, "URL " + localtime_url);
-
-                JsonObjectRequest jsObjTimeRequest = new JsonObjectRequest
-                        (Request.Method.GET, localtime_url, null, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d(TAG, "Response from localtime_url: " + response);
-                                try {
-                                    Log.d(TAG, "TimeZoneId " + response.getString("timeZoneId"));
-                                    timeZoneId = response.getString("timeZoneId");
-
-                                    TimeZone tz = TimeZone.getTimeZone(timeZoneId);
-                                    Calendar calendar = Calendar.getInstance(tz);
-
-                                    mCurrentTimeView.setText(String.format("%02d", calendar.get(Calendar.HOUR)) + ":" +
-                                            String.format("%02d", calendar.get(Calendar.MINUTE)) + "  " +
-                                            (calendar.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM"));
-
-                                    String time = String.format("%02d", calendar.get(Calendar.MONTH) + 1) + "/" +	       // January is 0
-                                            String.format("%02d", calendar.get(Calendar.DATE)) + "/" +
-                                            calendar.get(Calendar.YEAR) + "   " +
-                                            String.format("%02d", calendar.get(Calendar.HOUR)) + ":" +
-                                            String.format("%02d", calendar.get(Calendar.MINUTE)) + "  " +
-                                            (calendar.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM");
-
-                                    Log.d(TAG, "Current Local Time :" + time);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO Auto-generated method stub
-
-                                Log.v("ERROR:", error.toString());
-
-                            }
-                        });
-
-
-                queue.add(jsObjTimeRequest);
-                city.setLocalTime(mCurrentTimeView.getText().toString());
-                city.setCurrentTemperature(mCurrentTemperatureView.getText().toString());
-                Log.d(TAG, "City after binding : " + city.toString());
-                mCurrentTimeView.setText(String.valueOf(city.getLocalTime()));
-                mCityNameView.setText(city.getCityName());
-                Log.d(TAG, "City after binding : " + city.toString());
+                /*
+                Set up the widgets text here using DB call
+                */
             }
 
             @Override
             public void onClick(View view) {
                 //TODO Shaurya's activity (CityViewActivity)
-                Log.d(TAG, "inside onClick() method");
+
+                /*Log.d(TAG, "inside onClick() method");
                 Intent intent = new Intent(getActivity(), WeatherDetailsActivity.class);
                 int index = CityLab.get(getContext()).getCities().indexOf(mCity);
-//            if(mCurrentCity.equals(mCity.getCityName())){
-//                cmpe277.gaganjain.weatherapp.Location.currenCity = mCity.getCityName();
-//                intent.putExtra("current_city", true);
-//            }
-//            else{
-//                intent.putExtra("current_city", false);
-//            }
                 intent.putExtra("index", index);
                 intent.putExtra("cityName", mCity.getCityName());
                 intent.putExtra("latitude", mCity.getLatitude());
                 intent.putExtra("longitude", mCity.getLongitude());
                 startActivity(intent);
+                */
             }
 
             @Override
             public boolean onLongClick(View view) {
 
-                Log.d(TAG, "inside onLongClick() method");
+                /*Log.d(TAG, "inside onLongClick() method");
 
                 final CharSequence[] items = {"Delete City"};
 
@@ -314,60 +218,62 @@ public class ViewBooksActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
-
+                */
                 return true;
+
             }
         }
 
-        private class CityAdapter extends RecyclerView.Adapter<CityHolder> {
+        private class BookAdapter extends RecyclerView.Adapter<BookHolder> {
 
-            private List<City> mCities;
+            private List<Book> mBookList;
 
-            public CityAdapter(List<City> cities) {
-                mCities = cities;
+            public BookAdapter(List<Book> bookList) {
+                mBookList = bookList;
             }
 
             @Override
-            public CityHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                return new CityHolder(layoutInflater, parent);
+                return new BookHolder(layoutInflater, parent);
             }
 
             @Override
-            public void onBindViewHolder(CityHolder holder, int position) {
-                City city = mCities.get(position);
-                holder.bind(city);
+            public void onBindViewHolder(BookHolder holder, int position) {
+                Book book = mBookList.get(position);
+                holder.bind(book);
             }
 
             @Override
             public int getItemCount() {
-                return mCities.size();
+                return mBookList.size();
+            }
+        }
+        }
+
+
+        /**
+         * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+         * one of the sections/tabs/pages.
+         */
+        public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+            public SectionsPagerAdapter(FragmentManager fm) {
+                super(fm);
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                // getItem is called to instantiate the fragment for the given page.
+                // Return a PlaceholderFragment (defined as a static inner class below).
+                return PlaceholderFragment.newInstance(position + 1);
+            }
+
+            @Override
+            public int getCount() {
+                // Show 3 total pages.
+                return 3;
             }
         }
     }
 
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-    }
-}
