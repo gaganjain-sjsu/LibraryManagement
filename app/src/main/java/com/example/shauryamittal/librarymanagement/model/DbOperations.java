@@ -13,7 +13,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +35,8 @@ public class DbOperations {
     private static final String EMAIL_KEY = "email";
     private static final String SJSU_ID_KEY = "sjsuId";
     private static final String ROLE_KEY = "role";
+    private static final String USER_COLLECTION = "users";
+    static ArrayList<User> patrons = new ArrayList<User>();
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static List<User> librarians;
@@ -61,6 +68,8 @@ public class DbOperations {
                     }
                 });
     }
+
+
 
     public static void addBook(Book book){
         db.collection("books").add(book);
