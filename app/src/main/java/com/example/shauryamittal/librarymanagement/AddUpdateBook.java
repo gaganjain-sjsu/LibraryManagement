@@ -122,13 +122,7 @@ public class AddUpdateBook extends AppCompatActivity {
             return;
         }
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-
-
-
-
-
         book.setLibrarianName(CurrentUser.NAME);
-
         DbOperations dbOperations = new DbOperations();
         dbOperations.addBook(book);
 
