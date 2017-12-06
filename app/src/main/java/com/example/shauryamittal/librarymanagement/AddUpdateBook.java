@@ -51,9 +51,7 @@ public class AddUpdateBook extends AppCompatActivity {
         noOfCopyET=findViewById(R.id.NumOfCopies);
         statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
-
         mAuth = FirebaseAuth.getInstance();
-
         showToast(CurrentUser.NAME);
     }
 
@@ -122,7 +120,7 @@ public class AddUpdateBook extends AppCompatActivity {
             return;
         }
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-        book.setLibrarianName(CurrentUser.NAME);
+        book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
         dbOperations.addBook(book);
 
