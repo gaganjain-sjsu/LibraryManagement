@@ -14,7 +14,6 @@ public class Book {
     private int noOfCopy;
     private String status;
     private String keywords;
-    private int bookID;
     private String librarianName;
 
     public String getAuthor() {
@@ -90,13 +89,6 @@ public class Book {
         this.keywords = keywords;
     }
 
-    public int getBookID() {
-        return bookID;
-    }
-
-    public void setBookID(int bookID) {
-        this.bookID = bookID;
-    }
 
     public String getLibrarianName() {
         return librarianName;

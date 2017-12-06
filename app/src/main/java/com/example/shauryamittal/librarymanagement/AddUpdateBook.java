@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,6 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText statusET;
     private EditText keywordsET;
     private DatabaseReference mDatabase;
-    private int bookPK=0;
     private FirebaseAuth mAuth;
     // ...
     @Override
@@ -122,26 +122,15 @@ public class AddUpdateBook extends AppCompatActivity {
             return;
         }
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-        FirebaseDatabase database=FirebaseDatabase.getInstance();
 
-        DatabaseReference mRef=database.getReference().child("books-pk");
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                bookPK=Integer.parseInt(dataSnapshot.getValue().toString());
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-        bookPK++;
-        book.setBookID(bookPK);
-        book.setLibrarianName("Harshit");
-        mRef=database.getReference();
-        mRef.child("books").child(String.valueOf(bookPK)).setValue(book);
-        mRef.child("books-pk").setValue(String.valueOf(bookPK));
+
+
+        book.setLibrarianName(CurrentUser.NAME);
+
+        DbOperations dbOperations = new DbOperations();
+        dbOperations.addBook(book);
 
     }
     public void showToast(String text){

@@ -53,7 +53,25 @@ public class DbOperations {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+    }
 
+    public static void addBook(Book book){
+        System.out.println("---9090909-------"+db.collection("books").add(book));
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG, "Error writing document", e);
+//                    }
+//                });
+
+
+       // db.collection("books").add(book);
     }
 
 }
