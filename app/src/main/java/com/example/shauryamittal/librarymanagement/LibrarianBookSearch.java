@@ -17,9 +17,10 @@ public class LibrarianBookSearch extends AppCompatActivity {
         librarionSpinner = (Spinner) findViewById(R.id.librarionSpinner);
         List<String> list = new ArrayList<String>();
         list.add("Select Librarian");
-        list.add("list 1");
-        list.add("list 2");
-        list.add("list 3");
+        list.add("Harshit");
+        list.add("Shaurya");
+        list.add("Gagan");
+        list.add("Anshul");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
