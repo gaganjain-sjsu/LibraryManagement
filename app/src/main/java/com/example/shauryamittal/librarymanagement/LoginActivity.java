@@ -88,11 +88,24 @@ public class LoginActivity extends AppCompatActivity {
                         spinner.setVisibility(View.GONE);
 
                         if(task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
+
+                            FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(USER_COLLECTION + "/" + loggedInUser.getUid());
+
+                            currentUserDocument.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                    CurrentUser.setCurrentUser(documentSnapshot);
+                                    Intent intent = new Intent(LoginActivity.this, AddUpdateBook.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    finish();
+                                    startActivity(intent);
+
+                                }
+                            });
+
                         }
                         else {
 
@@ -129,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         if(currentUser != null){
 
             FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
