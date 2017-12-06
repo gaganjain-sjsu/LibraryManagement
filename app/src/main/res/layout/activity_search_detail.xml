@@ -194,6 +194,7 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="12sp"
                     android:layout_below="@id/book_status_label"
+                    android:onClick="addToCart"
                     />
 
 
