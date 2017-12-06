@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
+
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,35 +27,36 @@ public class SearchDetailActivity extends AppCompatActivity {
     private TextView bookStatus;
     private TextView bookAuthor;
     private TextView bookCopies;
-    private DatabaseReference mDatabase;
     private String bookId ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_detail);
+        setContentView(R.layout.activity_search_detail);
         bookTitle=findViewById(R.id.book_title);
         bookYear=findViewById(R.id.book_year_published);
         bookPublisher=findViewById(R.id.book_publisher);
         bookCallNum=findViewById(R.id.book_call);
         bookStatus=findViewById(R.id.book_status);
         bookAuthor=findViewById(R.id.book_author_name);
-        bookCallNum=findViewById(R.id.book_call);
+        bookCopies=findViewById(R.id.book_copies);
         Intent intent = getIntent();
         //bookId = Integer.parseInt(intent.getStringExtra("bookId"));
-        bookId = "4dsLA3qXZFk8EMhNEFzn";
+        bookId = "LoqMjSzUjT6qWCOXtfnt";
         FirebaseFirestore database= FirebaseFirestore.getInstance();
-        DocumentReference mRef=database.collection("books").document(bookId);
+        DocumentReference mRef=database.collection("books").document("81iiKvTNmH79XHXguMD0");
         mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
+                    Log.d("test", doc.getString("author"));
                     bookAuthor.setText(doc.getString("author"));
                     bookCallNum.setText(doc.getString("callNumber"));
                     bookTitle.setText(doc.getString("title"));
-                    bookYear.setText(doc.getString("yearOfPub"));
+//                    bookYear.setText(doc.getString("yearOfPub").toString());
                     bookPublisher.setText(doc.getString("publisher"));
                     bookStatus.setText(doc.getString("status"));
+                    //bookCopies.setText(doc.getString(""));
 
                 }
             }
@@ -67,9 +68,9 @@ public class SearchDetailActivity extends AppCompatActivity {
         SharedPreferences SP;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String bookId_sp = SP.getString("bookId", null);
-        SharedPreferences.Editor edit = null;
+        SharedPreferences.Editor edit = SP.edit();
         if (bookId_sp == null){
-        edit.putString("bookId", bookId);
+            edit.putString ("bookId", bookId);
         }
         else{
             StringBuilder sb = new StringBuilder(bookId_sp);

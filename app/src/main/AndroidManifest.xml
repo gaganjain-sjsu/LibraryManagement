@@ -39,7 +39,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".BookDetailActivity"/>
+        <activity android:name=".BookDetailActivity">
+            <intent-filter>
+                <action android:name="com.example.shauryamittal.librarymanagement.BookDetailActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -64,7 +71,13 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".SearchDetailActivity"/>
+        <activity android:name=".SearchDetailActivity">
+            <intent-filter>
+                <action android:name="com.example.shauryamittal.librarymanagement.SearchDetailActivity"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".LibrarianHomepageActivity">
         </activity>
     </application>
