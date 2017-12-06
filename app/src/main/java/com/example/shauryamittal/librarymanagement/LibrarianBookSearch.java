@@ -14,16 +14,5 @@ public class LibrarianBookSearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_librarian_book_search);
-        librarionSpinner = (Spinner) findViewById(R.id.librarionSpinner);
-        List<String> list = new ArrayList<String>();
-        list.add("Select Librarian");
-        list.add("Harshit");
-        list.add("Shaurya");
-        list.add("Gagan");
-        list.add("Anshul");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        librarionSpinner.setAdapter(dataAdapter);
     }
 }
