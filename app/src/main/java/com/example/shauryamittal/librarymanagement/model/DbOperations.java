@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class DbOperations {
     private static final String ROLE_KEY = "role";
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static List<User> librarians;
 
     public static void createUser(User user){
 
@@ -65,34 +67,36 @@ public class DbOperations {
     }
 
 
-//    public static List<User> getLibrarians(){
-//
-//        Book patrons = null;
-//
-//        db.collection("users")
-//                .whereEqualTo(ROLE_KEY, "librarian")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                User patron = new User(document.getString(FULLNAME_KEY),
-//                                        document.getString(EMAIL_KEY),
-//                                        document.getString(SJSU_ID_KEY),
-//                                        document.getString(UID_KEY),
-//                                        document.getString(ROLE_KEY));
-//
-//                                Log.d(TAG, document.getId() + " => " + document.getData());
-//
-//                                patrons.add(patron);
-//
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//        return patrons;
-//    }
+    public static void getLibrarians() {
+
+
+        librarians = new ArrayList<User>();
+
+        db.collection("users")
+                .whereEqualTo(ROLE_KEY, "librarian")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                User librarian = new User(document.getString(FULLNAME_KEY),
+                                        document.getString(EMAIL_KEY),
+                                        document.getString(SJSU_ID_KEY),
+                                        document.getString(UID_KEY),
+                                        document.getString(ROLE_KEY));
+
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                librarians.add(librarian);
+
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        //return patrons;
+    }
+
 }
