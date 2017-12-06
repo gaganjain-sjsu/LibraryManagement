@@ -35,6 +35,9 @@ public class SignupActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private final String LIBRARIAN = "librarian";
+    private final String PATRON = "patron";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +106,21 @@ public class SignupActivity extends AppCompatActivity {
                         spinner.setVisibility(View.GONE);
 
                         if(task.isSuccessful()){
-                            Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
+
                             String uid = task.getResult().getUser().getUid();
                             String email = task.getResult().getUser().getEmail();
+                            String role;
 
-                            DbOperations.createUser(new User(fullname, email, sjsuId, uid));
+                            if(email.split("@")[1].equals("sjsu.edu")){
+                                role = LIBRARIAN;
+                            }
+                            else {
+                                role = PATRON;
+                            }
+
+                            DbOperations.createUser(new User(fullname, email, sjsuId, uid, role));
+
+                            Toast.makeText(SignupActivity.this, "Signup Successful as a " + role, Toast.LENGTH_SHORT).show();
 
                         }
                         else {

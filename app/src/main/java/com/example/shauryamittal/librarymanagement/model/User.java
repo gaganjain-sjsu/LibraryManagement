@@ -6,13 +6,26 @@ package com.example.shauryamittal.librarymanagement.model;
 
 public class User {
 
-    String mName, mEmail, mSjsuId, mUid;
+    String mName;
+    String mEmail;
+    String mSjsuId;
+    String mUid;
+    String mRole;
 
-    public User(String name, String email, String sjsuId, String uid){
+    public User(String name, String email, String sjsuId, String uid, String role){
         mName = name;
         mEmail = email;
         mSjsuId = sjsuId;
         mUid = uid;
+        mRole = role;
+    }
+
+    public String getRole() {
+        return mRole;
+    }
+
+    public void setRole(String role) {
+        mRole = role;
     }
 
     public String getName() {

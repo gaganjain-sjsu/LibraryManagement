@@ -19,6 +19,12 @@ import static android.content.ContentValues.TAG;
 
 public class DbOperations {
 
+    private static final String UID_KEY = "uid";
+    private static final String FULLNAME_KEY = "fullname";
+    private static final String EMAIL_KEY = "email";
+    private static final String SJSU_ID_KEY = "sjsuId";
+    private static final String ROLE_KEY = "role";
+
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public static void createUser(User user){
@@ -26,24 +32,25 @@ public class DbOperations {
         // Create a new user with a first and last name
         Map<String, Object> newUser = new HashMap<>();
 
-        newUser.put("uid", user.getUid());
-        newUser.put("fullname", user.getName());
-        newUser.put("email", user.getEmail());
-        newUser.put("sjsuId", user.getSjsuId());
+        newUser.put(UID_KEY, user.getUid());
+        newUser.put(FULLNAME_KEY, user.getName());
+        newUser.put(EMAIL_KEY, user.getEmail());
+        newUser.put(SJSU_ID_KEY, user.getSjsuId());
+        newUser.put(ROLE_KEY, user.getRole());
 
         // Add a new document with a generated ID
-        db.collection("users")
-                .add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("users").document(user.getUid())
+                .set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.w(TAG, "Error writing document", e);
                     }
                 });
 
