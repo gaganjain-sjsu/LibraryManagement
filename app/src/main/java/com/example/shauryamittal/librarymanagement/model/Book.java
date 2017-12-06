@@ -5,16 +5,16 @@ package com.example.shauryamittal.librarymanagement.model;
  */
 
 public class Book {
-    private String author;
-    private String title;
-    private String callNumber;
-    private String publisher;
-    private int yearOfPub;
-    private String location;
-    private int noOfCopy;
-    private String status;
-    private String keywords;
-    private String librarianId;
+    private String author="";
+    private String title="";
+    private String callNumber="";
+    private String publisher="";
+    private int yearOfPub=0;
+    private String location="";
+    private int noOfCopy=0;
+    private String status="";
+    private String keywords="";
+    private String librarianId="";
 
     public String getAuthor() {
         return author;

@@ -119,6 +119,7 @@ public class AddUpdateBook extends AppCompatActivity {
             showToast("Enter Status");
             return;
         }
+
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
