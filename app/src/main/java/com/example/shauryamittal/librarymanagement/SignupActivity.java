@@ -1,16 +1,20 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class SignupActivity extends AppCompatActivity {
 
+    EditText editText_fullname;
     EditText editText_sjsuId;
     EditText editText_email;
     EditText editText_password;
@@ -40,6 +45,7 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        editText_fullname = (EditText) findViewById(R.id.fullname);
         editText_sjsuId = (EditText) findViewById(R.id.sjsu_id);
         editText_email = (EditText) findViewById(R.id.email_signup);
         editText_password = (EditText) findViewById(R.id.signup_password);
@@ -52,9 +58,16 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String sjsuId = editText_sjsuId.getText().toString().trim();
+                final String sjsuId = editText_sjsuId.getText().toString().trim();
                 String email = editText_email.getText().toString().trim();
                 String password = editText_password.getText().toString().trim();
+                final String fullname = editText_fullname.getText().toString().trim();
+
+                if(fullname.isEmpty()){
+                    editText_sjsuId.setError("Enter a name");
+                    editText_sjsuId.requestFocus();
+                    return;
+                }
 
                 if(sjsuId.isEmpty()){
                     editText_sjsuId.setError("SJSU ID can't be empty");
@@ -91,6 +104,11 @@ public class SignupActivity extends AppCompatActivity {
 
                         if(task.isSuccessful()){
                             Toast.makeText(SignupActivity.this, "Signup Successful", Toast.LENGTH_SHORT).show();
+                            String uid = task.getResult().getUser().getUid();
+                            String email = task.getResult().getUser().getEmail();
+
+                            DbOperations.createUser(new User(fullname, email, sjsuId, uid));
+
                         }
                         else {
                             if(task.getException() instanceof FirebaseAuthUserCollisionException){
@@ -116,5 +134,16 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
