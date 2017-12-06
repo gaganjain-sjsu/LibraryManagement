@@ -51,9 +51,7 @@ public class AddUpdateBook extends AppCompatActivity {
         noOfCopyET=findViewById(R.id.NumOfCopies);
         statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
-
         mAuth = FirebaseAuth.getInstance();
-
         showToast(CurrentUser.NAME);
     }
 
