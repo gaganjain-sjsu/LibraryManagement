@@ -45,7 +45,7 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private StorageReference mStorage;
-    private Button mChooseImage;
+
     private FirebaseAuth mAuth;
     private static final int GALLERY_INTENT =2;
     // ...
@@ -58,7 +58,7 @@ public class AddUpdateBook extends AppCompatActivity {
         Book b = (Book)intent.getSerializableExtra("bookObj");
         System.out.print("b==="+b);
 
-        mChooseImage=(Button) findViewById(R.id.chooseimage);
+
         mStorage = FirebaseStorage.getInstance().getReference();
         authorET=findViewById(R.id.Author);
         titleET=findViewById(R.id.Title);
@@ -72,15 +72,9 @@ public class AddUpdateBook extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         showToast(CurrentUser.NAME);
 
-        mChooseImage.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_INTENT);
-            }
-        });
-    }
 
+    }
+/*
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -100,7 +94,7 @@ public class AddUpdateBook extends AppCompatActivity {
             });
 
         }
-    }
+    }*/
 
     public void addBook(View view) {
         Book book = new Book();
