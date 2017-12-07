@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shauryamittal.librarymanagement.EmailVerificationActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginTop="150dp"
+            android:inputType="textPersonName"
+            android:hint="Enter Verification Code" />
+
+
+        <Button
+            android:id="@+id/verify_account"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/librarian_home_buttons"
+            android:text="Verify Account"
+            android:textColor="@color/background_light"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="12sp"
+            android:layout_below="@id/book_status_label"
+
+            />
+
+
+
+    </LinearLayout>
+</RelativeLayout>
