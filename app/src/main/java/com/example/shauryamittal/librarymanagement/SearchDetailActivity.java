@@ -1,5 +1,6 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -85,8 +87,14 @@ public class SearchDetailActivity extends AppCompatActivity {
             edit.putString(UID, sb.toString());
         }
         edit.commit();
+        showToast("Added Successfully to the cart");
         Log.d("Test","Book Id: " + SP.getString(UID, null));
 
+    }
+    public void showToast(String text){
+        Context context = getApplicationContext();
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
