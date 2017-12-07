@@ -9,5 +9,9 @@
         android:id="@+id/view_cart_option"
         >
     </item>
+    <item android:title="Delete All Cart"
+          android:id="@+id/del"
+        >
+    </item>
 
 </menu>
