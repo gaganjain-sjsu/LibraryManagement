@@ -41,7 +41,7 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText yearOfPubET;
     private EditText locationET;
     private EditText noOfCopyET;
-    private EditText statusET;
+//    private EditText statusET;
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private StorageReference mStorage;
@@ -67,7 +67,7 @@ public class AddUpdateBook extends AppCompatActivity {
         yearOfPubET=findViewById(R.id.Yearofpub);
         locationET=findViewById(R.id.Location);
         noOfCopyET=findViewById(R.id.NumOfCopies);
-        statusET=findViewById(R.id.Status);
+//        statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
         mAuth = FirebaseAuth.getInstance();
         showToast(CurrentUser.NAME);
@@ -161,12 +161,12 @@ public class AddUpdateBook extends AppCompatActivity {
             }
         }
 
-        book.setStatus(String.valueOf(statusET.getText()).trim());
-        if(book.getStatus()==null || book.getStatus().trim().equals("")){
-            showToast("Enter Status");
-            return;
-        }
-
+//        book.setStatus(String.valueOf(statusET.getText()).trim());
+//        if(book.getStatus()==null || book.getStatus().trim().equals("")){
+//            showToast("Enter Status");
+//            return;
+//        }
+        book.setStatus("available");
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
