@@ -40,6 +40,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,6 +118,14 @@ public class ViewBooksActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            CurrentUser.destroyCurrentUser();
+            startActivity(new Intent(ViewBooksActivity.this, LoginActivity.class));
             return true;
         }
 
