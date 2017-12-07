@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -66,19 +67,20 @@ public class SearchDetailActivity extends AppCompatActivity {
 
     public void addToCart(View view){
         SharedPreferences SP;
+        String UID = CurrentUser.UID;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String bookId_sp = SP.getString("bookId", null);
+        String bookId_sp = SP.getString(UID, null);
         SharedPreferences.Editor edit = SP.edit();
         if (bookId_sp == null){
-            edit.putString ("bookId", bookId);
+            edit.putString (UID, bookId);
         }
         else{
             StringBuilder sb = new StringBuilder(bookId_sp);
             sb.append(",").append(bookId);
-            edit.putString("bookId", sb.toString());
+            edit.putString(UID, sb.toString());
         }
         edit.commit();
-        Log.d("Test","Book Id: " + SP.getString("bookId", null));
+        Log.d("Test","Book Id: " + SP.getString(UID, null));
 
     }
 }
