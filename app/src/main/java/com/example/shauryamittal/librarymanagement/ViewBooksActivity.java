@@ -138,134 +138,135 @@ public class ViewBooksActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-
-        private static final String TAG = "PlaceholderFragment";
-        private BookFactory factory;
-        //private Book book;
-        private RecyclerView mBookRecyclerView;
-        private BookAdapter mAdapter;
-        private DatabaseReference mDatabase;
-        private static final String ARG_SECTION_NUMBER = "section_number";
-        private List<Book> mBookList;
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            mBookList = new ArrayList<>();
-            View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
-            mBookRecyclerView = rootView
-                    .findViewById(R.id.book_recycler_view);
-            mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-            Log.d(TAG, "inside onCreateView");
-
-            return rootView;
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            Log.d(TAG, "inside onResume()");
-            updateUI();
-        }
-
-        private void updateUI() {
-
-            Log.d(TAG, "inside updateUI()");
-            //factory = BookFactory.get(getActivity());
-            //List<Book> bookList = factory.getBookList();
-
-            if(mAdapter == null){
-                mAdapter = new BookAdapter(mBookList);
             }
-            mBookRecyclerView.setAdapter(mAdapter);
+        }
 
-            FirebaseFirestore database= FirebaseFirestore.getInstance();
-            //CollectionReference mRef=database.collection("books");
+        /**
+         * A placeholder fragment containing a simple view.
+         */
+        public static class PlaceholderFragment extends Fragment {
+            /**
+             * The fragment argument representing the section number for this
+             * fragment.
+             */
 
-            database.collection("books")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (DocumentSnapshot document : task.getResult()) {
-                                    Book book = document.toObject(Book.class);
-                                    book.setBookId(document.getId());
-                                    mBookList.add(book);
+            private static final String TAG = "PlaceholderFragment";
+            private BookFactory factory;
+            //private Book book;
+            private RecyclerView mBookRecyclerView;
+            private BookAdapter mAdapter;
+            private DatabaseReference mDatabase;
+            private static final String ARG_SECTION_NUMBER = "section_number";
+            private List<Book> mBookList;
+
+            public PlaceholderFragment() {
+            }
+
+            /**
+             * Returns a new instance of this fragment for the given section
+             * number.
+             */
+            public static PlaceholderFragment newInstance(int sectionNumber) {
+                PlaceholderFragment fragment = new PlaceholderFragment();
+                Bundle args = new Bundle();
+                args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+                fragment.setArguments(args);
+                return fragment;
+            }
+
+
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                     Bundle savedInstanceState) {
+                mBookList = new ArrayList<>();
+                View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
+                mBookRecyclerView = rootView
+                        .findViewById(R.id.book_recycler_view);
+                mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                Log.d(TAG, "inside onCreateView");
+
+                return rootView;
+            }
+
+            @Override
+            public void onResume() {
+                super.onResume();
+                Log.d(TAG, "inside onResume()");
+                updateUI();
+            }
+
+            private void updateUI() {
+
+                Log.d(TAG, "inside updateUI()");
+                //factory = BookFactory.get(getActivity());
+                //List<Book> bookList = factory.getBookList();
+
+                if (mAdapter == null) {
+                    mAdapter = new BookAdapter(mBookList);
+                }
+                mBookRecyclerView.setAdapter(mAdapter);
+
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                //CollectionReference mRef=database.collection("books");
+
+                database.collection("books")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        Book book = document.toObject(Book.class);
+                                        book.setBookId(document.getId());
+                                        mBookList.add(book);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    //TODO
                                 }
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                               //TODO
                             }
-                        }
-                    });
-        }
-
-
-        private class BookHolder extends RecyclerView.ViewHolder
-
-                implements View.OnClickListener, View.OnLongClickListener {
-
-            private Book mBook;
-            private ImageView mBookCover;
-            private TextView mBookTitle;
-            private TextView mBookAuthor;
-
-
-            public BookHolder(LayoutInflater inflater, ViewGroup parent) {
-                super(inflater.inflate(R.layout.list_item_book, parent, false));
-                itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
-
-                mBookCover = (ImageView) itemView.findViewById(R.id.book_cover);
-                mBookTitle = (TextView) itemView.findViewById(R.id.book_title);
-                mBookAuthor = (TextView) itemView.findViewById(R.id.book_author_name);
-
+                        });
             }
 
-            public void bind(Book book) {
+
+            private class BookHolder extends RecyclerView.ViewHolder
+
+                    implements View.OnClickListener, View.OnLongClickListener {
+
+                private Book mBook;
+                private ImageView mBookCover;
+                private TextView mBookTitle;
+                private TextView mBookAuthor;
+
+
+                public BookHolder(LayoutInflater inflater, ViewGroup parent) {
+                    super(inflater.inflate(R.layout.list_item_book, parent, false));
+                    itemView.setOnClickListener(this);
+                    itemView.setOnLongClickListener(this);
+
+                    mBookCover = (ImageView) itemView.findViewById(R.id.book_cover);
+                    mBookTitle = (TextView) itemView.findViewById(R.id.book_title);
+                    mBookAuthor = (TextView) itemView.findViewById(R.id.book_author_name);
+
+                }
+
+                public void bind(Book book) {
 
                 /*
                 Set up the widgets text here using DB call
                 */
-                mBook = book;
-                mBookTitle.setText(book.getTitle());
-                mBookAuthor.setText(book.getAuthor());
-            }
+                    mBook = book;
+                    mBookTitle.setText(book.getTitle());
+                    mBookAuthor.setText(book.getAuthor());
+                }
 
-            @Override
-            public void onClick(View view) {
-                //TODO Shaurya's activity (CityViewActivity)
-                Intent intent = new Intent(getActivity(), SearchDetailActivity.class);
-                intent.putExtra("bookId", mBook.getBookId());
-                startActivity(intent);
+                @Override
+                public void onClick(View view) {
+                    //TODO Shaurya's activity (CityViewActivity)
+                    Intent intent = new Intent(getActivity(), SearchDetailActivity.class);
+                    intent.putExtra("bookId", mBook.getBookId());
+                    startActivity(intent);
                 /*Log.d(TAG, "inside onClick() method");
                 Intent intent = new Intent(getActivity(), WeatherDetailsActivity.class);
                 int index = CityLab.get(getContext()).getCities().indexOf(mCity);
@@ -275,10 +276,10 @@ public class ViewBooksActivity extends AppCompatActivity {
                 intent.putExtra("longitude", mCity.getLongitude());
 
                 */
-            }
+                }
 
-            @Override
-            public boolean onLongClick(View view) {
+                @Override
+                public boolean onLongClick(View view) {
 
                 /*Log.d(TAG, "inside onLongClick() method");
 
@@ -301,36 +302,36 @@ public class ViewBooksActivity extends AppCompatActivity {
                 });
                 builder.show();
                 */
-                return true;
+                    return true;
 
-            }
-        }
-
-        private class BookAdapter extends RecyclerView.Adapter<BookHolder> {
-
-            private List<Book> mBookList;
-
-            public BookAdapter(List<Book> bookList) {
-                mBookList = bookList;
+                }
             }
 
-            @Override
-            public BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                return new BookHolder(layoutInflater, parent);
-            }
+            private class BookAdapter extends RecyclerView.Adapter<BookHolder> {
 
-            @Override
-            public void onBindViewHolder(BookHolder holder, int position) {
-                Book book = mBookList.get(position);
-                holder.bind(book);
-            }
+                private List<Book> mBookList;
 
-            @Override
-            public int getItemCount() {
-                return mBookList.size();
+                public BookAdapter(List<Book> bookList) {
+                    mBookList = bookList;
+                }
+
+                @Override
+                public BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+                    return new BookHolder(layoutInflater, parent);
+                }
+
+                @Override
+                public void onBindViewHolder(BookHolder holder, int position) {
+                    Book book = mBookList.get(position);
+                    holder.bind(book);
+                }
+
+                @Override
+                public int getItemCount() {
+                    return mBookList.size();
+                }
             }
-        }
         }
 
 
@@ -358,4 +359,5 @@ public class ViewBooksActivity extends AppCompatActivity {
             }
         }
     }
+
 
