@@ -1,11 +1,13 @@
 package com.example.shauryamittal.librarymanagement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -85,6 +87,13 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
             update.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+
+                    Intent intent = new Intent(ctx, AddUpdateBook.class);
+//                    EditText editText = (EditText) findViewById(R.id.editText);
+//                    String message = editText.getText().toString();
+//                    intent.putExtra(EXTRA_MESSAGE, message);
+                    intent.putExtra("bookObj",mBook);
+                    ctx.startActivity(intent);
 
                 }
             });

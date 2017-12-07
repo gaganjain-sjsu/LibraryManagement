@@ -42,6 +42,10 @@ public class AddUpdateBook extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_update_book);
 
+        Intent intent = getIntent();
+        Book b = (Book)intent.getSerializableExtra("bookObj");
+        System.out.print("b==="+b);
+
         authorET=findViewById(R.id.Author);
         titleET=findViewById(R.id.Title);
         callNumberET=findViewById(R.id.Callnumber);
