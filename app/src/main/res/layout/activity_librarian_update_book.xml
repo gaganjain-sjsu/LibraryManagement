@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shauryamittal.librarymanagement.LibrarianUpdateBook">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_below="@+id/TableLayout"
+                    android:layout_span="2"
+                    android:id="@+id/addBookImage"
+                    android:src="@drawable/sampleimage"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Author :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Author"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Title :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Title"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textCallnumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Call number :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Callnumber"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textPublisher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Publisher :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Publisher"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textYearofpub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Year of publication:"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Yearofpub"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Location in library :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Location"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+
+
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textNumOfCopies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Number of copies :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="15dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/NumOfCopies"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Current Status :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Status"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <TextView
+                    android:id="@+id/textKeywords"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="Keywords :"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="20dp" />
+
+                <EditText
+                    android:width="200dp"
+                    android:id="@+id/Keywords"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+
+                <Button
+                    android:id="@+id/createBookSubmit"
+                    android:layout_column="2"
+                    android:layout_marginTop="10dp"
+                    android:onClick="addBook"
+                    android:text="Ubdate Book" />
+
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

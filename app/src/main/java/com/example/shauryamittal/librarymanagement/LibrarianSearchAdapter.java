@@ -88,7 +88,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
             update.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(ctx, AddUpdateBook.class);
+                    Intent intent = new Intent(ctx, LibrarianUpdateBook.class);
 //                    EditText editText = (EditText) findViewById(R.id.editText);
 //                    String message = editText.getText().toString();
 //                    intent.putExtra(EXTRA_MESSAGE, message);

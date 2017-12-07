@@ -20,16 +20,16 @@
         </activity>
         <activity android:name=".LibrarianBookSearch">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".AddUpdateBook">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity">
@@ -46,6 +46,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -77,11 +78,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LibrarianHomepageActivity">
-        </activity>
-
-        <activity android:name=".LibrarianViewBooksActivity"></activity>
-        <activity android:name=".ErrorActivity">
+        <activity android:name=".LibrarianHomepageActivity"></activity>
+        <activity android:name=".ErrorActivity"></activity>
+        <activity android:name=".LibrarianUpdateBook">
+            <intent-filter>
+                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianUpdateBook" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -75,6 +75,30 @@ public class DbOperations {
         db.collection("books").add(book);
 
     }
+    public static void updateBook(Book book) {
+       // db.collection("books").document(book.getBookId()).set(book);
+        if (book.getBookId() != null) {
+            db.collection("books").document(book.getBookId())
+                    .set(book)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+
+        } else {
+            Log.w(TAG, "Book Id in null in book object. So cannot update");
+        }
+    }
+
+
     public static void deleteBook(String bookId){
         db.collection("books").document(bookId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
 
