@@ -5,5 +5,9 @@
         android:id="@+id/logout"
         >
     </item>
+    <item android:title="View Cart"
+        android:id="@+id/view_cart_option"
+        >
+    </item>
 
 </menu>

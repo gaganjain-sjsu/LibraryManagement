@@ -189,15 +189,17 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginStart="100dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/login_background"
+                    android:background="@drawable/librarian_home_buttons"
                     android:text="Add to Cart"
-                    android:textColor="@color/black"
+                    android:textColor="@color/background_light"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:textSize="12sp"
                     android:layout_below="@id/book_status_label"
                     android:onClick="addToCart"
                     />
+
+
 
 
             </RelativeLayout>

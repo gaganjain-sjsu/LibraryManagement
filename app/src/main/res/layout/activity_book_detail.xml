@@ -189,9 +189,9 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginStart="100dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/login_background"
+                    android:background="@drawable/librarian_home_buttons"
                     android:text="RENEW"
-                    android:textColor="@color/black"
+                    android:textColor="@color/background_light"
                     android:textSize="14sp"
                     android:layout_below="@id/book_status_label"
                     />
@@ -203,13 +203,16 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/login_background"
+                    android:background="@drawable/librarian_home_buttons"
                     android:text="RETURN"
-                    android:textColor="@color/black"
+                    android:textColor="@color/background_light"
                     android:textSize="14sp"
                     android:layout_below="@id/book_status"
                     android:layout_toEndOf="@id/renew"
                     />
+
+
+
             </RelativeLayout>
 
         </RelativeLayout>

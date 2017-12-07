@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,16 +52,18 @@ public class SearchDetailActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+
                     DocumentSnapshot doc = task.getResult();
+                    int year = doc.getDouble("yearOfPub").intValue();
+                    int copies = doc.getDouble("noOfCopy").intValue();
                     Log.d("test", doc.getString("author"));
                     bookAuthor.setText(doc.getString("author"));
                     bookCallNum.setText(doc.getString("callNumber"));
                     bookTitle.setText(doc.getString("title"));
-//                    bookYear.setText(doc.getString("yearOfPub").toString());
+                    bookYear.setText((String.valueOf(year)));
                     bookPublisher.setText(doc.getString("publisher"));
                     bookStatus.setText(doc.getString("status"));
-                    //bookCopies.setText(doc.getString(""));
-
+                    bookCopies.setText(String.valueOf(copies));
                 }
             }
         });
@@ -81,6 +86,35 @@ public class SearchDetailActivity extends AppCompatActivity {
         }
         edit.commit();
         Log.d("Test","Book Id: " + SP.getString(UID, null));
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.topmenu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(SearchDetailActivity.this, LoginActivity.class));
+                break;
+            case R.id.view_cart_option:
+                startActivity(new Intent(SearchDetailActivity.this, LoginActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
 
     }
 }
