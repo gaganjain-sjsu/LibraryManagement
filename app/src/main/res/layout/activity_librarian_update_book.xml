@@ -180,26 +180,26 @@
             </TableRow>
 
 
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-                <TextView
-                    android:id="@+id/textStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_marginLeft="10dp"
-                    android:text="Current Status :"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="20dp" />
+            <!--<TableRow-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="fill_parent">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/textStatus"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_column="1"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:text="Current Status :"-->
+                    <!--android:textColor="@android:color/background_dark"-->
+                    <!--android:textSize="20dp" />-->
 
-                <EditText
-                    android:width="200dp"
-                    android:id="@+id/Status"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
+                <!--<EditText-->
+                    <!--android:width="200dp"-->
+                    <!--android:id="@+id/Status"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</TableRow>-->
 
             <TableRow
                 android:layout_width="fill_parent"

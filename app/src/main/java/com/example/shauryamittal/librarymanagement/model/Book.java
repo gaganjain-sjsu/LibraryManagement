@@ -18,6 +18,7 @@ public class Book implements Serializable {
     private int yearOfPub=0;
     private String location="";
     private int noOfCopy=0;
+    private int noOfCheckedOutCopy=0;
     private String status="";
     private String keywords="";
     private String librarianId="";
@@ -110,5 +111,13 @@ public class Book implements Serializable {
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
+    }
+
+    public int getNoOfCheckedOutCopy() {
+        return noOfCheckedOutCopy;
+    }
+
+    public void setNoOfCheckedOutCopy(int noOfCheckedOutCopy) {
+        this.noOfCheckedOutCopy = noOfCheckedOutCopy;
     }
 }

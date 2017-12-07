@@ -25,7 +25,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     private EditText yearOfPubET;
     private EditText locationET;
     private EditText noOfCopyET;
-    private EditText statusET;
+    //private EditText statusET;
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -43,7 +43,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         yearOfPubET=findViewById(R.id.Yearofpub);
         locationET=findViewById(R.id.Location);
         noOfCopyET=findViewById(R.id.NumOfCopies);
-        statusET=findViewById(R.id.Status);
+       // statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
         mAuth = FirebaseAuth.getInstance();
         //showToast(CurrentUser.NAME);
@@ -55,7 +55,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         yearOfPubET.setText(String.valueOf(book.getYearOfPub()));
         locationET.setText(book.getLocation());
         noOfCopyET.setText(String.valueOf(book.getNoOfCopy()));
-        statusET.setText(book.getStatus());
+        //statusET.setText(book.getStatus());
         keywordsET.setText(book.getKeywords());
     }
 
@@ -118,11 +118,11 @@ public class LibrarianUpdateBook extends AppCompatActivity {
             }
         }
 
-        book.setStatus(String.valueOf(statusET.getText()).trim());
-        if(book.getStatus()==null || book.getStatus().trim().equals("")){
-            showToast("Enter Status");
-            return;
-        }
+//        book.setStatus(String.valueOf(statusET.getText()).trim());
+//        if(book.getStatus()==null || book.getStatus().trim().equals("")){
+//            showToast("Enter Status");
+//            return;
+//        }
 
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         book.setLibrarianId(CurrentUser.UID);
