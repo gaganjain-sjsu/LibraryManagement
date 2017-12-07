@@ -40,10 +40,10 @@ public class SearchDetailActivity extends AppCompatActivity {
         bookAuthor=findViewById(R.id.book_author_name);
         bookCopies=findViewById(R.id.book_copies);
         Intent intent = getIntent();
-        //bookId = Integer.parseInt(intent.getStringExtra("bookId"));
-        bookId = "LoqMjSzUjT6qWCOXtfnt";
+        bookId = intent.getStringExtra("bookId");
+        //bookId = "LoqMjSzUjT6qWCOXtfnt";
         FirebaseFirestore database= FirebaseFirestore.getInstance();
-        DocumentReference mRef=database.collection("books").document("81iiKvTNmH79XHXguMD0");
+        DocumentReference mRef=database.collection("books").document(bookId);
         mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
