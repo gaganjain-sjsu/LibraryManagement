@@ -46,9 +46,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
         SharedPreferences SP;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String currentCartItems = SP.getString(CurrentUser.UID, null);
-        Log.v("current Items ", currentCartItems);
+//        Log.d("current Items ", currentCartItems);
 
-        if(currentCartItems != null || currentCartItems.equals("")){
+        if(currentCartItems != null){
             bookIds = currentCartItems.split(",");
         }
 
@@ -69,7 +69,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
-                            cartItems.add(new CartItem(document.getString(BOOK_TITLE), document.getString(BOOK_AUTHOR)));
+                            cartItems.add(new CartItem(document.getId(), document.getString(BOOK_TITLE), document.getString(BOOK_AUTHOR)));
                             adapter.notifyDataSetChanged();
                             Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());
                         } else {

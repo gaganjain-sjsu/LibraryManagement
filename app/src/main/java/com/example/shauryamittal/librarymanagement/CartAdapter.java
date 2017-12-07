@@ -48,32 +48,60 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Log.v("REMOVE", "Remove item " + position);
+
                 ShoppingCartActivity.cartItems.remove(position);
-                ShoppingCartActivity.adapter.notifyDataSetChanged();
 
                 SharedPreferences SP;
                 SP = PreferenceManager.getDefaultSharedPreferences(context);
-                String currentCartItems = SP.getString(CurrentUser.UID, null);
 
-                String bookToRemove = (currentCartItems.split(","))[position];
+                StringBuilder sb = new StringBuilder("");
 
-                if((currentCartItems.split(",")).length == 1){
+                if(ShoppingCartActivity.cartItems.size() == 0){
                     SharedPreferences.Editor edit = SP.edit();
                     edit.remove(CurrentUser.UID);
                     edit.commit();
-                    ShoppingCartActivity.adapter.notifyDataSetChanged();
                     return;
                 }
 
-                //String test =  currentCartItems.replace(bookToRemove + ",", "");
-                String newCartItems = currentCartItems.replaceAll(bookToRemove+",","").replaceAll(""+","+bookToRemove,"").replaceAll(bookToRemove, "");
+                sb.append(ShoppingCartActivity.cartItems.get(0).getBookId());
+
+                for(int i=1; i<cartItems.size(); i++){
+                    sb.append(","+ShoppingCartActivity.cartItems.get(i).getBookId());
+                }
 
                 SharedPreferences.Editor edit = SP.edit();
-                edit.putString (CurrentUser.UID, newCartItems);
-                Log.v("SHARED PREFERENCE:", newCartItems);
+                edit.putString (CurrentUser.UID, sb.toString());
                 edit.commit();
 
                 ShoppingCartActivity.adapter.notifyDataSetChanged();
+
+
+//                String currentCartItems = SP.getString(CurrentUser.UID, null);
+//
+//                String bookToRemove = (currentCartItems.split(","))[position];
+//
+//                if((currentCartItems.split(",")).length == 1){
+//                    SharedPreferences.Editor edit = SP.edit();
+//                    edit.remove(CurrentUser.UID);
+//                    edit.commit();
+//                    ShoppingCartActivity.adapter.notifyDataSetChanged();
+//                    return;
+//                }
+//
+//                String newCartItems;
+//                if(position == 0){
+//                    newCartItems = currentCartItems.replace(bookToRemove + ",", "");
+//                }
+//                else {
+//                    newCartItems = currentCartItems.replace("," + bookToRemove, "");
+//                }
+//
+//                SharedPreferences.Editor edit = SP.edit();
+//                edit.putString (CurrentUser.UID, newCartItems);
+//                Log.v("SHARED PREFERENCE:", newCartItems);
+//                edit.commit();
+//
+//                ShoppingCartActivity.adapter.notifyDataSetChanged();
 
             }
         });
