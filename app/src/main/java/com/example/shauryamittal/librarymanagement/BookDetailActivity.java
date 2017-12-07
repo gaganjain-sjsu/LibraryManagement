@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,6 +61,31 @@ public class BookDetailActivity extends AppCompatActivity {
 
         
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.topmenu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(BookDetailActivity.this, LoginActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
 
     }
 

@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.shauryamittal.librarymanagement.SearchDetailActivity">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -194,6 +196,7 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="12sp"
                     android:layout_below="@id/book_status_label"
+                    android:onClick="addToCart"
                     />
 
 
