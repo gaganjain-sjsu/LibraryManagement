@@ -65,7 +65,7 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ctx, BookDetailActivity.class);
+                    Intent intent = new Intent(ctx, SearchDetailActivity.class);
                     System.out.println("Inside bind-----------------"+mBook.getBookId());
                     intent.putExtra("bookId",mBook.getBookId());
                     ctx.startActivity(intent);
