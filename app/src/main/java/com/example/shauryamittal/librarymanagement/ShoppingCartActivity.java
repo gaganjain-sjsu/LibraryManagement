@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,12 +29,14 @@ public class ShoppingCartActivity extends AppCompatActivity {
     public static RecyclerView.Adapter adapter;
     public static List<CartItem> cartItems = new ArrayList<CartItem>();
     String bookIds[];
-    static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String BOOKS_COLLECTION = "books";
     private static final String USER_COLLECTION = "users";
     private static final String BOOK_TITLE = "title";
     private static final String BOOK_AUTHOR = "author";
+    private static final String BOOKS_ISSUED_COLLECTION = "booksIssued";
     TextView remove;
+    Button checkout;
+    static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +47,43 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         remove = (TextView) findViewById(R.id.remove);
+        checkout = (Button) findViewById(R.id.checkout);
+
+
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ShoppingCartActivity.this, "Checkout", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        adapter = null;
+        bookIds = null;
+        cartItems = new ArrayList<CartItem>();
 
         SharedPreferences SP;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String currentCartItems = SP.getString(CurrentUser.UID, null);
 //        Log.d("current Items ", currentCartItems);
 
-        if(currentCartItems != null){
-            bookIds = currentCartItems.split(",");
-        }
-
-        else{
+        if(currentCartItems == null || currentCartItems.equals("")){
             ((TextView) findViewById(R.id.emptyCartText)).setText("Your Cart is Empty!");
             return;
         }
 
-        adapter = new CartAdapter(cartItems, this);
+        else{
+            bookIds = currentCartItems.split(",");
+        }
 
+        adapter = new CartAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
+
 
         for(int i=0; i<bookIds.length; i++){
             DocumentReference docRef = db.collection(BOOKS_COLLECTION).document(bookIds[i]);
@@ -81,11 +105,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     }
                 }
             });
-            adapter.notifyDataSetChanged();
-
         }
-
-        //cartItems = new ArrayList<>();
 
     }
 }

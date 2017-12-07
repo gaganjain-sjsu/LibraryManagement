@@ -47,6 +47,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         holder.bookName.setText(cartItem.getBookName());
         holder.authorName.setText(cartItem.getAuthorName());
+
+
+
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +87,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return cartItems.size();
+        if(ShoppingCartActivity.cartItems == null) return 0;
+        return ShoppingCartActivity.cartItems.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
