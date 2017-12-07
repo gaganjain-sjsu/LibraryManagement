@@ -65,13 +65,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                     return;
                 }
 
-                String newCartItems;
-                if(position == 0){
-                    newCartItems = currentCartItems.replace(bookToRemove + ",", "");
-                }
-                else {
-                    newCartItems = currentCartItems.replace("," + bookToRemove, "");
-                }
+                //String test =  currentCartItems.replace(bookToRemove + ",", "");
+                String newCartItems = currentCartItems.replaceAll(bookToRemove+",","").replaceAll(""+","+bookToRemove,"").replaceAll(bookToRemove, "");
 
                 SharedPreferences.Editor edit = SP.edit();
                 edit.putString (CurrentUser.UID, newCartItems);

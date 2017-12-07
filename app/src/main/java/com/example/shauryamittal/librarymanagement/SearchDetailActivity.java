@@ -38,14 +38,14 @@ public class SearchDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_detail);
-
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String bookId_sp = SP.getString(CurrentUser.UID, null);
-        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
-//        SharedPreferences.Editor edit = SP.edit();
-//        edit.remove(CurrentUser.UID);
-//        edit.commit();
-        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
+//
+//        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+//        String bookId_sp = SP.getString(CurrentUser.UID, null);
+//        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
+////        SharedPreferences.Editor edit = SP.edit();
+////        edit.remove(CurrentUser.UID);
+////        edit.commit();
+//        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
 
         bookTitle=findViewById(R.id.book_title);
         bookYear=findViewById(R.id.book_year_published);
