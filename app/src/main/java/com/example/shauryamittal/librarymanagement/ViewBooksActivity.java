@@ -264,7 +264,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //TODO Shaurya's activity (CityViewActivity)
-                    Intent intent = new Intent(getActivity(), SearchDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), BookDetailActivity.class);
                     intent.putExtra("bookId", mBook.getBookId());
                     startActivity(intent);
                 /*Log.d(TAG, "inside onClick() method");

@@ -36,6 +36,20 @@
                 android:src="@drawable/sampleimage"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"/>
+            <Button
+                android:id="@+id/chooseimage"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/librarian_home_buttons"
+                android:text="Choose Coverage Image"
+                android:textColor="@color/background_light"
+                android:textSize="14sp"
+                android:layout_below="@id/book_status"
+                android:layout_toEndOf="@id/renew"
+                />
         </TableRow>
 
         <TableRow
