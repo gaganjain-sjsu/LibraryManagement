@@ -36,6 +36,8 @@ public class DbOperations {
     private static final String SJSU_ID_KEY = "sjsuId";
     private static final String ROLE_KEY = "role";
     private static final String USER_COLLECTION = "users";
+    private static final String BOOK_TITLE = "title";
+    private static final String BOOK_AUTHOR = "author";
     static ArrayList<User> patrons = new ArrayList<User>();
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,8 +70,6 @@ public class DbOperations {
                     }
                 });
     }
-
-
 
     public static void addBook(Book book){
         db.collection("books").add(book);

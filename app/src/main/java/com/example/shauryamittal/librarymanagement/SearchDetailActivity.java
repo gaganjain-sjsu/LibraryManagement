@@ -38,6 +38,15 @@ public class SearchDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_detail);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String bookId_sp = SP.getString(CurrentUser.UID, null);
+        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
+//        SharedPreferences.Editor edit = SP.edit();
+//        edit.remove(CurrentUser.UID);
+//        edit.commit();
+        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
+
         bookTitle=findViewById(R.id.book_title);
         bookYear=findViewById(R.id.book_year_published);
         bookPublisher=findViewById(R.id.book_publisher);
@@ -87,6 +96,7 @@ public class SearchDetailActivity extends AppCompatActivity {
             edit.putString(UID, sb.toString());
         }
         edit.commit();
+//        Log.v("SHARED PREF", SP)
         showToast("Added Successfully to the cart");
         Log.d("Test","Book Id: " + SP.getString(UID, null));
 
@@ -118,7 +128,17 @@ public class SearchDetailActivity extends AppCompatActivity {
                 startActivity(new Intent(SearchDetailActivity.this, LoginActivity.class));
                 break;
             case R.id.view_cart_option:
-                startActivity(new Intent(SearchDetailActivity.this, LoginActivity.class));
+                startActivity(new Intent(SearchDetailActivity.this, ShoppingCartActivity.class));
+                break;
+
+            case R.id.del:
+                SharedPreferences SP;
+                String UID = CurrentUser.UID;
+                SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                String bookId_sp = SP.getString(UID, null);
+                SharedPreferences.Editor edit = SP.edit();
+                edit.remove(UID);
+                edit.commit();
                 break;
         }
 
