@@ -63,15 +63,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="10px"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/deleteBook"
                 android:layout_alignTop="@+id/textViewYearOfPub"
                 android:text="Update" />
             <Button
                 android:id="@+id/deleteBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="80dp"
+                android:layout_toEndOf="@+id/bookCoverImage"
                 android:layout_alignTop="@+id/textViewYearOfPub"
                 android:layout_centerHorizontal="true"
                 android:text="Delete" />
