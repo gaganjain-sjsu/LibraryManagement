@@ -73,8 +73,19 @@ public class DbOperations {
 
     public static void addBook(Book book){
         db.collection("books").add(book);
-    }
 
+    }
+    public static void deleteBook(String bookId){
+        db.collection("books").document(bookId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "Deleted books-----"+ task.getResult());
+
+            }
+        });
+
+    }
 
     public static void getLibrarians() {
 
