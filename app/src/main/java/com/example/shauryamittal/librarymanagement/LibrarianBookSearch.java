@@ -111,32 +111,26 @@ public class LibrarianBookSearch extends AppCompatActivity {
                             if (task.isSuccessful()) {
 
                                 for (DocumentSnapshot document : task.getResult()) {
-
-
-
-
                                     Book b1= new Book();
                                     if(searchKey!=null && !searchKey.equals("")){
                                         String keyWord=document.getString("keywords");
                                         if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
+                                            b1.setBookId(document.getId());
                                             b1.setTitle(document.getString("title"));
                                             b1.setAuthor(document.getString("author"));
-                                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
+                                            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
                                             books.add(b1);
+                                            lsAdapter.notifyDataSetChanged();
                                         }
                                     }else{
+                                        b1.setBookId(document.getId());
                                         b1.setTitle(document.getString("title"));
                                         b1.setAuthor(document.getString("author"));
-                                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
+                                        //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
                                         books.add(b1);
                                     }
-
-                                    createSearchList();
-
-
-
-
-
+                                    //createSearchList();
+                                    lsAdapter.notifyDataSetChanged();
                                 }
 
 
@@ -156,11 +150,13 @@ public class LibrarianBookSearch extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot document : task.getResult()) {
                                     Book b1= new Book();
+                                    b1.setBookId(document.getId());
                                     b1.setTitle(document.getString("title"));
                                     b1.setAuthor(document.getString("author"));
-                                    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
+                                    //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
                                     books.add(b1);
-                                    createSearchList();
+                                    //createSearchList();
+                                    lsAdapter.notifyDataSetChanged();
                                 }
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
@@ -171,12 +167,12 @@ public class LibrarianBookSearch extends AppCompatActivity {
         }
 
     }
-public void createSearchList(){
-    recyclerView=(RecyclerView)findViewById(R.id.librarianSearchRecyclerView);
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    lsAdapter= new LibrarianSearchAdapter(this,books);
-    recyclerView.setAdapter(lsAdapter);
-    }
+//public void createSearchList(){
+//    recyclerView=(RecyclerView)findViewById(R.id.librarianSearchRecyclerView);
+//    recyclerView.setHasFixedSize(true);
+//    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    lsAdapter= new LibrarianSearchAdapter(this,books);
+//    recyclerView.setAdapter(lsAdapter);
+//    }
 
 }

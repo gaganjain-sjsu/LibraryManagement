@@ -21,6 +21,7 @@ public class Book implements Serializable {
     private String status="";
     private String keywords="";
     private String librarianId="";
+    private String bookId="";
 
     public String getAuthor() {
         return author;
@@ -103,23 +104,11 @@ public class Book implements Serializable {
         this.librarianId = librarianId;
     }
 
-
-    /*@Override
-    public int describeContents() {
-        return 0;
+    public String getBookId() {
+        return bookId;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(author);
-        parcel.writeString(title);
-        parcel.writeString(callNumber);
-        parcel.writeString(publisher);
-        parcel.writeInt(yearOfPub);
-        parcel.writeString(location);
-        parcel.writeInt(noOfCopy);
-        parcel.writeString(status);
-        parcel.writeString(keywords);
-        parcel.writeString(librarianId);
-    }*/
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
 }

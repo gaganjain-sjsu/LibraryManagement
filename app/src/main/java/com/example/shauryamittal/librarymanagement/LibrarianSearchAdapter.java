@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.DbOperations;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
     private Context ctx;
     private List<Book> bookList;
+    private String currentBookId="";
 
     public LibrarianSearchAdapter(Context ctx, List<Book> bookList) {
         this.ctx = ctx;
@@ -38,7 +41,21 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
             Book book=bookList.get(position);
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
+        currentBookId=book.getBookId();
         holder.yearOfPub.setText(String.valueOf(book.getYearOfPub()));
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DbOperations.deleteBook(currentBookId);
+                System.out.println("Inside delete button called.  Book Id="+currentBookId);
+            }
+        });
+
+        holder.update.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                //System.out.println("Inside delete button called.  Book Id="+currentBookId);
+            }
+        });
     }
 
     @Override
@@ -49,12 +66,16 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
     class LibrarianSearchViewHolder extends RecyclerView.ViewHolder{
         ImageView coverImage;
         TextView title,author,yearOfPub;
+        Button delete, update;
         public LibrarianSearchViewHolder(View itemView) {
             super(itemView);
             coverImage=itemView.findViewById(R.id.bookCoverImage);
             title=itemView.findViewById(R.id.textViewTitle);
             author=itemView.findViewById(R.id.textViewAuthor);
             yearOfPub=itemView.findViewById(R.id.textViewYearOfPub);
+            delete= itemView.findViewById(R.id.deleteBook);
+            update=itemView.findViewById(R.id.updateSeatchBook);
+
         }
     }
 }
