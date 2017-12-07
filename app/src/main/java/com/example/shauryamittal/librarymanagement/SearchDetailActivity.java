@@ -87,17 +87,29 @@ public class SearchDetailActivity extends AppCompatActivity {
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String bookId_sp = SP.getString(UID, null);
         SharedPreferences.Editor edit = SP.edit();
+        //edit.remove(UID);
         if (bookId_sp == null){
             edit.putString (UID, bookId);
+            showToast("Added Successfully to the cart");
         }
         else{
             StringBuilder sb = new StringBuilder(bookId_sp);
-            sb.append(",").append(bookId);
+            System.out.print("###sb.toString()==="+sb.toString()+"length="+sb.toString().split(",").length);
+            if(sb.toString().split(",").length>=3){
+                showToast("You Already have 3 items in your cart");
+            }
+            else if (!sb.toString().contains(bookId)) {
+                sb.append(",").append(bookId);
+                showToast("Added Successfully to the cart");
+            }
+            else{
+                showToast("Item Already added to your cart");
+            }
             edit.putString(UID, sb.toString());
         }
         edit.commit();
 //        Log.v("SHARED PREF", SP)
-        showToast("Added Successfully to the cart");
+
         Log.d("Test","Book Id: " + SP.getString(UID, null));
 
     }
