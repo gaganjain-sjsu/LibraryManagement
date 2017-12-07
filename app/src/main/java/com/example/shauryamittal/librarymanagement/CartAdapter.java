@@ -40,14 +40,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(CartAdapter.ViewHolder holder, final int position) {
+
+
         CartItem cartItem = cartItems.get(position);
+        holder.bind(cartItem);
 
         holder.bookName.setText(cartItem.getBookName());
         holder.authorName.setText(cartItem.getAuthorName());
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("REMOVE", "Remove item " + position);
+                Log.d("REMOVE", "Remove item " + position);
                 ShoppingCartActivity.cartItems.remove(position);
                 ShoppingCartActivity.adapter.notifyDataSetChanged();
 
@@ -86,6 +89,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+
+        private CartItem mCartItem;
         public TextView bookName, authorName, remove;
 
         public ViewHolder(View itemView) {
@@ -94,6 +99,59 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             bookName = (TextView) itemView.findViewById(R.id.cart_book_name);
             authorName = (TextView) itemView.findViewById(R.id.cart_author);
             remove = (TextView) itemView.findViewById(R.id.remove);
+
+        }
+
+        public void bind(final CartItem cartItem){
+            mCartItem = cartItem;
+            bookName.setText(cartItem.getBookName());
+            authorName.setText(cartItem.getAuthorName());
+
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    cartItems.remove(mCartItem);
+                    int position = cartItems.indexOf(mCartItem);
+                    notifyDataSetChanged();
+
+//                    Log.d("REMOVE", "Remove item " + position);
+//
+//
+//                    ShoppingCartActivity.cartItems.remove(position);
+//                    ShoppingCartActivity.adapter.notifyDataSetChanged();
+
+                    SharedPreferences SP;
+                    SP = PreferenceManager.getDefaultSharedPreferences(context);
+                    String currentCartItems = SP.getString(CurrentUser.UID, null);
+
+                    String bookToRemove = (currentCartItems.split(","))[position];
+
+                    if((currentCartItems.split(",")).length == 1){
+                        SharedPreferences.Editor edit = SP.edit();
+                        edit.remove(CurrentUser.UID);
+                        edit.commit();
+                        ShoppingCartActivity.adapter.notifyDataSetChanged();
+                        return;
+                    }
+
+                    //String test =  currentCartItems.replace(bookToRemove + ",", "");
+                    //String newCartItems = currentCartItems.replaceAll(bookToRemove+",","").replaceAll(""+","+bookToRemove,"").replaceAll(bookToRemove, "");
+
+                    if(currentCartItems.contains(bookToRemove)) currentCartItems=currentCartItems.replaceAll(bookToRemove,"");
+                    if(currentCartItems.contains(",,")) currentCartItems=currentCartItems.replaceAll(",,",",");
+                    String newCartItems=currentCartItems;
+
+                    SharedPreferences.Editor edit = SP.edit();
+                    edit.putString (CurrentUser.UID, newCartItems);
+                    Log.v("SHARED PREFERENCE:", newCartItems);
+                    System.out.println("####Items after removal"+newCartItems);
+                    edit.commit();
+
+                    ShoppingCartActivity.adapter.notifyDataSetChanged();
+
+                }
+            });
 
         }
     }

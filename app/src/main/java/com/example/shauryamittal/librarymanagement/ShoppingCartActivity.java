@@ -71,6 +71,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         if (document != null) {
                             cartItems.add(new CartItem(document.getString(BOOK_TITLE), document.getString(BOOK_AUTHOR)));
                             adapter.notifyDataSetChanged();
+
                             Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());
                         } else {
                             Log.d("DOCUMENT SNAPSHOT", "No such document");
