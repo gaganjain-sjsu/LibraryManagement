@@ -42,7 +42,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textAuthor"
                 android:layout_width="wrap_content"
@@ -51,7 +50,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Author :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="20dp" />
 
             <EditText
                 android:width="200dp"
@@ -64,7 +63,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
@@ -73,7 +71,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Title :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="20dp" />
 
             <EditText
                 android:width="200dp"
@@ -86,7 +84,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textCallnumber"
                 android:layout_width="wrap_content"
@@ -95,7 +92,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Call number :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="20dp" />
 
             <EditText
                 android:width="200dp"
@@ -108,7 +105,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textPublisher"
                 android:layout_width="wrap_content"
@@ -117,7 +113,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Publisher :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="20dp" />
 
             <EditText
                 android:width="200dp"
@@ -130,7 +126,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textYearofpub"
                 android:layout_width="wrap_content"
@@ -139,7 +134,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Year of publication:"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="15dp" />
 
             <EditText
                 android:width="200dp"
@@ -152,7 +147,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textLocation"
                 android:layout_width="wrap_content"
@@ -161,7 +155,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Location in library :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="15dp" />
 
             <EditText
                 android:width="200dp"
@@ -177,7 +171,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textNumOfCopies"
                 android:layout_width="wrap_content"
@@ -186,7 +179,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Number of copies :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="15dp" />
 
             <EditText
                 android:width="200dp"
@@ -221,7 +214,6 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-
             <TextView
                 android:id="@+id/textKeywords"
                 android:layout_width="wrap_content"
@@ -230,7 +222,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Keywords :"
                 android:textColor="@android:color/background_dark"
-                />
+                android:textSize="20dp" />
 
             <EditText
                 android:width="200dp"
@@ -247,8 +239,7 @@
             <Button
                 android:id="@+id/createBookSubmit"
                 android:layout_column="2"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
                 android:onClick="addBook"
                 android:text="Submit" />
 
