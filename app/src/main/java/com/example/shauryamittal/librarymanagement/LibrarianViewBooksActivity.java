@@ -3,15 +3,13 @@ package com.example.shauryamittal.librarymanagement;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,77 +33,46 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_librarian_view_books);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-    }
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_books, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.search:
-                Intent intent = new Intent(this, LibrarianBookSearch.class);
-                startActivity(intent);
-                return true;
-
-            /*
-            TODO
-            case  R.id.view_cart:
-
-                intent = new Intent(this, .class);
-                startActivity(intent);
-                return true;
-            */
-            case R.id.logout:
-                intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
+        if (fragment == null) {
+            fragment = new PlaceholderFragment();
+            fm.beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class LibrarianPlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
 
-        private static final String TAG = "LibrarianPHFragment";
+        private static final String TAG = "PlaceholderFragment";
+        private BookFactory factory;
+        //private Book book;
         private RecyclerView mBookRecyclerView;
         private BookAdapter mAdapter;
         private DatabaseReference mDatabase;
         private static final String ARG_SECTION_NUMBER = "section_number";
         private List<Book> mBookList;
-        public LibrarianPlaceholderFragment() {
+
+        public PlaceholderFragment() {
         }
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static LibrarianPlaceholderFragment newInstance(int sectionNumber) {
-            LibrarianPlaceholderFragment fragment = new LibrarianPlaceholderFragment();
+        public static ViewBooksActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            ViewBooksActivity.PlaceholderFragment fragment = new ViewBooksActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
-
 
 
         @Override
@@ -135,12 +102,12 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
             //factory = BookFactory.get(getActivity());
             //List<Book> bookList = factory.getBookList();
 
-            if(mAdapter == null){
+            if (mAdapter == null) {
                 mAdapter = new BookAdapter(mBookList);
             }
             mBookRecyclerView.setAdapter(mAdapter);
 
-            FirebaseFirestore database= FirebaseFirestore.getInstance();
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
             //CollectionReference mRef=database.collection("books");
 
             database.collection("books")

@@ -60,12 +60,4 @@ public class User {
     public void setUid(String uid) {
         mUid = uid;
     }
-
-    public int getCheckOutBooks() {
-        return checkOutBooks;
-    }
-
-    public void setCheckOutBooks(int checkOutBooks) {
-        this.checkOutBooks = checkOutBooks;
-    }
 }

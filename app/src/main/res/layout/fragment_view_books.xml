@@ -26,17 +26,22 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/book_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="510dp">
     </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
 
+        <TextView
+            android:id="@+id/return_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="RETURN"
+            android:textAlignment="viewEnd"
+            android:textSize="30sp"/>
 
 </LinearLayout>

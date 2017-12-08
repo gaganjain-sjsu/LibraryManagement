@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +68,7 @@ public class ViewBooksActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private TextView returns;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -158,6 +162,10 @@ public class ViewBooksActivity extends AppCompatActivity {
             private DatabaseReference mDatabase;
             private static final String ARG_SECTION_NUMBER = "section_number";
             private List<Book> mBookList;
+            private List<Book> returnsBookList;
+            private CheckBox mCheckBox;
+            private TextView mReturns;
+            private Boolean returnsClicked;
 
             public PlaceholderFragment() {
             }
@@ -179,15 +187,73 @@ public class ViewBooksActivity extends AppCompatActivity {
             public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                      Bundle savedInstanceState) {
                 mBookList = new ArrayList<>();
+                returnsBookList = new ArrayList<>();
                 View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
                 mBookRecyclerView = rootView
                         .findViewById(R.id.book_recycler_view);
+                mReturns =  rootView.findViewById(R.id.return_book);
                 mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+                returnsClicked = false;
                 Log.d(TAG, "inside onCreateView");
 
+                mReturns.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        returnsClicked = true;
+                        for(Book returns : returnsBookList){
+                            int position = mAdapter.mBookList.indexOf(returns);
+                            CheckBox chBox = mBookRecyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.return_user_input);
+                            chBox.setChecked(false);
+                            mAdapter.mBookList.remove(returns);
+                        }
+                        returnsBookList.clear();
+                        mAdapter.notifyDataSetChanged();
+                        returnsClicked = false;
+                       // updateCheckBox();
+                    }
+                });
                 return rootView;
             }
+
+            public void updateCheckBox(){
+
+                for(Book books: mAdapter.mBookList){
+                    int position = mAdapter.mBookList.indexOf(books);
+                    CheckBox chBox = mBookRecyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.return_user_input);
+                    chBox.setChecked(false);
+                }
+            }
+
+            /*
+            @Override
+
+            public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+                super.onViewCreated(view, savedInstanceState);
+                mCheckBox = (CheckBox) view.findViewById(R.id.user_input);
+
+                //FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab);
+                Log.d(TAG, "inside onViewCreated");
+                mCheckBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if(!checkBoxHasBeenClicked){
+                            ViewGroup.LayoutParams params=mBookRecyclerView.getLayoutParams();
+                            params.height -= 100;
+                            mBookRecyclerView.setLayoutParams(params);
+                            checkBoxHasBeenClicked = true;
+                        }
+
+
+                        /*TextView btn = new Button(getActivity());
+                        btn.setText("Manual Add");
+                        btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        linearLayout.addView(btn);*/
+                    /*}
+                });
+
+
+            }*/
 
             @Override
             public void onResume() {
@@ -216,6 +282,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    mBookList.clear();
                                     for (DocumentSnapshot document : task.getResult()) {
                                         Book book = document.toObject(Book.class);
                                         book.setBookId(document.getId());
@@ -238,6 +305,8 @@ public class ViewBooksActivity extends AppCompatActivity {
                 private ImageView mBookCover;
                 private TextView mBookTitle;
                 private TextView mBookAuthor;
+                //private CheckBox mCheckBox;
+                private TextView mReturns;
 
 
                 public BookHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -248,6 +317,10 @@ public class ViewBooksActivity extends AppCompatActivity {
                     mBookCover = (ImageView) itemView.findViewById(R.id.book_cover);
                     mBookTitle = (TextView) itemView.findViewById(R.id.book_title);
                     mBookAuthor = (TextView) itemView.findViewById(R.id.book_author_name);
+                    mCheckBox = (CheckBox) itemView.findViewById(R.id.return_user_input);
+                   // mReturns = (TextView) itemView.findViewById(R.id.return_book);
+                    //mReturns.setOnClickListener(this);
+
 
                 }
 
@@ -259,6 +332,57 @@ public class ViewBooksActivity extends AppCompatActivity {
                     mBook = book;
                     mBookTitle.setText(book.getTitle());
                     mBookAuthor.setText(book.getAuthor());
+
+                    mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if(compoundButton.isChecked()){
+                                //compoundButton.setChecked();
+                                returnsBookList.add(mBook);
+                            }
+                            else{
+                                if(!returnsClicked){
+                                    if(returnsBookList.contains(mBook)){
+                                        returnsBookList.remove(mBook);
+                                    }
+                                }
+
+                                /*if(returnsBookList.size() > 0 && returnsBookList.contains(mBook)){
+                                    returnsBookList.remove(mBook);
+                                }*/
+                            }
+                        }
+                    });
+
+                    /*mCheckBox.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if(!mCheckBox.isChecked()){
+                                mCheckBox.setChecked(true);
+                            }
+
+                            if (mCheckBox.isChecked())
+                            {
+                                returnsBookList.add(mBook);
+//                                //mBookRecyclerView.
+//                                //mBookRecyclerView.getLayoutParams();//Perform action when you touch on checkbox and it change to selected state
+//                                ViewGroup.LayoutParams params=mBookRecyclerView.getLayoutParams();
+//                                params.height -= 100;
+//                                mBookRecyclerView.setLayoutParams(params);
+
+                            }
+                            else
+                            {
+                                //Perform action when you touch on checkbox and it change to unselected state
+                                mCheckBox.setChecked(true);
+                                if(returnsBookList.contains(mBook)){
+                                    returnsBookList.remove(mBook);
+                                }
+                            }
+                        }
+                    });*/
+
                 }
 
                 @Override

@@ -2,6 +2,7 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
+import java.util.Random;
 
 
 public class SignupActivity extends AppCompatActivity {
@@ -55,6 +59,12 @@ public class SignupActivity extends AppCompatActivity {
 
         signup = (Button) findViewById(R.id.signup);
         toLogin = (Button) findViewById(R.id.go_to_login);
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
 
         signup.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +106,23 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
-                spinner.setVisibility(View.VISIBLE);
+                Random rn = new Random();
+                int n = 99999 - 22222 + 1;
+                int i = rn.nextInt() % n;
+                int code =  22222 + i;
+                //MailUtility.sendMail(email, String.valueOf(code));
+                MailUtility.sendMail(email, String.valueOf(code));
+
+                Intent intent = new Intent(SignupActivity.this, EmailVerificationActivity.class);
+                intent.putExtra("sjsuId", sjsuId);
+                intent.putExtra("fullName", fullname);
+                intent.putExtra("email", email);
+                intent.putExtra("password", password);
+                intent.putExtra("code", code);
+                startActivity(intent);
+                finish();
+
+                /*spinner.setVisibility(View.VISIBLE);
 
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -134,7 +160,7 @@ public class SignupActivity extends AppCompatActivity {
                         }
 
                     }
-                });
+                });*/
 
             }
         });
