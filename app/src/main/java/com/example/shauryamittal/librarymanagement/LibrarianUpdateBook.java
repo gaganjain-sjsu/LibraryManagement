@@ -60,6 +60,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     }
 
 
+
     public void addBook(View view) {
         book.setAuthor(String.valueOf(authorET.getText()).trim());
         if(book.getAuthor()==null || book.getAuthor().trim().equals("")){
@@ -132,9 +133,6 @@ public class LibrarianUpdateBook extends AppCompatActivity {
 
     }
 
-
-
-
     public void showToast(String text){
         Context context = getApplicationContext();
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
@@ -144,7 +142,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.topmenu, menu);
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
 
         return true;
     }
@@ -154,7 +152,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -162,17 +160,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
                 startActivity(new Intent(LibrarianUpdateBook.this, LoginActivity.class));
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mAuth == null){
-            finish();
-            CurrentUser.destroyCurrentUser();
-            startActivity(new Intent(LibrarianUpdateBook.this, LoginActivity.class));
-        }
     }
 }

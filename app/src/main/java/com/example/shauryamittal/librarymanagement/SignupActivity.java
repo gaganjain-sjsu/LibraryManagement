@@ -6,6 +6,7 @@ import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +24,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Random;
 
@@ -36,8 +41,11 @@ public class SignupActivity extends AppCompatActivity {
     Button signup;
     Button toLogin;
     ProgressBar spinner;
+    String email;
+    String password;
 
     private FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     private final String LIBRARIAN = "librarian";
     private final String PATRON = "patron";
@@ -72,8 +80,8 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final String sjsuId = editText_sjsuId.getText().toString().trim();
-                String email = editText_email.getText().toString().trim();
-                String password = editText_password.getText().toString().trim();
+                email = editText_email.getText().toString().trim();
+                password = editText_password.getText().toString().trim();
                 final String fullname = editText_fullname.getText().toString().trim();
 
                 if(fullname.isEmpty()){
@@ -106,61 +114,73 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
-                Random rn = new Random();
-                int n = 99999 - 22222 + 1;
-                int i = rn.nextInt() % n;
-                int code =  22222 + i;
-                //MailUtility.sendMail(email, String.valueOf(code));
-                MailUtility.sendMail(email, String.valueOf(code));
 
-                Intent intent = new Intent(SignupActivity.this, EmailVerificationActivity.class);
-                intent.putExtra("sjsuId", sjsuId);
-                intent.putExtra("fullName", fullname);
-                intent.putExtra("email", email);
-                intent.putExtra("password", password);
-                intent.putExtra("code", code);
-                startActivity(intent);
-                finish();
 
-                /*spinner.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.VISIBLE);
 
-                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
+                db = FirebaseFirestore.getInstance();
 
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                db.collection("users")
+                        .whereEqualTo("sjsuId", sjsuId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    if(task.getResult().size() == 0){
 
-                        spinner.setVisibility(View.GONE);
+                                        db.collection("users")
+                                                .whereEqualTo("email", email)
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            if(task.getResult().size() == 0){
 
-                        if(task.isSuccessful()){
+                                                                Random rn = new Random();
+                                                                int n = 99999 - 22222 + 1;
+                                                                int i = rn.nextInt() % n;
+                                                                int code =  22222 + i;
+                                                                //MailUtility.sendMail(email, String.valueOf(code));
+                                                                MailUtility.sendMail(email, String.valueOf(code));
+                                                                spinner.setVisibility(View.GONE);
 
-                            String uid = task.getResult().getUser().getUid();
-                            String email = task.getResult().getUser().getEmail();
-                            String role;
+                                                                Intent intent = new Intent(SignupActivity.this, EmailVerificationActivity.class);
+                                                                intent.putExtra("sjsuId", sjsuId);
+                                                                intent.putExtra("fullName", fullname);
+                                                                intent.putExtra("email", email);
+                                                                intent.putExtra("password", password);
+                                                                intent.putExtra("code", code);
+                                                                startActivity(intent);
 
-                            if(email.split("@")[1].equals("sjsu.edu")){
-                                role = LIBRARIAN;
+                                                                finish();
+
+                                                            }
+                                                            else {
+                                                                Toast.makeText(SignupActivity.this, "Email already registered!", Toast.LENGTH_SHORT).show();
+                                                                spinner.setVisibility(View.GONE);
+                                                            }
+
+                                                        } else {
+                                                            Log.d("Docs", "Error getting documents: ", task.getException());
+                                                        }
+                                                    }
+                                                });
+
+                                    }
+                                    else {
+                                        Toast.makeText(SignupActivity.this, "SJSU ID already registered!", Toast.LENGTH_SHORT).show();
+                                        spinner.setVisibility(View.GONE);
+                                    }
+
+                                } else {
+                                    Log.d("Docs", "Error getting documents: ", task.getException());
+                                }
                             }
-                            else {
-                                role = PATRON;
-                            }
+                        });
 
-                            DbOperations.createUser(new User(fullname, email, sjsuId, uid, role));
 
-                            Toast.makeText(SignupActivity.this, "Signup Successful as a " + role, Toast.LENGTH_SHORT).show();
-
-                        }
-                        else {
-                            if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                Toast.makeText(SignupActivity.this, "Email Already Registered", Toast.LENGTH_SHORT).show();
-                            }
-
-                            else{
-                                Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-                });*/
 
             }
         });

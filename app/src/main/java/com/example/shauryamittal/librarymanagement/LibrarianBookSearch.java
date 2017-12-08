@@ -1,21 +1,26 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -53,6 +58,31 @@ public class LibrarianBookSearch extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         librarionSpinner.setAdapter(dataAdapter);
 
+
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(LibrarianBookSearch.this, LoginActivity.class));
+        }
+
+        return true;
 
 
     }
@@ -170,6 +200,8 @@ public class LibrarianBookSearch extends AppCompatActivity {
                         }
                     });
         }
+
+
 
     }
 //public void createSearchList(){

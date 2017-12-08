@@ -13,6 +13,14 @@ public class User {
     String mRole;
     int checkOutBooks;
 
+    public int getCheckOutBooks() {
+        return checkOutBooks;
+    }
+
+    public void setCheckOutBooks(int checkOutBooks) {
+        this.checkOutBooks = checkOutBooks;
+    }
+
     public User(String name, String email, String sjsuId, String uid, String role){
         mName = name;
         mEmail = email;

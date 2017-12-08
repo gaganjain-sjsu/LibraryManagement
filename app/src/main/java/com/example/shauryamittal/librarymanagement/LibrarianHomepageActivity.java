@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LibrarianHomepageActivity extends AppCompatActivity {
 
-    Button updateBook;
+    Button updateBook, myBooks, searchBooks;
     Button addBook;
     TextView welcome;
 
@@ -23,8 +23,12 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_librarian_homepage);
 
+        ((Button) findViewById(R.id.librarian_myBooks)).setVisibility(View.GONE);
+
         welcome = (TextView) findViewById(R.id.welcome);
         welcome.setText("Welcome " + CurrentUser.NAME );
+
+        searchBooks = (Button) findViewById(R.id.librarian_searchBook);
 
         addBook = (Button) findViewById(R.id.librarian_addNewBook);
         updateBook = (Button) findViewById(R.id.librarian_updateBook);
@@ -39,7 +43,14 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
         updateBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LibrarianHomepageActivity.this, AddUpdateBook.class));
+                startActivity(new Intent(LibrarianHomepageActivity.this, LibrarianBookSearch.class));
+            }
+        });
+
+        searchBooks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LibrarianHomepageActivity.this, LibrarianBookSearch.class));
             }
         });
     }
@@ -47,7 +58,7 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.topmenu, menu);
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
 
         return true;
     }
