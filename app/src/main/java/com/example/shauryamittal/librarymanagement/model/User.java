@@ -11,6 +11,7 @@ public class User {
     String mSjsuId;
     String mUid;
     String mRole;
+    int checkOutBooks;
 
     public User(String name, String email, String sjsuId, String uid, String role){
         mName = name;
@@ -58,5 +59,13 @@ public class User {
 
     public void setUid(String uid) {
         mUid = uid;
+    }
+
+    public int getCheckOutBooks() {
+        return checkOutBooks;
+    }
+
+    public void setCheckOutBooks(int checkOutBooks) {
+        this.checkOutBooks = checkOutBooks;
     }
 }
