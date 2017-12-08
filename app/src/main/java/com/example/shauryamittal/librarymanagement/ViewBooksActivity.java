@@ -124,14 +124,13 @@ public class ViewBooksActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            /*
-            TODO
+
             case  R.id.view_cart:
 
-                intent = new Intent(this, .class);
+                intent = new Intent(this, ShoppingCartActivity.class);
                 startActivity(intent);
                 return true;
-            */
+
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
