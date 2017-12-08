@@ -120,7 +120,7 @@ public class ViewBooksActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.search:
-                Intent intent = new Intent(this, LibrarianBookSearch.class);
+                Intent intent = new Intent(this, PatronBookSearch.class);
                 startActivity(intent);
                 return true;
 
