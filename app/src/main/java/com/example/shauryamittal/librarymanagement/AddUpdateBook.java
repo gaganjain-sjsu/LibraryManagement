@@ -165,6 +165,8 @@ public class AddUpdateBook extends AppCompatActivity {
         book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
         dbOperations.addBook(book);
+        Toast toast = Toast.makeText(getApplicationContext(), "Book add Succesful", Toast.LENGTH_SHORT);
+        toast.show();
         //startActivity(new Intent(AddUpdateBook.this, BookDetailActivity.class));
 
     }
