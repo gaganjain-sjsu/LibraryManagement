@@ -147,22 +147,14 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                         if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
                                             b1 = document.toObject(Book.class);
                                             b1.setBookId(document.getId());
-//                                            b1.setTitle(document.getString("title"));
-//                                            b1.setAuthor(document.getString("author"));
-                                            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
                                             books.add(b1);
                                             lsAdapter.notifyDataSetChanged();
                                         }
                                     }else{
                                         b1 = document.toObject(Book.class);
                                         b1.setBookId(document.getId());
-//                                        b1.setBookId(document.getId());
-//                                        b1.setTitle(document.getString("title"));
-//                                        b1.setAuthor(document.getString("author"));
-                                        //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
                                         books.add(b1);
                                     }
-                                    //createSearchList();
                                     lsAdapter.notifyDataSetChanged();
                                 }
 
@@ -183,15 +175,20 @@ public class LibrarianBookSearch extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot document : task.getResult()) {
                                     Book b1= new Book();
-                                    b1 = document.toObject(Book.class);
-                                    b1.setBookId(document.getId());
-//                                    b1.setBookId(document.getId());
-//                                    b1.setTitle(document.getString("title"));
-//                                    b1.setAuthor(document.getString("author"));
-                                    //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!==="+document.get("yearOfPub"));
-                                    books.add(b1);
-                                    //createSearchList();
-                                    lsAdapter.notifyDataSetChanged();
+                                    if(searchKey!=null && !searchKey.equals("")){
+                                        String keyWord=document.getString("keywords");
+                                        if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
+                                            b1 = document.toObject(Book.class);
+                                            b1.setBookId(document.getId());
+                                            books.add(b1);
+                                            lsAdapter.notifyDataSetChanged();
+                                        }
+                                    }else{
+                                        b1 = document.toObject(Book.class);
+                                        b1.setBookId(document.getId());
+                                        books.add(b1);
+                                        lsAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());

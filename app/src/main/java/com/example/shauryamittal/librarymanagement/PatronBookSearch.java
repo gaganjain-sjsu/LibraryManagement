@@ -140,10 +140,21 @@ public class PatronBookSearch extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot document : task.getResult()) {
                                     Book b1= new Book();
-                                    b1 = document.toObject(Book.class);
-                                    b1.setBookId(document.getId());
-                                    books.add(b1);
-                                    psAdapter.notifyDataSetChanged();
+                                    if(searchKey!=null && !searchKey.equals("")){
+                                        String keyWord=document.getString("keywords");
+                                        if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
+                                            b1 = document.toObject(Book.class);
+                                            b1.setBookId(document.getId());
+                                            books.add(b1);
+                                            psAdapter.notifyDataSetChanged();
+                                        }
+                                    }else{
+                                        b1 = document.toObject(Book.class);
+                                        b1.setBookId(document.getId());
+                                        books.add(b1);
+                                        psAdapter.notifyDataSetChanged();
+                                    }
+
                                 }
                             } else {
                                 //Log.d(TAG, "Error getting documents: ", task.getException());
