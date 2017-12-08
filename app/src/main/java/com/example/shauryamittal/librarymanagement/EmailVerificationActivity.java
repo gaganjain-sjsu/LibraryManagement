@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class EmailVerificationActivity extends AppCompatActivity {
 
@@ -45,63 +47,87 @@ public class EmailVerificationActivity extends AppCompatActivity {
         verifyAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int enteredCode =Integer.parseInt(codeInput.getText().toString());
-                if( enteredCode == verificationCode){
+                int enteredCode = Integer.parseInt(codeInput.getText().toString());
+                if (enteredCode == verificationCode) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
+                    db.collection("users")
+                            .whereEqualTo("sjsuId", sjsuId)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        if (task.getResult().size() == 0) {
+                                            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                @Override
 
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            //spinner.setVisibility(View.GONE);
+                                                    //spinner.setVisibility(View.GONE);
 
 
-                            if(task.isSuccessful()){
+                                                    if (task.isSuccessful()) {
 
-                                String uid = task.getResult().getUser().getUid();
-                                String email = task.getResult().getUser().getEmail();
-                                String role;
+                                                        String uid = task.getResult().getUser().getUid();
+                                                        String email = task.getResult().getUser().getEmail();
+                                                        String role;
 
-                                if(email.split("@")[1].equals("sjsu.edu")){
-                                    role = "Librarian";
+                                                        if (email.split("@")[1].equals("sjsu.edu")) {
+                                                            role = "Librarian";
+                                                        } else {
+                                                            role = "Patron";
+                                                        }
+
+                                                        DbOperations.createUser(new User(fullname, email, sjsuId, uid, role));
+                                                        userCreated = true;
+                                                        toastMessage = "Signup Successful as a " + role;
+                                                        //Toast.makeText(, "Signup Successful as a " + role, Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                                            toastMessage = "Email Already Registered";
+                                                            //Toast.makeText(SignupActivity.this, "Email Already Registered", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            //Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                            toastMessage = task.getException().getMessage();
+                                                        }
+                                                    }
+                                                    navigateNextActivity();
+                                                }
+                                            });
+                                        } else {
+                                            toastMessage = "SJSU ID already registered!";
+                                        }
+                                    }
+                                    else {
+                                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                            toastMessage = "Email Already Registered";
+                                            //Toast.makeText(SignupActivity.this, "Email Already Registered", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            //Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            toastMessage = task.getException().getMessage();
+                                        }
+                                    }
+
+
+                                    /*else {
+                                        toastMessage = "Incorrect Verification Code";
+                                    }*/
                                 }
-                                else {
-                                    role = "Patron";
-                                }
-
-                                DbOperations.createUser(new User(fullname, email, sjsuId, uid, role));
-                                userCreated = true;
-                                toastMessage = "Signup Successful as a " + role;
-                                //Toast.makeText(, "Signup Successful as a " + role, Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                    toastMessage = "Email Already Registered";
-                                    //Toast.makeText(SignupActivity.this, "Email Already Registered", Toast.LENGTH_SHORT).show();
-                                }
-
-                                else{
-                                    //Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    toastMessage = task.getException().getMessage();
-                                }
-                            }
-                            navigateNextActivity();
-
-                        }
-                    });
-                }
-                else{
-                    toastMessage = "Incorrect Verification Code";
+                            });
+                    Toast.makeText(EmailVerificationActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        Toast.makeText(EmailVerificationActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
     }
 
     public void navigateNextActivity(){
         //T
         if(userCreated){
             startActivity(new Intent(this, ViewBooksActivity.class));
+        }
+        else{
+            startActivity(new Intent(this, SignupActivity.class));
         }
 
     }

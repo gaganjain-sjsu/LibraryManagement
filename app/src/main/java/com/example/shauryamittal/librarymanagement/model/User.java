@@ -68,4 +68,5 @@ public class User {
     public void setUid(String uid) {
         mUid = uid;
     }
+
 }

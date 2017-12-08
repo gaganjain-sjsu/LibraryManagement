@@ -5,14 +5,14 @@
 
     <item
         android:id="@+id/search"
-        android:icon="@drawable/googleg_standard_color_18"
+        android:icon="@android:drawable/ic_menu_search"
         android:title="@string/search"
         app:showAsAction="ifRoom|withText">
     </item>
 
     <item
         android:id="@+id/view_cart"
-        android:icon="@drawable/googleg_standard_color_18"
+        android:icon="@drawable/cart"
         android:title="@string/view_cart"
         app:showAsAction="ifRoom|withText">
     </item>
