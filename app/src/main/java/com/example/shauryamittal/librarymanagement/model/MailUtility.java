@@ -12,6 +12,7 @@ import javax.activation.*;
  */
 
 public class MailUtility {
+
     public static void sendMail(String sendTo, String sendText){
         final String username = "librarian.cmpe277@gmail.com";
         final String password = "aghs@123";

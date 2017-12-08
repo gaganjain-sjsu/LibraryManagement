@@ -65,126 +65,39 @@ public class ShoppingCartActivity extends AppCompatActivity {
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ShoppingCartActivity.this, "Checkout", Toast.LENGTH_SHORT).show();
+//                db.collection("users").document(CurrentUser.UID)
+//                        .set("issuedbooks", cartItems.get(0))
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Log.d(TAG, "DocumentSnapshot successfully written!");
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.w(TAG, "Error writing document", e);
+//                            }
+//                        });
 
+                DocumentReference docRef = db.collection("users").document(CurrentUser.UID);
 
-                //harshit
-
-                SharedPreferences SP;
-                SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String currentCartItems = SP.getString(CurrentUser.UID, null);
-                //String currentCartItems = "u5ENASVZU2Cfb4wKKWv8";
-
-                //currentUserId="yiYWVwVAVSeVEsNA593081Xdh2e2";
-                currentUserId=CurrentUser.UID;
-                bookKeyList = currentCartItems.split(",");
-                currentCheckoutSize=bookKeyList.length;
-                DocumentReference mRefUser = db.collection("users").document(currentUserId);
-                mRefUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot doc = task.getResult();
-                            User user = doc.toObject(User.class);
-                            currentUserDetails=user;
-                            if((user.getCheckOutBooks()+currentCheckoutSize)>9){
-                                String tostString="Cannot Checkout. " + user.getCheckOutBooks() + " Books Already Taken by Patron";
-                                Toast toast = Toast.makeText(getApplicationContext(), tostString, Toast.LENGTH_SHORT);
-                                toast.show();
-                            }else{
-                                for (int i = 0; i < currentCheckoutSize; i++) {
-                                    DocumentReference mRef = db.collection("books").document(bookKeyList[i]);
-                                    mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot doc = task.getResult();
-                                                System.out.println(doc.getId());
-                                                Book book = doc.toObject(Book.class);
-                                                book.setBookId(doc.getId());
-                                                checkedOutBooks.add(book);
-
-
-                                                if(checkedOutBooks.size()==currentCheckoutSize){
-                                                    for(Book book1 :checkedOutBooks){
-                                                        if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
-                                                            canBeCheckedOut=false;
-                                                            String tostStr="Book Unavailable. Book Title="+book1.getTitle()+" Publisher="+book1.getPublisher();
-                                                            Toast toast = Toast.makeText(getApplicationContext(), tostStr, Toast.LENGTH_SHORT);
-                                                            toast.show();
-                                                            break;
-                                                        }
-                                                    }
-
-                                                    if(canBeCheckedOut){
-                                                        for(Book book1 :checkedOutBooks){
-                                                            book1.setNoOfCheckedOutCopy(book1.getNoOfCheckedOutCopy()+1);
-                                                            if (book.getBookId() != null) {
-                                                                db.collection("books").document(book1.getBookId())
-                                                                        .set(book1)
-                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                                            }
-                                                                        })
-                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Log.w(TAG, "Error writing document", e);
-                                                                            }
-                                                                        });
-
-                                                            } else {
-                                                                Log.w(TAG, "Book Id in null in book object. So cannot update");
-                                                            }
-                                                        }
-
-                                                        // Updating User Checkedout
-                                                        currentUserDetails.setCheckOutBooks(currentUserDetails.getCheckOutBooks()+currentCheckoutSize);
-                                                        db.collection("users").document(currentUserId)
-                                                                .set(currentUserDetails)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.w(TAG, "Error writing document", e);
-                                                                    }
-                                                                });
-
-
-                                                        //end Updating userChecked books
-                                                        Toast toast = Toast.makeText(getApplicationContext(), "Checked Out Succesful", Toast.LENGTH_SHORT);
-                                                        toast.show();
-
-
-                                                    }
-
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-
+                // Set the "isCapital" field of the city 'DC'
+                docRef
+                        .update("issuedbooks", cartItems.get(0).getBookId())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    }
-                });
-
-                //harshit
-
-
-
-
-
-
-
-
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error updating document", e);
+                            }
+                        });
 
 
             }
