@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
     private String email, password, sjsuId, fullname;
     String toastMessage = "";
     boolean userCreated;
+    String role;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,7 @@ public class EmailVerificationActivity extends AppCompatActivity {
         email = intent.getStringExtra("email");
         password = intent.getStringExtra("password");
         sjsuId = intent.getStringExtra("sjsuId");
-        fullname = intent.getStringExtra("fullname");
+        fullname = intent.getStringExtra("fullName");
         userCreated = false;
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,12 +73,12 @@ public class EmailVerificationActivity extends AppCompatActivity {
 
                                                         String uid = task.getResult().getUser().getUid();
                                                         String email = task.getResult().getUser().getEmail();
-                                                        String role;
+                                                        //String role;
 
                                                         if (email.split("@")[1].equals("sjsu.edu")) {
-                                                            role = "Librarian";
+                                                            role = "librarian";
                                                         } else {
-                                                            role = "Patron";
+                                                            role = "patron";
                                                         }
 
                                                         DbOperations.createUser(new User(fullname, email, sjsuId, uid, role));
@@ -124,7 +126,13 @@ public class EmailVerificationActivity extends AppCompatActivity {
     public void navigateNextActivity(){
         //T
         if(userCreated){
-            startActivity(new Intent(this, ViewBooksActivity.class));
+//            if(role.equals("librarian")){
+//                startActivity(new Intent(this, LibrarianHomepageActivity.class));
+//            }
+//            else{
+//                startActivity(new Intent(this, ViewBooksActivity.class));
+//            }
+            startActivity(new Intent(this, LoginActivity.class));
         }
         else{
             startActivity(new Intent(this, SignupActivity.class));
