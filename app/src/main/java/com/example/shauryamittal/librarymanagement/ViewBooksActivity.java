@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.BookFactory;
+import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +57,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
+import static android.content.ContentValues.TAG;
 
 public class ViewBooksActivity extends AppCompatActivity {
 
@@ -124,14 +127,13 @@ public class ViewBooksActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            /*
-            TODO
+
             case  R.id.view_cart:
 
-                intent = new Intent(this, .class);
+                intent = new Intent(this, ShoppingCartActivity.class);
                 startActivity(intent);
                 return true;
-            */
+
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -191,7 +193,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                 View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
                 mBookRecyclerView = rootView
                         .findViewById(R.id.book_recycler_view);
-                mReturns =  rootView.findViewById(R.id.return_book);
+                mReturns = rootView.findViewById(R.id.return_book);
                 mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 returnsClicked = false;
                 Log.d(TAG, "inside onCreateView");
@@ -200,7 +202,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         returnsClicked = true;
-                        for(Book returns : returnsBookList){
+                        for (Book returns : returnsBookList) {
                             int position = mAdapter.mBookList.indexOf(returns);
                             CheckBox chBox = mBookRecyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.return_user_input);
                             chBox.setChecked(false);
@@ -208,16 +210,41 @@ public class ViewBooksActivity extends AppCompatActivity {
                         }
                         returnsBookList.clear();
                         mAdapter.notifyDataSetChanged();
+
                         returnsClicked = false;
-                       // updateCheckBox();
+                        // updateCheckBox();
                     }
                 });
+
                 return rootView;
             }
 
-            public void updateCheckBox(){
+            public void fetchUser(){
 
-                for(Book books: mAdapter.mBookList){
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                DocumentReference docRef = database.collection("users").document(CurrentUser.UID);
+
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                User user = document.toObject(User.class);
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+            }
+
+            public void updateCheckBox() {
+
+                for (Book books : mAdapter.mBookList) {
                     int position = mAdapter.mBookList.indexOf(books);
                     CheckBox chBox = mBookRecyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.return_user_input);
                     chBox.setChecked(false);
@@ -262,6 +289,33 @@ public class ViewBooksActivity extends AppCompatActivity {
                 updateUI();
             }
 
+            public void pullBooks(String bookId){
+
+                if(bookId != null){
+                    FirebaseFirestore database = FirebaseFirestore.getInstance();
+                    database.collection("books")
+                            .whereEqualTo("bookId", bookId)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        mBookList.clear();
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Book book = document.toObject(Book.class);
+                                            book.setBookId(document.getId());
+                                            mBookList.add(book);
+                                        }
+                                        mAdapter.notifyDataSetChanged();
+                                    } else {
+                                        //TODO
+                                    }
+                                }
+                            });
+                }
+
+            }
+
             private void updateUI() {
 
                 Log.d(TAG, "inside updateUI()");
@@ -272,11 +326,33 @@ public class ViewBooksActivity extends AppCompatActivity {
                     mAdapter = new BookAdapter(mBookList);
                 }
                 mBookRecyclerView.setAdapter(mAdapter);
-
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
-                //CollectionReference mRef=database.collection("books");
+                String id = CurrentUser.UID;
+                System.out.println("id==================="+id);
+                DocumentReference docRef = database.collection("users").document(CurrentUser.UID);
 
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                String bookId = document.getString("issuedbooks");
+                                pullBooks(bookId);
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+
+
+                /*
                 database.collection("books")
+
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -294,7 +370,9 @@ public class ViewBooksActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                        */
             }
+
 
 
             private class BookHolder extends RecyclerView.ViewHolder

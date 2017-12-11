@@ -79,7 +79,7 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             mBookList = new ArrayList<>();
-            View rootView = inflater.inflate(R.layout.fragment_view_books, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_lib_view_books, container, false);
             mBookRecyclerView = rootView
                     .findViewById(R.id.book_recycler_view);
             mBookRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -37,6 +37,7 @@ public class DbOperations {
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static List<User> librarians;
+    Book book12;
 
     public static void createUser(User user){
 
@@ -106,6 +107,10 @@ public class DbOperations {
         });
 
     }
+
+
+
+
 
     public static void getLibrarians() {
 
