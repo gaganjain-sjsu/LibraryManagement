@@ -100,8 +100,8 @@
         </activity>
         <activity android:name=".ShoppingCartActivity"/>
         <activity android:name=".EmailVerificationActivity"/>
-        <activity android:name=".OtpVerificationActivity">
-        </activity>
+        <activity android:name=".OtpVerificationActivity"/>
+        <activity android:name=".SetDateActivity"/>
     </application>
 
 </manifest>

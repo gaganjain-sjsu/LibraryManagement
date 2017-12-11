@@ -222,7 +222,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "DocumentSnapshot successfully updated!");
                                 Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
-                                MailUtility.sendMail(CurrentUser.EMAIL, "Your book "+ cartItems.get(0).getBookName()+ " has been issued");
+                                //MailUtility.sendMail(CurrentUser.EMAIL, "Your book "+ cartItems.get(0).getBookName()+ " has been issued");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
