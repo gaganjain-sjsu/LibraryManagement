@@ -181,15 +181,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
                 //harshit
 
-
-
-
-
-
-
-
-
-
             }
         });*/
 

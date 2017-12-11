@@ -14,6 +14,10 @@ public class Constants {
     public static final String SJSU_ID_KEY = "sjsuId";
     public static final String ROLE_KEY = "role";
     public static final String USER_COLLECTION = "users";
+    public static final String BOOKS_COLLECTION = "books";
+    public static final String BOOK_IMAGE_URL = "book_image_url";
     public static final String EMAIL_VERIFIED = "emailverified";
+    public static final String BOOK_COVERS = "bookcovers";
+
 
 }

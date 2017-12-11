@@ -2,23 +2,43 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
 
 public class AddUpdateBook extends AppCompatActivity {
+
+    private static final int CHOOSE_BOOK_COVER = 1;
     private EditText authorET;
     private EditText titleET;
     private EditText callNumberET;
@@ -30,6 +50,11 @@ public class AddUpdateBook extends AppCompatActivity {
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private StorageReference mStorage;
+    private ImageView imageUpload;
+    Uri uriBookImage;
+    ProgressBar uploadBookProgress;
+    Button submit;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private FirebaseAuth mAuth;
     private static final int GALLERY_INTENT =2;
@@ -55,6 +80,18 @@ public class AddUpdateBook extends AppCompatActivity {
 //        statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
         mAuth = FirebaseAuth.getInstance();
+        uploadBookProgress = (ProgressBar) findViewById(R.id.uploadBookProgress);
+        uploadBookProgress.setVisibility(View.GONE);
+        submit = (Button) findViewById(R.id.createBookSubmit);
+
+        imageUpload = (ImageView) findViewById(R.id.imageUpload);
+
+        imageUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showImageChoose();
+            }
+        });
 
     }
 /*
@@ -147,12 +184,77 @@ public class AddUpdateBook extends AppCompatActivity {
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
         book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
-        dbOperations.addBook(book);
-        Toast toast = Toast.makeText(getApplicationContext(), "Book add Succesful", Toast.LENGTH_SHORT);
-        toast.show();
-        //startActivity(new Intent(AddUpdateBook.this, BookDetailActivity.class));
+
+        submit.setVisibility(View.GONE);
+        uploadBookProgress.setVisibility(View.VISIBLE);
+
+        db.collection(Constants.BOOKS_COLLECTION).add(book).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if(task.isSuccessful()){
+                    String bookId = task.getResult().getId();
+                    uploadImage(bookId);
+                }
+                else {
+                    Log.v("BOOK UPLOAD ", task.getException().getMessage());
+                    Toast.makeText(getApplicationContext(), "Unable to set Book info", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CHOOSE_BOOK_COVER && resultCode == RESULT_OK && data != null && data.getData() != null){
+
+            uriBookImage = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriBookImage);
+                imageUpload.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
+
+    private void uploadImage(final String bookId) {
+
+        StorageReference bookCoverReference = FirebaseStorage.getInstance().getReference(Constants.BOOK_COVERS + "/" + bookId + ".jpg");
+
+        if(uriBookImage != null){
+            bookCoverReference.putFile(uriBookImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getApplicationContext(), "Book Added to Library", Toast.LENGTH_SHORT).show();
+                    uploadBookProgress.setVisibility(View.GONE);
+                    submit.setVisibility(View.VISIBLE);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.v("BOOK IMAGE ", e.getMessage());
+                    uploadBookProgress.setVisibility(View.GONE);
+                    submit.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(), "Unable to upload book image", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
+    private void showImageChoose() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Book Cover"), CHOOSE_BOOK_COVER);
+    }
+
     public void showToast(String text){
         Context context = getApplicationContext();
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
