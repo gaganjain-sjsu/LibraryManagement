@@ -33,7 +33,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_librarian_update_book);
+        setContentView(R.layout.activity_add_update_book);
         Intent intent = getIntent();
         book = (Book)intent.getSerializableExtra("bookObj");
         authorET=findViewById(R.id.Author);
