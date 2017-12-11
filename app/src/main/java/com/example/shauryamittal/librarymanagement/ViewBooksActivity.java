@@ -328,6 +328,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                 mBookRecyclerView.setAdapter(mAdapter);
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
                 String id = CurrentUser.UID;
+                System.out.println("id==================="+id);
                 DocumentReference docRef = database.collection("users").document(CurrentUser.UID);
 
 

@@ -32,8 +32,8 @@ import static android.content.ContentValues.TAG;
 public class ShoppingCartActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    public static RecyclerView.Adapter adapter;
-    public static List<CartItem> cartItems = new ArrayList<CartItem>();
+    public static ShoppingCartAdapter adapter;
+    public static List<Book> cartItems = new ArrayList<Book>();
     String bookIds[];
     private String BOOKS_COLLECTION = "books";
     private static final String USER_COLLECTION = "users";
@@ -58,8 +58,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.cart_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        remove = (TextView) findViewById(R.id.remove);
-        checkout = (Button) findViewById(R.id.checkoutCart);
+        //remove = (TextView) findViewById(R.id.remove);
+        checkout = (Button) findViewById(R.id.checkout);
 
         /*
         checkout.setOnClickListener(new View.OnClickListener() {
@@ -192,48 +192,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
             }
         });*/
 
-        //shaurya
-
-        checkout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                db.collection("users").document(CurrentUser.UID)
-//                        .set("issuedbooks", cartItems.get(0))
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                Log.d(TAG, "DocumentSnapshot successfully written!");
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Log.w(TAG, "Error writing document", e);
-//                            }
-//                        });
-
-                DocumentReference docRef = db.collection("users").document(CurrentUser.UID);
-
-                // Set the "isCapital" field of the city 'DC'
-                docRef
-                        .update("issuedbooks", cartItems.get(0).getBookId())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error updating document", e);
-                            }
-                        });
-
-
-            }
-        });
 
     }
 
@@ -246,37 +204,55 @@ public class ShoppingCartActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+        if(CurrentUser.UID==null){
+            Toast toast = Toast.makeText(getBaseContext(), "User details not present", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+
+
         adapter = null;
         bookIds = null;
-        cartItems = new ArrayList<CartItem>();
+        String currentCartItems="";
+        cartItems = new ArrayList<Book>();
 
         SharedPreferences SP;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String currentCartItems = SP.getString(CurrentUser.UID, null);
-//        Log.d("current Items ", currentCartItems);
+        if (SP!=null) currentCartItems = SP.getString(CurrentUser.UID, null);
+
+        System.out.println("ValuesFrom Shared Pref======="+currentCartItems);
+
+        //currentCartItems="M2xBqgaOX1ldvUaA7w0H,O0ilxwN3PUDo2SXgpguW";
 
         if(currentCartItems == null || currentCartItems.equals("")){
             ((TextView) findViewById(R.id.emptyCartText)).setText("Your Cart is Empty!");
             return;
-        }
-
-        else{
+        }else{
             bookIds = currentCartItems.split(",");
         }
 
-        adapter = new CartAdapter(cartItems, this);
+
+
+
+        adapter = new ShoppingCartAdapter(this,cartItems);
         recyclerView.setAdapter(adapter);
 
 
+
         for(int i=0; i<bookIds.length; i++){
+            if(bookIds[i]==null || bookIds[i].trim().equals("")) continue;
             DocumentReference docRef = db.collection(BOOKS_COLLECTION).document(bookIds[i]);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
+
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
-                            cartItems.add(new CartItem(document.getId(), document.getString(BOOK_TITLE), document.getString(BOOK_AUTHOR)));
+                            Book book = document.toObject(Book.class);
+                            book.setBookId(document.getId());
+                            cartItems.add(book);
                             adapter.notifyDataSetChanged();
 
                             Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());
@@ -287,6 +263,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         Log.d("DOCUMENT SNAPSHOT", "get failed with ", task.getException());
                     }
                 }
+
+
             });
         }
 

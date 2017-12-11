@@ -103,7 +103,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
             bookName = (TextView) itemView.findViewById(R.id.cart_book_name);
             authorName = (TextView) itemView.findViewById(R.id.cart_author);
-            remove = (TextView) itemView.findViewById(R.id.remove);
+            remove = (TextView) itemView.findViewById(R.id.cart_author);
 
         }
 
