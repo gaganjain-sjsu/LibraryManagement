@@ -95,6 +95,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/librarian_addNewBook"/>
 
+
+        <Button
+            android:id="@+id/librarian_setdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/librarian_home_buttons"
+            android:text="SET CURRENT DATE"
+            android:textAllCaps="false"
+            android:textColor="@color/background_light"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/librarian_updateBook"/>
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"

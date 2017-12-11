@@ -65,7 +65,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
                 if((currentCartItems.split(",")).length == 1){
                     SharedPreferences.Editor edit = SP.edit();
-                    edit.remove(CurrentUser.UID);
+                    //edit.remove(CurrentUser.UID);
+                    edit.putString (CurrentUser.UID, "");
                     edit.commit();
                     ShoppingCartActivity.adapter.notifyDataSetChanged();
                     return;
@@ -133,7 +134,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
                     if((currentCartItems.split(",")).length == 1){
                         SharedPreferences.Editor edit = SP.edit();
-                        edit.remove(CurrentUser.UID);
+                        //edit.remove(CurrentUser.UID);
+                        edit.putString (CurrentUser.UID, "");
                         edit.commit();
                         ShoppingCartActivity.adapter.notifyDataSetChanged();
                         return;

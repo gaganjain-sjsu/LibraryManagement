@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LibrarianHomepageActivity extends AppCompatActivity {
 
-    Button updateBook, myBooks, searchBooks;
+    Button updateBook, myBooks, searchBooks, setDate;
     Button addBook;
     TextView welcome;
 
@@ -33,6 +33,7 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
 
         addBook = (Button) findViewById(R.id.librarian_addNewBook);
         updateBook = (Button) findViewById(R.id.librarian_updateBook);
+        setDate = (Button) findViewById(R.id.librarian_setdate);
 
         myBooks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +60,13 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LibrarianHomepageActivity.this, LibrarianBookSearch.class));
+            }
+        });
+
+        setDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LibrarianHomepageActivity.this, SetDateActivity.class));
             }
         });
     }

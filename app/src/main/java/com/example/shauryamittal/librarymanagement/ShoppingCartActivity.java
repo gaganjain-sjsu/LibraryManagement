@@ -59,7 +59,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         remove = (TextView) findViewById(R.id.remove);
-        checkout = (Button) findViewById(R.id.checkout);
+        checkout = (Button) findViewById(R.id.checkoutCart);
 
         /*
         checkout.setOnClickListener(new View.OnClickListener() {
