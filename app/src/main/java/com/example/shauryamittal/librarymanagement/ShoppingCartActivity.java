@@ -269,6 +269,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
 
         for(int i=0; i<bookIds.length; i++){
+            if(bookIds==null || bookIds[i]==null||bookIds[i].trim().equals("")) continue;
             DocumentReference docRef = db.collection(BOOKS_COLLECTION).document(bookIds[i]);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
