@@ -30,12 +30,7 @@ import static android.content.ContentValues.TAG;
 
 public class DbOperations {
 
-    private static final String UID_KEY = "uid";
-    private static final String FULLNAME_KEY = "fullname";
-    private static final String EMAIL_KEY = "email";
-    private static final String SJSU_ID_KEY = "sjsuId";
-    private static final String ROLE_KEY = "role";
-    private static final String USER_COLLECTION = "users";
+
     private static final String BOOK_TITLE = "title";
     private static final String BOOK_AUTHOR = "author";
     static ArrayList<User> patrons = new ArrayList<User>();
@@ -48,14 +43,15 @@ public class DbOperations {
         // Create a new user with a first and last name
         Map<String, Object> newUser = new HashMap<>();
 
-        newUser.put(UID_KEY, user.getUid());
-        newUser.put(FULLNAME_KEY, user.getName());
-        newUser.put(EMAIL_KEY, user.getEmail());
-        newUser.put(SJSU_ID_KEY, user.getSjsuId());
-        newUser.put(ROLE_KEY, user.getRole());
+        newUser.put(Constants.UID_KEY, user.getUid());
+        newUser.put(Constants.FULLNAME_KEY, user.getName());
+        newUser.put(Constants.EMAIL_KEY, user.getEmail());
+        newUser.put(Constants.SJSU_ID_KEY, user.getSjsuId());
+        newUser.put(Constants.ROLE_KEY, user.getRole());
+        newUser.put(Constants.EMAIL_VERIFIED, user.getEmailVerified());
 
         // Add a new document with a generated ID
-        db.collection("users").document(user.getUid())
+        db.collection(Constants.USER_COLLECTION).document(user.getUid())
                 .set(newUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -116,19 +112,19 @@ public class DbOperations {
 
         librarians = new ArrayList<User>();
 
-        db.collection("users")
-                .whereEqualTo(ROLE_KEY, "librarian")
+        db.collection(Constants.USER_COLLECTION)
+                .whereEqualTo(Constants.ROLE_KEY, "librarian")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot document : task.getResult()) {
-                                User librarian = new User(document.getString(FULLNAME_KEY),
-                                        document.getString(EMAIL_KEY),
-                                        document.getString(SJSU_ID_KEY),
-                                        document.getString(UID_KEY),
-                                        document.getString(ROLE_KEY));
+                                User librarian = new User(document.getString(Constants.FULLNAME_KEY),
+                                        document.getString(Constants.EMAIL_KEY),
+                                        document.getString(Constants.SJSU_ID_KEY),
+                                        document.getString(Constants.UID_KEY),
+                                        document.getString(Constants.ROLE_KEY));
 
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -83,13 +84,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 DocumentReference docRef = db.collection("users").document(CurrentUser.UID);
 
                 // Set the "isCapital" field of the city 'DC'
-                docRef
-                        .update("issuedbooks", cartItems.get(0).getBookId())
+                docRef.update("issuedbooks", cartItems.get(0).getBookId())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "DocumentSnapshot successfully updated!");
                                 Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
+                                MailUtility.sendMail(CurrentUser.EMAIL, "Your book "+ cartItems.get(0).getBookName()+ " has been issued");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
