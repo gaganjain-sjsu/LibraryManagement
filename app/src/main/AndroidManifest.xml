@@ -101,13 +101,11 @@
         </activity>
         <activity android:name=".ShoppingCartActivity"/>
         <activity android:name=".EmailVerificationActivity"/>
-<<<<<<< HEAD
         <activity android:name=".ISBNBarcodeScanActivity">
         </activity>
-=======
         <activity android:name=".OtpVerificationActivity"/>
         <activity android:name=".SetDateActivity"/>
->>>>>>> 197d804ed02d4a36667802b0c4b34c4589ce86d1
+
     </application>
 
 </manifest>
