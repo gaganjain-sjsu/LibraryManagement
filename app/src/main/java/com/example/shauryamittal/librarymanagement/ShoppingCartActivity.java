@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,8 +33,8 @@ import static android.content.ContentValues.TAG;
 public class ShoppingCartActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    public static RecyclerView.Adapter adapter;
-    public static List<CartItem> cartItems = new ArrayList<CartItem>();
+    public static ShoppingCartAdapter adapter;
+    public static List<Book> cartItems = new ArrayList<Book>();
     String bookIds[];
     private String BOOKS_COLLECTION = "books";
     private static final String USER_COLLECTION = "users";
@@ -58,8 +59,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.cart_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        remove = (TextView) findViewById(R.id.remove);
-        checkout = (Button) findViewById(R.id.checkout);
+        //remove = (TextView) findViewById(R.id.remove);
+        checkout = (Button) findViewById(R.id.checkoutCart);
 
         /*
         checkout.setOnClickListener(new View.OnClickListener() {
@@ -180,15 +181,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
                 //harshit
 
-
-
-
-
-
-
-
-
-
             }
         });*/
 
@@ -215,13 +207,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 DocumentReference docRef = db.collection("users").document(CurrentUser.UID);
 
                 // Set the "isCapital" field of the city 'DC'
-                docRef
-                        .update("issuedbooks", cartItems.get(0).getBookId())
+                docRef.update("issuedbooks", cartItems.get(0).getBookId())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "DocumentSnapshot successfully updated!");
                                 Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
+                                //MailUtility.sendMail(CurrentUser.EMAIL, "Your book "+ cartItems.get(0).getBookName()+ " has been issued");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -248,12 +240,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         adapter = null;
         bookIds = null;
-        cartItems = new ArrayList<CartItem>();
+        cartItems = new ArrayList<Book>();
+        if(CurrentUser.UID==null) return;
 
         SharedPreferences SP;
         SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String currentCartItems = SP.getString(CurrentUser.UID, null);
-//        Log.d("current Items ", currentCartItems);
 
         if(currentCartItems == null || currentCartItems.equals("")){
             ((TextView) findViewById(R.id.emptyCartText)).setText("Your Cart is Empty!");
@@ -264,11 +256,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
             bookIds = currentCartItems.split(",");
         }
 
-        adapter = new CartAdapter(cartItems, this);
+        adapter = new ShoppingCartAdapter(this,cartItems);
         recyclerView.setAdapter(adapter);
 
 
         for(int i=0; i<bookIds.length; i++){
+            if(bookIds==null || bookIds[i]==null||bookIds[i].trim().equals("")) continue;
             DocumentReference docRef = db.collection(BOOKS_COLLECTION).document(bookIds[i]);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -276,7 +269,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
-                            cartItems.add(new CartItem(document.getId(), document.getString(BOOK_TITLE), document.getString(BOOK_AUTHOR)));
+                           Book b1 = document.toObject(Book.class);
+                           b1.setBookId(document.getId());
+                            cartItems.add(b1);
                             adapter.notifyDataSetChanged();
 
                             Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());

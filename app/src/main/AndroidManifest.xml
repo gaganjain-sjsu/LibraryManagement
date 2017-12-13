@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.shauryamittal.librarymanagement">
+
+<manifest package="com.example.shauryamittal.librarymanagement"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -22,44 +23,44 @@
         </activity>
         <activity android:name=".LibrarianBookSearch">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianBookSearch" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".AddUpdateBook">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.AddUpdateBook" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.SignupActivity"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.SignupActivity" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".BookDetailActivity">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.BookDetailActivity"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.BookDetailActivity" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".LibrarianUpdateBook">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianUpdateBook"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.LibrarianUpdateBook" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -67,9 +68,9 @@
             android:label="@string/title_activity_view_books"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.ViewBooksActivity"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.ViewBooksActivity" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <!--
             <intent-filter>
@@ -81,13 +82,12 @@
         </activity>
         <activity android:name=".SearchDetailActivity">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.SearchDetailActivity"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.SearchDetailActivity" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".LibrarianHomepageActivity">
-        </activity>
+        <activity android:name=".LibrarianHomepageActivity"></activity>
         <activity android:name=".PatronBookSearch">
             <intent-filter>
                 <action android:name="com.example.shauryamittal.librarymanagement.PatronBookSearch"/>
@@ -101,8 +101,13 @@
         </activity>
         <activity android:name=".ShoppingCartActivity"/>
         <activity android:name=".EmailVerificationActivity"/>
+<<<<<<< HEAD
         <activity android:name=".ISBNBarcodeScanActivity">
         </activity>
+=======
+        <activity android:name=".OtpVerificationActivity"/>
+        <activity android:name=".SetDateActivity"/>
+>>>>>>> 197d804ed02d4a36667802b0c4b34c4589ce86d1
     </application>
 
 </manifest>

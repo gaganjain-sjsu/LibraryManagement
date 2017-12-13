@@ -2,12 +2,16 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
@@ -16,7 +20,10 @@ import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.IOException;
+
 public class LibrarianUpdateBook extends AppCompatActivity {
+
     Book book;
     private EditText authorET;
     private EditText titleET;
@@ -30,10 +37,11 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_librarian_update_book);
+        setContentView(R.layout.activity_add_update_book);
         Intent intent = getIntent();
         book = (Book)intent.getSerializableExtra("bookObj");
         authorET=findViewById(R.id.Author);
@@ -46,6 +54,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
        // statusET=findViewById(R.id.Status);
         keywordsET=findViewById(R.id.Keywords);
         mAuth = FirebaseAuth.getInstance();
+
         //showToast(CurrentUser.NAME);
 
         authorET.setText(book.getAuthor());
@@ -57,6 +66,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         noOfCopyET.setText(String.valueOf(book.getNoOfCopy()));
         //statusET.setText(book.getStatus());
         keywordsET.setText(book.getKeywords());
+
     }
 
 
@@ -134,6 +144,9 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         //startActivity(new Intent(AddUpdateBook.this, SearchDetailActivity.class));
 
     }
+
+
+
 
     public void showToast(String text){
         Context context = getApplicationContext();

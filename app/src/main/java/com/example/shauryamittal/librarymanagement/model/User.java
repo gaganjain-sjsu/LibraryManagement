@@ -12,6 +12,7 @@ public class User {
     String mUid;
     String mRole;
     int checkOutBooks;
+    boolean emailVerified;
 
     public int getCheckOutBooks() {
         return checkOutBooks;
@@ -27,6 +28,7 @@ public class User {
         mSjsuId = sjsuId;
         mUid = uid;
         mRole = role;
+        emailVerified = false;
     }
 
     public String getRole() {
@@ -67,6 +69,14 @@ public class User {
 
     public void setUid(String uid) {
         mUid = uid;
+    }
+
+    public boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
 }

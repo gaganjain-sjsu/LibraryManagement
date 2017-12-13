@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     Button login;
     Button toSignup;
     ProgressBar spinner;
-    private final String ROLE_PATRON = "patron";
-    private final String ROLE_LIBRARIAN = "librarian";
 
     private FirebaseAuth mAuth;
 
@@ -59,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String email = editText_email.getText().toString().trim();
+                final String email = editText_email.getText().toString().trim();
                 String password = editText_password.getText().toString().trim();
 
                 if(email.isEmpty()){
@@ -87,27 +86,39 @@ public class LoginActivity extends AppCompatActivity {
 
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        spinner.setVisibility(View.GONE);
+
 
                         if(task.isSuccessful()){
 
-                            FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+                            final FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                            DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(USER_COLLECTION + "/" + loggedInUser.getUid());
+                            final DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(USER_COLLECTION + "/" + loggedInUser.getUid());
 
                             currentUserDocument.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                                     Intent intent;
+                                    spinner.setVisibility(View.GONE);
+
+
+                                    if(!documentSnapshot.contains(Constants.EMAIL_VERIFIED) || !documentSnapshot.getBoolean(Constants.EMAIL_VERIFIED)){
+                                        intent = new Intent(LoginActivity.this, OtpVerificationActivity.class);
+                                        intent.putExtra("email", email);
+                                        Toast.makeText(LoginActivity.this, "Your email is not verified", Toast.LENGTH_SHORT).show();
+                                        startActivity(intent);
+
+                                        finish();
+                                        return;
+                                    }
 
                                     CurrentUser.setCurrentUser(documentSnapshot);
 
-                                    if(CurrentUser.ROLE.equals(ROLE_LIBRARIAN)){
+                                    if(CurrentUser.ROLE.equals(Constants.KEY_ROLE_LIBRARIAN)){
                                         intent = new Intent(LoginActivity.this, LibrarianHomepageActivity.class);
                                     }
 
-                                    else if(CurrentUser.ROLE.equals(ROLE_PATRON)){
+                                    else if(CurrentUser.ROLE.equals(Constants.KEY_ROLE_PATRON)){
                                         intent = new Intent(LoginActivity.this, ViewBooksActivity.class);
                                     }
 
@@ -173,11 +184,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent;
 
-                    if(CurrentUser.ROLE.equals(ROLE_LIBRARIAN)){
+                    if(CurrentUser.ROLE.equals(Constants.KEY_ROLE_LIBRARIAN)){
                         intent = new Intent(LoginActivity.this, LibrarianHomepageActivity.class);
                     }
 
-                    else if(CurrentUser.ROLE.equals(ROLE_PATRON)){
+                    else if(CurrentUser.ROLE.equals(Constants.KEY_ROLE_PATRON)){
                         intent = new Intent(LoginActivity.this, ViewBooksActivity.class);
                     }
 
