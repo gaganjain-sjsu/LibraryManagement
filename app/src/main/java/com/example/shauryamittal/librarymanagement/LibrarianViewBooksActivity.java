@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.BookFactory;
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -96,6 +98,33 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
             updateUI();
         }
 
+        public void pullBooks(String bookId){
+
+            if(bookId != null){
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                database.collection("books")
+                        .whereEqualTo("bookId", bookId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    mBookList.clear();
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        Book book = document.toObject(Book.class);
+                                        book.setBookId(document.getId());
+                                        mBookList.add(book);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    //TODO
+                                }
+                            }
+                        });
+            }
+
+        }
+
         private void updateUI() {
 
             Log.d(TAG, "inside updateUI()");
@@ -109,6 +138,29 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             //CollectionReference mRef=database.collection("books");
+            String id = CurrentUser.UID;
+            DocumentReference docRef = database.collection("users").document(CurrentUser.UID);
+
+
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            String bookId = document.getString("issuedbooks");
+                            pullBooks(bookId);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+
+
+
 
             database.collection("books")
                     .get()

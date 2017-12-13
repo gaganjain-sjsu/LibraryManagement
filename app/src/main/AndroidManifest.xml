@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shauryamittal.librarymanagement">
+          package="com.example.shauryamittal.librarymanagement">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -48,7 +48,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".LibrarianUpdateBook">
             <intent-filter>
                 <action android:name="com.example.shauryamittal.librarymanagement.LibrarianUpdateBook"/>
@@ -56,7 +55,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -92,17 +90,19 @@
         </activity>
         <activity android:name=".PatronBookSearch">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.PatronBookSearch" />
+                <action android:name="com.example.shauryamittal.librarymanagement.PatronBookSearch"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity android:name=".ErrorActivity">
         </activity>
         <activity android:name=".LibrarianViewBooksActivity">
         </activity>
-        <activity android:name=".ShoppingCartActivity"></activity>
-        <activity android:name=".EmailVerificationActivity"></activity>
+        <activity android:name=".ShoppingCartActivity"/>
+        <activity android:name=".EmailVerificationActivity"/>
+        <activity android:name=".ISBNBarcodeScanActivity">
+        </activity>
     </application>
 
 </manifest>
