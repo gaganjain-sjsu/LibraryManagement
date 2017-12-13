@@ -101,8 +101,6 @@
         </activity>
         <activity android:name=".ShoppingCartActivity"/>
         <activity android:name=".EmailVerificationActivity"/>
-        <activity android:name=".ISBNBarcodeScanActivity">
-        </activity>
         <activity android:name=".OtpVerificationActivity"/>
         <activity android:name=".SetDateActivity"/>
 
