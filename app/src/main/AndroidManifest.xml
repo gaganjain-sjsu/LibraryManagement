@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest package="com.example.shauryamittal.librarymanagement"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -102,6 +103,7 @@
         <activity android:name=".EmailVerificationActivity"/>
         <activity android:name=".OtpVerificationActivity"/>
         <activity android:name=".SetDateActivity"/>
+
     </application>
 
 </manifest>

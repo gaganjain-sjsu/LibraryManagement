@@ -81,8 +81,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     SP = PreferenceManager.getDefaultSharedPreferences(ctx);
                     String currentCartItems = SP.getString(CurrentUser.UID, null);
                     String currrentItem=mBook.getBookId();
-                    currentCartItems=currentCartItems.replaceAll(currrentItem,"");
-                    currentCartItems=currentCartItems.replaceAll(",,",",");
+                    //currentCartItems=currentCartItems.replaceAll(currrentItem,"");
+                    //currentCartItems=currentCartItems.replaceAll(",,",",");
+                    currentCartItems = currentCartItems.replaceAll(currrentItem+",","").replaceAll(""+","+currrentItem,"").replaceAll(currrentItem, "");
+
 
                     SharedPreferences.Editor edit = SP.edit();
                     edit.putString (CurrentUser.UID, currentCartItems);

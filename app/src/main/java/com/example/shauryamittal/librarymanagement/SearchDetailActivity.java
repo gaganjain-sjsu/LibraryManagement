@@ -94,13 +94,13 @@ public class SearchDetailActivity extends AppCompatActivity {
         }
         else{
             StringBuilder sb = new StringBuilder(bookId_sp);
-            sb = new StringBuilder();
+            //sb = new StringBuilder();
             System.out.print("###sb.toString()==="+sb.toString()+"length="+sb.toString().split(",").length);
             if(sb.toString().split(",").length>=3){
                 showToast("You Already have 3 items in your cart");
             }
             else if (!sb.toString().contains(bookId)) {
-                sb.append(bookId);
+                sb.append(",").append(bookId);
                 showToast("Added Successfully to the cart");
             }
             else{
