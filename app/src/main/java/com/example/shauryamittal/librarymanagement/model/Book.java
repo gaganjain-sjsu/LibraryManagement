@@ -23,7 +23,7 @@ public class Book implements Serializable {
     private String keywords="";
     private String librarianId="";
     private String bookId="";
-    private int checkOutCopies=0;
+    //private int checkOutCopies=0;
 
     public String getAuthor() {
         return author;
@@ -114,13 +114,13 @@ public class Book implements Serializable {
         this.bookId = bookId;
     }
 
-    public int getCheckOutCopies() {
-        return checkOutCopies;
-    }
-
-    public void setCheckOutCopies(int checkOutCopies) {
-        this.checkOutCopies = checkOutCopies;
-    }
+//    public int getCheckOutCopies() {
+//        return checkOutCopies;
+//    }
+//
+//    public void setCheckOutCopies(int checkOutCopies) {
+//        this.checkOutCopies = checkOutCopies;
+//    }
 
 
     public int getNoOfCheckedOutCopy() {

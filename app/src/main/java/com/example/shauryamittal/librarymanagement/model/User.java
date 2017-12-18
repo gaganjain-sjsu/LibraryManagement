@@ -11,7 +11,7 @@ public class User {
     String mSjsuId;
     String mUid;
     String mRole;
-    int checkOutBooks;
+    int checkOutBooks=0;
     boolean emailVerified;
 
     public int getCheckOutBooks() {

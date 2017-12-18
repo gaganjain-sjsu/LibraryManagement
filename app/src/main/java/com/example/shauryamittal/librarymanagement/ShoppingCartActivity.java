@@ -14,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.User;
+import com.example.shauryamittal.librarymanagement.model.Transaction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,8 +27,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -45,11 +50,14 @@ public class ShoppingCartActivity extends AppCompatActivity {
     Button checkout;
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     public ArrayList<Book> checkedOutBooks = new ArrayList<Book>();
+    //public ArrayList<Book> eligibleToCheckoutBooks = new ArrayList<Book>();
     public int currentCheckoutSize = 0;
     public boolean canBeCheckedOut = true;
     String currentUserId;
+    int checkOutBooks=0;
     User currentUserDetails;
     String[] bookKeyList;
+    SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +67,20 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.cart_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //remove = (TextView) findViewById(R.id.remove);
         checkout = (Button) findViewById(R.id.checkoutCart);
 
-        /*
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ShoppingCartActivity.this, "Checkout", Toast.LENGTH_SHORT).show();
-
-
-                //harshit
-
-
 
                 SharedPreferences SP;
                 SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 String currentCartItems = SP.getString(CurrentUser.UID, null);
-                //String currentCartItems = "u5ENASVZU2Cfb4wKKWv8";
-
-                //currentUserId="yiYWVwVAVSeVEsNA593081Xdh2e2";
+                if(currentCartItems==null|| currentCartItems.trim().equals("")){
+                    Toast toast = Toast.makeText(getApplicationContext(), "Cart Empty", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
                 currentUserId=CurrentUser.UID;
                 bookKeyList = currentCartItems.split(",");
                 currentCheckoutSize=bookKeyList.length;
@@ -88,10 +90,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
-                            User user = doc.toObject(User.class);
-                            currentUserDetails=user;
-                            if((user.getCheckOutBooks()+currentCheckoutSize)>9){
-                                String tostString="Cannot Checkout. " + user.getCheckOutBooks() + " Books Already Taken by Patron";
+                            System.out.println("Book Id in CheckOut Book Is:-"+doc.getId());
+                            checkOutBooks=Integer.parseInt(doc.getString(Constants.CheckedOutBooks));
+                            System.out.println("!!!!!!!Email===="+doc.getString("checkOutBooks"));
+
+                            if((checkOutBooks+currentCheckoutSize)>9){
+                                String tostString="Cannot Checkout. " + checkOutBooks + " Books Already Issued. Remove "+(checkOutBooks+currentCheckoutSize-9)+" Books from cart";
                                 Toast toast = Toast.makeText(getApplicationContext(), tostString, Toast.LENGTH_SHORT);
                                 toast.show();
                             }else{
@@ -123,45 +127,43 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         for(Book book1 :checkedOutBooks){
                                                             book1.setNoOfCheckedOutCopy(book1.getNoOfCheckedOutCopy()+1);
                                                             if (book.getBookId() != null) {
-                                                                db.collection("books").document(book1.getBookId())
-                                                                        .set(book1)
-                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                                            }
-                                                                        })
-                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Log.w(TAG, "Error writing document", e);
-                                                                            }
-                                                                        });
-
+                                                                DbOperations.updateBook(book1);
                                                             } else {
                                                                 Log.w(TAG, "Book Id in null in book object. So cannot update");
                                                             }
                                                         }
 
                                                         // Updating User Checkedout
-                                                        currentUserDetails.setCheckOutBooks(currentUserDetails.getCheckOutBooks()+currentCheckoutSize);
-                                                        db.collection("users").document(currentUserId)
-                                                                .set(currentUserDetails)
+                                                        DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(Constants.USER_COLLECTION+ "/" + currentUserId);
+                                                        currentUserDocument.
+                                                                update(Constants.CheckedOutBooks, checkOutBooks+currentCheckoutSize)
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {
-                                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                                        Log.v("User No Of Books Update", "Successful");
                                                                     }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.w(TAG, "Error writing document", e);
-                                                                    }
-                                                                });
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w(TAG, "Error writing document No Of Books", e);
+                                                            }
+                                                        });
+
+    //                                                  Updating The Transaction Table.
+                                                        for(Book book1 :checkedOutBooks){
+                                                          Transaction transaction = new Transaction();
+                                                            transaction.setBookId(book1.getBookId());
+                                                            Date d = new Date() ;
+                                                            d.setTime(d.getTime()+ (30 * 1000 * 60 * 60 * 24));
+                                                            transaction.setDueDate(dateToString.format(d));
+                                                            transaction.setFine(0);
+                                                            transaction.setIssueDate(dateToString.format(new Date()));
+                                                            transaction.setRenewCount(0);
+                                                            transaction.setUid(currentUserId);
+                                                            DbOperations.addTransaction(transaction);
+                                                        }
 
 
-                                                        //end Updating userChecked books
                                                         Toast toast = Toast.makeText(getApplicationContext(), "Checked Out Succesful", Toast.LENGTH_SHORT);
                                                         toast.show();
 
@@ -178,50 +180,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         }
                     }
                 });
+                // End Harshit
 
-                //harshit
-
-            }
-        });*/
-
-        //shaurya
-
-        checkout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                db.collection("users").document(CurrentUser.UID)
-//                        .set("issuedbooks", cartItems.get(0))
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                Log.d(TAG, "DocumentSnapshot successfully written!");
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Log.w(TAG, "Error writing document", e);
-//                            }
-//                        });
-
-                DocumentReference docRef = db.collection("users").document(CurrentUser.UID);
-
-                // Set the "isCapital" field of the city 'DC'
-                docRef.update("issuedbooks", cartItems.get(0).getBookId())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-                                Toast.makeText(ShoppingCartActivity.this, "Book Checked Out", Toast.LENGTH_SHORT).show();
-                                //MailUtility.sendMail(CurrentUser.EMAIL, "Your book "+ cartItems.get(0).getBookName()+ " has been issued");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error updating document", e);
-                            }
-                        });
 
 
             }

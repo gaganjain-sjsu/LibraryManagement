@@ -50,7 +50,7 @@ public class DbOperations {
         newUser.put(Constants.SJSU_ID_KEY, user.getSjsuId());
         newUser.put(Constants.ROLE_KEY, user.getRole());
         newUser.put(Constants.EMAIL_VERIFIED, user.getEmailVerified());
-
+        newUser.put(Constants.CheckedOutBooks, "0");
         // Add a new document with a generated ID
         db.collection(Constants.USER_COLLECTION).document(user.getUid())
                 .set(newUser)
@@ -70,7 +70,10 @@ public class DbOperations {
 
     public static void addBook(Book book){
         db.collection("books").add(book);
+    }
 
+    public static void addTransaction(Transaction transaction){
+        db.collection("transaction").add(transaction);
     }
     public static void updateBook(Book book) {
        // db.collection("books").document(book.getBookId()).set(book);

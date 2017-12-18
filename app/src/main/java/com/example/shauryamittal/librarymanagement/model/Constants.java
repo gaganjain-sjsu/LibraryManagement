@@ -18,6 +18,9 @@ public class Constants {
     public static final String BOOK_IMAGE_URL = "book_image_url";
     public static final String EMAIL_VERIFIED = "emailverified";
     public static final String BOOK_COVERS = "bookcovers";
+    public static final String CheckedOutBooks = "checkOutBooks";
+
+
 
 
 }
