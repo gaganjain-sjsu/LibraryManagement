@@ -25,19 +25,27 @@ public class CheckoutStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_status);
         Intent intent = getIntent();
-
-        //bookId = intent.getStringExtra("bookId");
-
-
-
-        Book b1= new Book();
-        b1.setTitle("123");
-        b1.setStatus("abs success");
-        books.add(b1);
-        Book b2= new Book();
-        b2.setTitle("123");
-        b2.setStatus("abs waitlist");
+        try {
+            Book b1 = (Book) intent.getSerializableExtra("book1");
+            books.add(b1);
+        }catch(Exception e){}
+        try{
+        Book b2 = (Book)intent.getSerializableExtra("book2");
         books.add(b2);
+        }catch(Exception e){}
+        try{
+        Book b3 = (Book)intent.getSerializableExtra("book3");
+        books.add(b3);
+        }catch(Exception e){}
+
+//        Book b1= new Book();
+//        b1.setTitle("123");
+//        b1.setStatus("abs success");
+//        books.add(b1);
+//        Book b2= new Book();
+//        b2.setTitle("123");
+//        b2.setStatus("abs waitlist");
+//        books.add(b2);
         recyclerView=(RecyclerView)findViewById(R.id.checkoutStatusRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

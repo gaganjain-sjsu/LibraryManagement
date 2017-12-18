@@ -235,7 +235,14 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                             }
                                                         });
 
-                                                    
+//    Intent intent = new Intent(ctx, LibrarianUpdateBook.class);
+////                    EditText editText = (EditText) findViewById(R.id.editText);
+////                    String message = editText.getText().toString();
+////                    intent.putExtra(EXTRA_MESSAGE, message);
+//                                                    intent.putExtra("bookObj",mBook);
+//                                                    ctx.startActivity(intent);
+                                                    Intent intent = new Intent(ShoppingCartActivity.this, CheckoutStatusActivity.class);
+                                                    ShoppingCartActivity.this.startActivity(intent);
 
 
 
