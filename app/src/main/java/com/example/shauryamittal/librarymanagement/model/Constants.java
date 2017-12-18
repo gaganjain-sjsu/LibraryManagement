@@ -1,4 +1,5 @@
 package com.example.shauryamittal.librarymanagement.model;
+import java.util.Date;
 
 /**
  * Created by shauryamittal on 12/10/17.
@@ -21,6 +22,7 @@ public class Constants {
     public static final String CheckedOutBooks = "checkOutBooks";
     public static final String LAST_CHECKOUT_DAY_COUNT = "lastCheckoutDayCount";
     public static final String LAST_CHECKED_OUT_DAY = "lastCheckedOutDay";
+    public static Date todaysDate=new Date();
 
 
 }

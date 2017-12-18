@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
     public boolean canBeCheckedOut = true;
     String currentUserId;
     int checkOutBooks=0;
+    Date lastCheckedOutDay;
+    int lastCheckoutDayCount=0;
     User currentUserDetails;
     String[] bookKeyList;
     SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -90,14 +94,45 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
-                            System.out.println("Book Id in CheckOut Book Is:-"+doc.getId());
+                            //System.out.println("Book Id in CheckOut Book Is:-"+doc.getId());
+
                             checkOutBooks=Integer.parseInt(doc.getString(Constants.CheckedOutBooks));
-                            System.out.println("!!!!!!!Email===="+doc.getString("checkOutBooks"));
+                            String lastCountStr=doc.getString(Constants.LAST_CHECKOUT_DAY_COUNT);
+                            if(lastCountStr==null|| lastCountStr.trim().equals("")){
+                                Log.w(TAG, "lastCheckoutDayCount is Null");
+                                return;
+                            }
+                            lastCheckoutDayCount=Integer.parseInt(lastCountStr);
+                            System.out.println("!!!!!!!lastCheckoutDayCount===="+lastCheckoutDayCount);
+
+                            String lastCheckDay=doc.getString(Constants.LAST_CHECKED_OUT_DAY);
+                            if(lastCheckDay==null|| lastCheckDay.trim().equals("")){
+                                Log.w(TAG, "lastCheckoutDay is Null");
+                                return;
+                            }
+                            try {
+                                lastCheckedOutDay=dateToString.parse(lastCheckDay);
+                            } catch (ParseException e) {
+                                Log.w(TAG, "Error In parsing Date"+e.getMessage());
+                            }
+                            System.out.println("!!!!!!!lastCheckedOutDay===="+lastCheckedOutDay);
+                            //System.out.println("!!!!!!!Email===="+doc.getString("checkOutBooks"));
 
                             if((checkOutBooks+currentCheckoutSize)>9){
                                 String tostString="Cannot Checkout. " + checkOutBooks + " Books Already Issued. Remove "+(checkOutBooks+currentCheckoutSize-9)+" Books from cart";
                                 Toast toast = Toast.makeText(getApplicationContext(), tostString, Toast.LENGTH_SHORT);
                                 toast.show();
+                            }else if(lastCheckedOutDay.getDate()==Constants.todaysDate.getDate() && (lastCheckoutDayCount+currentCheckoutSize)>3){
+                                if(lastCheckoutDayCount==3){
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Reached Daily Checkout Limit", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }else{
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Daily Checkout limit is 3. Remove "+(lastCheckoutDayCount+currentCheckoutSize-3)+" books to checkout.", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+
+                                System.out.println("!!!!!!!!!!!Todays Date=============");
+                                return;
                             }else{
                                 for (int i = 0; i < currentCheckoutSize; i++) {
                                     DocumentReference mRef = db.collection("books").document(bookKeyList[i]);
@@ -153,11 +188,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         for(Book book1 :checkedOutBooks){
                                                           Transaction transaction = new Transaction();
                                                             transaction.setBookId(book1.getBookId());
-                                                            Date d = new Date() ;
+                                                            Date d = Constants.todaysDate ;
                                                             d.setTime(d.getTime()+ (30 * 1000 * 60 * 60 * 24));
                                                             transaction.setDueDate(dateToString.format(d));
                                                             transaction.setFine(0);
-                                                            transaction.setIssueDate(dateToString.format(new Date()));
+                                                            transaction.setIssueDate(dateToString.format(Constants.todaysDate));
                                                             transaction.setRenewCount(0);
                                                             transaction.setUid(currentUserId);
                                                             DbOperations.addTransaction(transaction);
