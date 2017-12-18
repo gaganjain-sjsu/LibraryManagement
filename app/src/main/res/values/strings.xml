@@ -11,4 +11,6 @@
     <string name="book_cover">Book Cover</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="remove"><u>Remove</u></string>
+    <string name="addwaitlist"><u>Add To Waitlist</u></string>
+    <string name="title_activity_checkout_status">CheckoutStatusActivity</string>
 </resources>

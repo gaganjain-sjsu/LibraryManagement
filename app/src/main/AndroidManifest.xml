@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.shauryamittal.librarymanagement">
 
-<manifest package="com.example.shauryamittal.librarymanagement"
-          xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -87,23 +86,27 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".LibrarianHomepageActivity"></activity>
+        <activity android:name=".LibrarianHomepageActivity" />
         <activity android:name=".PatronBookSearch">
             <intent-filter>
-                <action android:name="com.example.shauryamittal.librarymanagement.PatronBookSearch"/>
+                <action android:name="com.example.shauryamittal.librarymanagement.PatronBookSearch" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ErrorActivity">
+        <activity android:name=".ErrorActivity"></activity>
+        <activity android:name=".LibrarianViewBooksActivity"></activity>
+        <activity android:name=".ShoppingCartActivity" />
+        <activity android:name=".EmailVerificationActivity" />
+        <activity android:name=".OtpVerificationActivity" />
+        <activity android:name=".SetDateActivity" />
+        <activity
+            android:name=".CheckoutStatusActivity">
+            <intent-filter>
+                <action android:name="com.example.shauryamittal.librarymanagement.CheckoutStatusActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-        <activity android:name=".LibrarianViewBooksActivity">
-        </activity>
-        <activity android:name=".ShoppingCartActivity"/>
-        <activity android:name=".EmailVerificationActivity"/>
-        <activity android:name=".OtpVerificationActivity"/>
-        <activity android:name=".SetDateActivity"/>
-
     </application>
 
 </manifest>

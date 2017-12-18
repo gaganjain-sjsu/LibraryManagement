@@ -1,5 +1,6 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -54,6 +55,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
     Button checkout;
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     public ArrayList<Book> checkedOutBooks = new ArrayList<Book>();
+    public ArrayList<Book> checkedOutStatus = new ArrayList<Book>();
+    public int successfulCheckedCount=0;
     //public ArrayList<Book> eligibleToCheckoutBooks = new ArrayList<Book>();
     public int currentCheckoutSize = 0;
     public boolean canBeCheckedOut = true;
@@ -70,7 +73,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_cart);
-
+        successfulCheckedCount=0;
         recyclerView = (RecyclerView) findViewById(R.id.cart_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,6 +92,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     return;
                 }
                 currentUserId=CurrentUser.UID;
+                System.out.println("currentCartItems==="+currentCartItems);
+                if(currentCartItems.charAt(0)==','){
+                    currentCartItems=currentCartItems.substring(1);
+                    SharedPreferences.Editor edit = SP.edit();
+                    edit.putString (CurrentUser.UID, currentCartItems);
+                    edit.commit();
+                }
                 bookKeyList = currentCartItems.split(",");
                 currentCheckoutSize=bookKeyList.length;
                 DocumentReference mRefUser = db.collection("users").document(currentUserId);
@@ -118,8 +128,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 Log.w(TAG, "Error In parsing Date"+e.getMessage());
                             }
-                            System.out.println("!!!!!!!lastCheckedOutDay===="+lastCheckedOutDay);
-                            //System.out.println("!!!!!!!Email===="+doc.getString("checkOutBooks"));
 
                             if((checkOutBooks+currentCheckoutSize)>9){
                                 String tostString="Cannot Checkout. " + checkOutBooks + " Books Already Issued. Remove "+(checkOutBooks+currentCheckoutSize-9)+" Books from cart";
@@ -130,6 +138,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                     Toast toast = Toast.makeText(getApplicationContext(), "Reached Daily Checkout Limit", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }else{
+                                    System.out.println("lastCheckoutDayCount="+lastCheckoutDayCount+" currentCheckoutSize=="+currentCheckoutSize);
                                     Toast toast = Toast.makeText(getApplicationContext(), "Daily Checkout limit is 3. Remove "+(lastCheckoutDayCount+currentCheckoutSize-3)+" books to checkout.", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
@@ -142,40 +151,72 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot doc = task.getResult();
-                                                System.out.println(doc.getId());
                                                 Book book = doc.toObject(Book.class);
                                                 book.setBookId(doc.getId());
                                                 checkedOutBooks.add(book);
-
-
                                                 if(checkedOutBooks.size()==currentCheckoutSize){
-                                                    for(Book book1 :checkedOutBooks){
-                                                        if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
-                                                            canBeCheckedOut=false;
-                                                            String tostStr="Book Unavailable. Book Title="+book1.getTitle()+" Publisher="+book1.getPublisher();
-                                                            Toast toast = Toast.makeText(getApplicationContext(), tostStr, Toast.LENGTH_SHORT);
-                                                            toast.show();
-                                                            break;
-                                                        }
-                                                    }
+//                                                    for(Book book1 :checkedOutBooks){
+//                                                        if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
+//                                                            canBeCheckedOut=false;
+//                                                            String tostStr="Book Unavailable. Book Title="+book1.getTitle()+" Publisher="+book1.getPublisher();
+//                                                            Toast toast = Toast.makeText(getApplicationContext(), tostStr, Toast.LENGTH_SHORT);
+//                                                            toast.show();
+//                                                            break;
+//                                                        }
+//                                                    }
 
-                                                    if(canBeCheckedOut){
+                                                    //if(canBeCheckedOut){
                                                         for(Book book1 :checkedOutBooks){
+                                                            if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
+                                                                book1.setStatus("Book not available");
+                                                                checkedOutStatus.add(book1);
+                                                                continue;
+                                                            }
+
                                                             book1.setNoOfCheckedOutCopy(book1.getNoOfCheckedOutCopy()+1);
                                                             if (book.getBookId() != null) {
                                                                 DbOperations.updateBook(book1);
                                                             } else {
                                                                 Log.w(TAG, "Book Id in null in book object. So cannot update");
                                                             }
+                                                          //  Updating The Transaction Table.
+                                                                Transaction transaction = new Transaction();
+                                                                transaction.setBookId(book1.getBookId());
+                                                                Date d = Constants.todaysDate ;
+                                                                d= DbOperations.addDays(d,30);
+                                                                transaction.setDueDate(dateToString.format(d));
+                                                                transaction.setFine(0);
+                                                                transaction.setIssueDate(dateToString.format(Constants.todaysDate));
+                                                                transaction.setRenewCount(0);
+                                                                transaction.setUid(currentUserId);
+                                                                DbOperations.addTransaction(transaction);
+
+                                                            book1.setStatus("Due Date is "+ new SimpleDateFormat("MM/dd/yyyy").format(d));
+                                                            checkedOutStatus.add(book1);
+                                                            successfulCheckedCount++;
+
+
+                                                            SharedPreferences SP;
+                                                            SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                                                            String currentCartItems = SP.getString(CurrentUser.UID, null);
+                                                            String bookToRemove=book1.getBookId();
+                                                            if(bookToRemove!=null && currentCartItems!=null){
+                                                                String newCartItems = currentCartItems.replaceAll(bookToRemove+",","").replaceAll(""+","+bookToRemove,"").replaceAll(bookToRemove, "");
+                                                                SharedPreferences.Editor edit = SP.edit();
+                                                                edit.putString (CurrentUser.UID, newCartItems);
+                                                                Log.v("SHARED PREFERENCE:", newCartItems);
+                                                                edit.commit();
+                                                            }
+
                                                         }
 
                                                         // Updating User Checkedout
                                                         HashMap<String, Object> hm = new HashMap<String,Object>();
-                                                        hm.put(Constants.CheckedOutBooks,String.valueOf(checkOutBooks+currentCheckoutSize));
+                                                        hm.put(Constants.CheckedOutBooks,String.valueOf(checkOutBooks+successfulCheckedCount));
                                                         if(DbOperations.checkEqualDay(lastCheckedOutDay,Constants.todaysDate)){
-                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(lastCheckoutDayCount+currentCheckoutSize));
+                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(lastCheckoutDayCount+successfulCheckedCount));
                                                         }else{
-                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(currentCheckoutSize));
+                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(successfulCheckedCount));
                                                             hm.put(Constants.LAST_CHECKED_OUT_DAY,dateToString.format(Constants.todaysDate));
                                                             System.out.println("Updated Date======="+dateToString.format(Constants.todaysDate));
                                                         }
@@ -194,26 +235,15 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                             }
                                                         });
 
-    //                                                  Updating The Transaction Table.
-                                                        for(Book book1 :checkedOutBooks){
-                                                          Transaction transaction = new Transaction();
-                                                            transaction.setBookId(book1.getBookId());
-                                                            Date d = Constants.todaysDate ;
-                                                            d= DbOperations.addDays(d,30);
-                                                            transaction.setDueDate(dateToString.format(d));
-                                                            transaction.setFine(0);
-                                                            transaction.setIssueDate(dateToString.format(Constants.todaysDate));
-                                                            transaction.setRenewCount(0);
-                                                            transaction.setUid(currentUserId);
-                                                            DbOperations.addTransaction(transaction);
-                                                        }
+                                                    
+
 
 
                                                         Toast toast = Toast.makeText(getApplicationContext(), "Checked Out Succesful", Toast.LENGTH_SHORT);
                                                         toast.show();
 
 
-                                                    }
+                                                    //}
 
                                                 }
                                             }
