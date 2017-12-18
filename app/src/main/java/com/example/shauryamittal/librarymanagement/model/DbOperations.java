@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Calendar;
 
 import static android.content.ContentValues.TAG;
 
@@ -36,6 +37,7 @@ public class DbOperations {
     private static final String BOOK_TITLE = "title";
     private static final String BOOK_AUTHOR = "author";
     static ArrayList<User> patrons = new ArrayList<User>();
+    static SimpleDateFormat dateCompareFormatter = new SimpleDateFormat("MM/dd/yyyy");
 
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static List<User> librarians;
@@ -153,4 +155,16 @@ public class DbOperations {
         //return patrons;
     }
 
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
+    public static boolean checkEqualDay(Date date1, Date date2)
+    {
+        System.out.println("Inside checkEqualDay==="+dateCompareFormatter.format(date1).equals(dateCompareFormatter.format(date2)));
+        return dateCompareFormatter.format(date1).equals(dateCompareFormatter.format(date2));
+    }
 }

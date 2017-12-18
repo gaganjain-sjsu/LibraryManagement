@@ -5,12 +5,21 @@ package com.example.shauryamittal.librarymanagement.model;
  */
 
 public class Transaction {
+    private String transactionId;
     private String bookId;
     private String dueDate;
     private int fine;
     private String issueDate;
     private int renewCount;
     private String uid;
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
 
     public String getBookId() {
         return bookId;

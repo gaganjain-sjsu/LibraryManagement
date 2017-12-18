@@ -33,7 +33,9 @@ import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.DoubleBinaryOperator;
 
 import static android.content.ContentValues.TAG;
 
@@ -62,6 +64,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     User currentUserDetails;
     String[] bookKeyList;
     SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +125,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                 String tostString="Cannot Checkout. " + checkOutBooks + " Books Already Issued. Remove "+(checkOutBooks+currentCheckoutSize-9)+" Books from cart";
                                 Toast toast = Toast.makeText(getApplicationContext(), tostString, Toast.LENGTH_SHORT);
                                 toast.show();
-                            }else if(lastCheckedOutDay.getDate()==Constants.todaysDate.getDate() && (lastCheckoutDayCount+currentCheckoutSize)>3){
+                            }else if(DbOperations.checkEqualDay(lastCheckedOutDay,Constants.todaysDate) && (lastCheckoutDayCount+currentCheckoutSize)>3){
                                 if(lastCheckoutDayCount==3){
                                     Toast toast = Toast.makeText(getApplicationContext(), "Reached Daily Checkout Limit", Toast.LENGTH_SHORT);
                                     toast.show();
@@ -131,8 +134,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                     toast.show();
                                 }
 
-                                System.out.println("!!!!!!!!!!!Todays Date=============");
-                                return;
                             }else{
                                 for (int i = 0; i < currentCheckoutSize; i++) {
                                     DocumentReference mRef = db.collection("books").document(bookKeyList[i]);
@@ -169,9 +170,18 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         }
 
                                                         // Updating User Checkedout
+                                                        HashMap<String, Object> hm = new HashMap<String,Object>();
+                                                        hm.put(Constants.CheckedOutBooks,String.valueOf(checkOutBooks+currentCheckoutSize));
+                                                        if(DbOperations.checkEqualDay(lastCheckedOutDay,Constants.todaysDate)){
+                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(lastCheckoutDayCount+currentCheckoutSize));
+                                                        }else{
+                                                            hm.put(Constants.LAST_CHECKOUT_DAY_COUNT,String.valueOf(currentCheckoutSize));
+                                                            hm.put(Constants.LAST_CHECKED_OUT_DAY,dateToString.format(Constants.todaysDate));
+                                                            System.out.println("Updated Date======="+dateToString.format(Constants.todaysDate));
+                                                        }
                                                         DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(Constants.USER_COLLECTION+ "/" + currentUserId);
                                                         currentUserDocument.
-                                                                update(Constants.CheckedOutBooks, String.valueOf(checkOutBooks+currentCheckoutSize))
+                                                                update(hm)
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {
@@ -189,7 +199,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                           Transaction transaction = new Transaction();
                                                             transaction.setBookId(book1.getBookId());
                                                             Date d = Constants.todaysDate ;
-                                                            d.setTime(d.getTime()+ (30 * 1000 * 60 * 60 * 24));
+                                                            d= DbOperations.addDays(d,30);
                                                             transaction.setDueDate(dateToString.format(d));
                                                             transaction.setFine(0);
                                                             transaction.setIssueDate(dateToString.format(Constants.todaysDate));
