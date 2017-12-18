@@ -11,16 +11,18 @@ public class User {
     String mSjsuId;
     String mUid;
     String mRole;
-    int checkOutBooks=0;
+    String checkOutBooks="0";
     boolean emailVerified;
+    String lastCheckoutDayCount;
+    String lastCheckedOutDay;
 
-    public int getCheckOutBooks() {
-        return checkOutBooks;
-    }
-
-    public void setCheckOutBooks(int checkOutBooks) {
-        this.checkOutBooks = checkOutBooks;
-    }
+//    public int getCheckOutBooks() {
+//        return checkOutBooks;
+//    }
+//
+//    public void setCheckOutBooks(int checkOutBooks) {
+//        this.checkOutBooks = checkOutBooks;
+//    }
 
     public User(String name, String email, String sjsuId, String uid, String role){
         mName = name;

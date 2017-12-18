@@ -136,7 +136,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         // Updating User Checkedout
                                                         DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(Constants.USER_COLLECTION+ "/" + currentUserId);
                                                         currentUserDocument.
-                                                                update(Constants.CheckedOutBooks, checkOutBooks+currentCheckoutSize)
+                                                                update(Constants.CheckedOutBooks, String.valueOf(checkOutBooks+currentCheckoutSize))
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {

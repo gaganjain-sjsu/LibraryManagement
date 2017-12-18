@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
@@ -40,7 +42,7 @@ public class DbOperations {
     Book book12;
 
     public static void createUser(User user){
-
+        SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         // Create a new user with a first and last name
         Map<String, Object> newUser = new HashMap<>();
 
@@ -51,6 +53,10 @@ public class DbOperations {
         newUser.put(Constants.ROLE_KEY, user.getRole());
         newUser.put(Constants.EMAIL_VERIFIED, user.getEmailVerified());
         newUser.put(Constants.CheckedOutBooks, "0");
+        newUser.put(Constants.LAST_CHECKOUT_DAY_COUNT, "0");
+        newUser.put(Constants.LAST_CHECKED_OUT_DAY, dateToString.format(new Date()));
+
+
         // Add a new document with a generated ID
         db.collection(Constants.USER_COLLECTION).document(user.getUid())
                 .set(newUser)

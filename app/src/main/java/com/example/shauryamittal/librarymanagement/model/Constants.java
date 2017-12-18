@@ -19,8 +19,8 @@ public class Constants {
     public static final String EMAIL_VERIFIED = "emailverified";
     public static final String BOOK_COVERS = "bookcovers";
     public static final String CheckedOutBooks = "checkOutBooks";
-
-
+    public static final String LAST_CHECKOUT_DAY_COUNT = "lastCheckoutDayCount";
+    public static final String LAST_CHECKED_OUT_DAY = "lastCheckedOutDay";
 
 
 }
