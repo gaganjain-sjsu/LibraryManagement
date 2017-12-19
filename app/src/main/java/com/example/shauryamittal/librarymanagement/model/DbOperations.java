@@ -2,6 +2,7 @@ package com.example.shauryamittal.librarymanagement.model;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -131,7 +132,44 @@ public class DbOperations {
         });
 
     }
+    public static void dropWaitList(final Book book){
+        if(book.getWailistedUsers() == null || book.getWailistedUsers().isEmpty() || book.getWailistedUsers().length() == 0)return;
+        String[] users = book.getWailistedUsers().split(",");
 
+        for(String user : users){
+            final DocumentReference userRef = db.document(Constants.USER_COLLECTION + "/" + user);
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            String waitlist = document.getString(Constants.USER_WAITLISTED_BOOKS_KEY);
+                            String newWaitList = removeEntry(waitlist, book.getBookId());
+                            userRef.update(Constants.USER_WAITLISTED_BOOKS_KEY, newWaitList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Log.v("WAITLIST ", "WAITLIST UPDATED for user");
+                                    }
+                                    else {
+                                        Log.v("WAITLIST PROBLEM ", task.getException().getMessage());
+                                    }
+                                }
+                            }) ;
+                            Log.d("Document Data", "DocumentSnapshot data: " + task.getResult().getData());
+                        } else {
+                            Log.d("NOT FOUND", "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+
+        }
+
+    }
 
 
     public static void getLibrarians() {
@@ -178,4 +216,12 @@ public class DbOperations {
         System.out.println("Inside checkEqualDay==="+dateCompareFormatter.format(date1).equals(dateCompareFormatter.format(date2)));
         return dateCompareFormatter.format(date1).equals(dateCompareFormatter.format(date2));
     }
+
+    public static String removeEntry(String values, String id){
+        if(values.contains(id + ",")) return values.replace(id + ",", "");
+        if(values.contains( "," + id )) return values.replace("," + id , "");
+        else return values.replace(id , "");
+    }
+
+
 }

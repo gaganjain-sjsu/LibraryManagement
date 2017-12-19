@@ -156,6 +156,12 @@ public class LibrarianUpdateBook extends AppCompatActivity {
             numberOfCopies=numberOfCopies.trim();
             try {
                 book.setNoOfCopy(Integer.parseInt(numberOfCopies));
+                if(Integer.parseInt(numberOfCopies) < 1){
+                    book.setStatus("Unavailable");
+                }
+                else{
+                    book.setStatus("Available");
+                }
             }catch (NumberFormatException e){
                 showToast("Enter Valid Number Of Copies");
                 return;

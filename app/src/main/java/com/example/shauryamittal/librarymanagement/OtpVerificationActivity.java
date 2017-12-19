@@ -87,6 +87,9 @@ public class OtpVerificationActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.v("EMAIL VERIFICATION ", "Successful");
+                                    VerificationConfirmation emailSender = new VerificationConfirmation();
+                                    emailSender.execute(email);
+
                                 }
                             });
 
@@ -163,6 +166,33 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 Log.v("EMAIL SENT TO:", params[0]);
 
                 String emailMessage = "Your One Time Password (OTP) for the Spartan Bookstore Account is " + generatedOtp;
+                MailUtility.sendMail(params[0], emailMessage);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return otp.toString();
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(OtpVerificationActivity.this, "Verification Email Sent", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private class VerificationConfirmation extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Random rand = new Random();
+
+                Log.v("EMAIL SENT TO:", params[0]);
+
+                String emailMessage = "Your email has been successfully verified";
                 MailUtility.sendMail(params[0], emailMessage);
 
             } catch (Exception e) {

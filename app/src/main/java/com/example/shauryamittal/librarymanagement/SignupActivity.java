@@ -85,6 +85,12 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
+                if(sjsuId.length() != 6){
+                    editText_sjsuId.setError("SJSU ID need to be 6 digits");
+                    editText_sjsuId.requestFocus();
+                    return;
+                }
+
                 if(email.isEmpty()){
                     editText_email.setError("Email can't be empty");
                     editText_email.requestFocus();

@@ -299,14 +299,14 @@ public class SearchDetailActivity extends AppCompatActivity {
 
                             String userIdExtension;
 
-                            if(document.getString(Constants.USER_WAITLISTED_BOOKS_KEY).equals("")){
+                            if(document.getString(Constants.WAITLISTED_USERS_KEY).equals("")){
                                 userIdExtension = CurrentUser.UID;
                             }
                             else {
                                 userIdExtension = "," + CurrentUser.UID;
                             }
 
-                            bookDoc.update(Constants.WAITLISTED_USERS_KEY, document.getString(Constants.WAITLISTED_USERS_KEY)+ ","+ userIdExtension).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            bookDoc.update(Constants.WAITLISTED_USERS_KEY, document.getString(Constants.WAITLISTED_USERS_KEY)+ userIdExtension).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){

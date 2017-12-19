@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
@@ -78,6 +79,14 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
             delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+
+                    if(mBook.getNoOfCheckedOutCopy() !=0 ){
+                        Toast.makeText(ctx, "Cannot be deleted as the book has been issued by patrons", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    DbOperations.dropWaitList(mBook);
+
                     DbOperations.deleteBook(mBook.getBookId());
                     mBookList.remove(mBook);
                     System.out.println("Inside delete button called.  Book Id="+mBook.getTitle());

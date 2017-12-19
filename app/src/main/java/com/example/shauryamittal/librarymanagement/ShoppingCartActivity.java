@@ -160,17 +160,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                 book.setBookId(doc.getId());
                                                 checkedOutBooks.add(book);
                                                 if(checkedOutBooks.size()==currentCheckoutSize){
-//                                                    for(Book book1 :checkedOutBooks){
-//                                                        if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
-//                                                            canBeCheckedOut=false;
-//                                                            String tostStr="Book Unavailable. Book Title="+book1.getTitle()+" Publisher="+book1.getPublisher();
-//                                                            Toast toast = Toast.makeText(getApplicationContext(), tostStr, Toast.LENGTH_SHORT);
-//                                                            toast.show();
-//                                                            break;
-//                                                        }
-//                                                    }
-
-                                                    //if(canBeCheckedOut){
+//
                                                         for(Book book1 :checkedOutBooks){
                                                             if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
                                                                 book1.setStatus("Book not available");
@@ -185,6 +175,16 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                             } else {
                                                                 Log.w(TAG, "Book Id in null in book object. So cannot update");
                                                             }
+
+                                                            if(book1.getNoOfCopy() - book1.getNoOfCheckedOutCopy()<=0){
+                                                                book1.setStatus("Unavailable");
+                                                            }
+                                                            if (book.getBookId() != null) {
+                                                                DbOperations.updateBook(book1);
+                                                            } else {
+                                                                Log.w(TAG, "Book Id in null in book object. So cannot update");
+                                                            }
+
                                                           //  Updating The Transaction Table.
                                                                 Transaction transaction = new Transaction();
                                                                 transaction.setBookId(book1.getBookId());
