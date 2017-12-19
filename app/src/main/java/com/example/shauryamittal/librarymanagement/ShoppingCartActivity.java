@@ -189,6 +189,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                                 transaction.setIssueDate(dateToString.format(Constants.todaysDate));
                                                                 transaction.setRenewCount(0);
                                                                 transaction.setUid(currentUserId);
+                                                                transaction.setBook(book1);
                                                                 DbOperations.addTransaction(transaction);
 
                                                             book1.setStatus("Due Date is "+ new SimpleDateFormat("MM/dd/yyyy").format(d));

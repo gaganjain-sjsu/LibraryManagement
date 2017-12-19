@@ -12,6 +12,7 @@ public class Transaction {
     private String issueDate;
     private int renewCount;
     private String uid;
+    private Book book;
 
     public String getTransactionId() {
         return transactionId;
@@ -67,5 +68,13 @@ public class Transaction {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

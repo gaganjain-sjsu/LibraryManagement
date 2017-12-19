@@ -29,7 +29,7 @@ import java.util.List;
 public class PatronMybookFragment extends Fragment {
     RecyclerView recyclerView;
     PatronMybookAdapter csAdapter;
-    List<Book> books = new ArrayList<>();
+    List<Transaction> transactionList = new ArrayList<>();
     static FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Nullable
@@ -37,36 +37,35 @@ public class PatronMybookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_patron_mybook,container,false);
 
-        Book b1= new Book();
-        b1.setTitle("aaaa");
-        b1.setAuthor("hjj");
-        books.add(b1);
         recyclerView=(RecyclerView)view.findViewById(R.id.patronMyBookRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        csAdapter= new PatronMybookAdapter(getContext(),books);
+        csAdapter= new PatronMybookAdapter(getContext(),transactionList);
         recyclerView.setAdapter(csAdapter);
+        getPatronMybookListFromTransaction();
 
         return view;
     }
-    //adapter.notifyDataSetChanged();
-//    public void getPatronMybookListFromTransaction(){
-//        db.collection("transaction")
-//                .whereEqualTo("uid", CurrentUser.UID)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                document.getId();
-//                                Transaction transaction = document.toObject(Transaction.class);
-//                               // Log.d(TAG, document.getId() + " => " + document.getData());
-//                            }
-//                        } else {
-//                            //Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
+
+    public void getPatronMybookListFromTransaction(){
+        db.collection("transaction")
+                .whereEqualTo("uid", CurrentUser.UID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                document.getId();
+                                Transaction transaction = document.toObject(Transaction.class);
+                                transactionList.add(transaction);
+                                csAdapter.notifyDataSetChanged();
+
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 }

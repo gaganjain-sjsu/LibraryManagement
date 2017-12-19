@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.Transaction;
 
 import java.util.List;
 
@@ -25,13 +26,13 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
 
 
     private Context ctx;
-    private List<Book> mBookList;
+    private List<Transaction> transactionList;
     private String currentBookId="";
     private int currPosition;
 
-    public PatronMybookAdapter(Context ctx, List<Book> bookList) {
+    public PatronMybookAdapter(Context ctx, List<Transaction> transactionlist) {
         this.ctx = ctx;
-        mBookList = bookList;
+        transactionList = transactionlist;
     }
 
     @Override
@@ -44,37 +45,40 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
     @Override
     public void onBindViewHolder(PatronMybookViewHolder holder, int position) {
 
-        holder.bind(mBookList.get(position));
+        holder.bind(transactionList.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return mBookList.size();
+        return transactionList.size();
     }
 
     class PatronMybookViewHolder extends RecyclerView.ViewHolder{
-        Book mBook;
+        Transaction transaction;
         ImageView coverImage;
-        TextView title,author,publisher;
+        TextView title,author,dueDate, fine;
         Button returnBook, reissueBook;
         public PatronMybookViewHolder(View itemView) {
             super(itemView);
             coverImage=itemView.findViewById(R.id.patron_mybook_book_img);
             title=itemView.findViewById(R.id.patron_mybook_book_name);
             author=itemView.findViewById(R.id.patron_mybook_author);
-            publisher=itemView.findViewById(R.id.patron_mybook_Publisher);
+            dueDate=itemView.findViewById(R.id.patron_mybook_duedate);
+            fine=itemView.findViewById(R.id.patron_mybook_fine);
+
             returnBook= itemView.findViewById(R.id.patron_mybook_return_book);
             reissueBook=itemView.findViewById(R.id.patron_mybook_reissue_book);
         }
 
-        public void bind(Book book){
+        public void bind(Transaction transact){
 
-            mBook = book;
+            transaction = transact;
+            Book book=transaction.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
-            publisher.setText(book.getPublisher());
-            publisher.setText(book.getPublisher());
+            dueDate.setText("Due Date is "+transaction.getDueDate());
+            fine.setText("Fine on book is $"+transaction.getFine());
 
 //            delete.setOnClickListener(new View.OnClickListener() {
 //                public void onClick(View v) {
