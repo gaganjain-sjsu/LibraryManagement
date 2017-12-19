@@ -62,49 +62,38 @@ import static android.content.ContentValues.TAG;
 
 public class ViewBooksActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TextView returns;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+    List<Fragment> mFragmentList=new ArrayList<Fragment>();
+    List<String> mFragmentPageTitle=new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_books);
 
+        PatronMybookFragment f1 = new PatronMybookFragment();
+        mFragmentList.add(f1);
+        PatronMyWaitlistFragment f2= new PatronMyWaitlistFragment();
+        mFragmentList.add(f2);
+        mFragmentPageTitle.add("My Books");
+        mFragmentPageTitle.add("My Waitlist Books");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
+//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
 
     }
 
@@ -147,14 +136,8 @@ public class ViewBooksActivity extends AppCompatActivity {
             }
         }
 
-        /**
-         * A placeholder fragment containing a simple view.
-         */
         public static class PlaceholderFragment extends Fragment {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.
-             */
+
 
             private static final String TAG = "PlaceholderFragment";
             private BookFactory factory;
@@ -251,36 +234,6 @@ public class ViewBooksActivity extends AppCompatActivity {
                 }
             }
 
-            /*
-            @Override
-
-            public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-                super.onViewCreated(view, savedInstanceState);
-                mCheckBox = (CheckBox) view.findViewById(R.id.user_input);
-
-                //FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fab);
-                Log.d(TAG, "inside onViewCreated");
-                mCheckBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if(!checkBoxHasBeenClicked){
-                            ViewGroup.LayoutParams params=mBookRecyclerView.getLayoutParams();
-                            params.height -= 100;
-                            mBookRecyclerView.setLayoutParams(params);
-                            checkBoxHasBeenClicked = true;
-                        }
-
-
-                        /*TextView btn = new Button(getActivity());
-                        btn.setText("Manual Add");
-                        btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        linearLayout.addView(btn);*/
-                    /*}
-                });
-
-
-            }*/
 
             @Override
             public void onResume() {
@@ -432,34 +385,6 @@ public class ViewBooksActivity extends AppCompatActivity {
                         }
                     });
 
-                    /*mCheckBox.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            if(!mCheckBox.isChecked()){
-                                mCheckBox.setChecked(true);
-                            }
-
-                            if (mCheckBox.isChecked())
-                            {
-                                returnsBookList.add(mBook);
-//                                //mBookRecyclerView.
-//                                //mBookRecyclerView.getLayoutParams();//Perform action when you touch on checkbox and it change to selected state
-//                                ViewGroup.LayoutParams params=mBookRecyclerView.getLayoutParams();
-//                                params.height -= 100;
-//                                mBookRecyclerView.setLayoutParams(params);
-
-                            }
-                            else
-                            {
-                                //Perform action when you touch on checkbox and it change to unselected state
-                                mCheckBox.setChecked(true);
-                                if(returnsBookList.contains(mBook)){
-                                    returnsBookList.remove(mBook);
-                                }
-                            }
-                        }
-                    });*/
 
                 }
 
@@ -469,41 +394,11 @@ public class ViewBooksActivity extends AppCompatActivity {
                     Intent intent = new Intent(getActivity(), SearchDetailActivity.class);
                     intent.putExtra("bookId", mBook.getBookId());
                     startActivity(intent);
-                /*Log.d(TAG, "inside onClick() method");
-                Intent intent = new Intent(getActivity(), WeatherDetailsActivity.class);
-                int index = CityLab.get(getContext()).getCities().indexOf(mCity);
-                intent.putExtra("index", index);
-                intent.putExtra("cityName", mCity.getCityName());
-                intent.putExtra("latitude", mCity.getLatitude());
-                intent.putExtra("longitude", mCity.getLongitude());
-
-                */
                 }
 
                 @Override
                 public boolean onLongClick(View view) {
 
-                /*Log.d(TAG, "inside onLongClick() method");
-
-                final CharSequence[] items = {"Delete City"};
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.remove(mCity.getCityName());
-                        editor.commit();
-                        mAdapter.mCities.remove(mCity);
-                        mAdapter.notifyDataSetChanged();
-                        Toast.makeText(getContext(), "City " + mCity.getCityName() + " removed from the list",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.show();
-                */
                     return true;
 
                 }
@@ -543,21 +438,27 @@ public class ViewBooksActivity extends AppCompatActivity {
          */
         public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+
             public SectionsPagerAdapter(FragmentManager fm) {
                 super(fm);
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mFragmentPageTitle.get(position);
             }
 
             @Override
             public Fragment getItem(int position) {
                 // getItem is called to instantiate the fragment for the given page.
                 // Return a PlaceholderFragment (defined as a static inner class below).
-                return PlaceholderFragment.newInstance(position + 1);
+                return mFragmentList.get(position);
             }
 
             @Override
             public int getCount() {
                 // Show 3 total pages.
-                return 2;
+                return mFragmentList.size();
             }
         }
     }

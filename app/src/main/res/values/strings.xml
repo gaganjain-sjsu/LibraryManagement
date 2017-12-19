@@ -13,4 +13,7 @@
     <string name="remove"><u>Remove</u></string>
     <string name="addwaitlist"><u>Add To Waitlist</u></string>
     <string name="title_activity_checkout_status">CheckoutStatusActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
