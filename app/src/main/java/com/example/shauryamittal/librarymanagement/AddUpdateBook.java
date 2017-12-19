@@ -1,7 +1,9 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -83,6 +85,7 @@ public class AddUpdateBook extends AppCompatActivity {
         uploadBookProgress = (ProgressBar) findViewById(R.id.uploadBookProgress);
         uploadBookProgress.setVisibility(View.GONE);
         submit = (Button) findViewById(R.id.createBookSubmit);
+
 
         imageUpload = (ImageView) findViewById(R.id.imageUpload);
 
@@ -218,33 +221,37 @@ public class AddUpdateBook extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 
     private void uploadImage(final String bookId) {
 
         StorageReference bookCoverReference = FirebaseStorage.getInstance().getReference(Constants.BOOK_COVERS + "/" + bookId + ".jpg");
 
-        if(uriBookImage != null){
-            bookCoverReference.putFile(uriBookImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getApplicationContext(), "Book Added to Library", Toast.LENGTH_SHORT).show();
-                    uploadBookProgress.setVisibility(View.GONE);
-                    submit.setVisibility(View.VISIBLE);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.v("BOOK IMAGE ", e.getMessage());
-                    uploadBookProgress.setVisibility(View.GONE);
-                    submit.setVisibility(View.VISIBLE);
-                    Toast.makeText(getApplicationContext(), "Unable to upload book image", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if(uriBookImage == null){
+            Resources resources = this.getResources();
+            uriBookImage = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+
         }
+
+        bookCoverReference.putFile(uriBookImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "Book Added to Library", Toast.LENGTH_SHORT).show();
+                uploadBookProgress.setVisibility(View.GONE);
+                submit.setVisibility(View.VISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.v("BOOK IMAGE ", e.getMessage());
+                uploadBookProgress.setVisibility(View.GONE);
+                submit.setVisibility(View.VISIBLE);
+                Toast.makeText(getApplicationContext(), "Unable to upload book image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
     }
 

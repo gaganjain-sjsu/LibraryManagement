@@ -3,22 +3,32 @@ package com.example.shauryamittal.librarymanagement;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
@@ -36,6 +46,10 @@ public class LibrarianUpdateBook extends AppCompatActivity {
     private EditText keywordsET;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    ProgressBar uploadBookProgress;
+    Button updateBook;
+    private ImageView imageUpload;
+
 
 
     @Override
@@ -44,6 +58,8 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         setContentView(R.layout.activity_add_update_book);
         Intent intent = getIntent();
         book = (Book)intent.getSerializableExtra("bookObj");
+        uploadBookProgress = (ProgressBar) findViewById(R.id.uploadBookProgress);
+        uploadBookProgress.setVisibility(View.GONE);
         authorET=findViewById(R.id.Author);
         titleET=findViewById(R.id.Title);
         callNumberET=findViewById(R.id.Callnumber);
@@ -56,7 +72,6 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         //showToast(CurrentUser.NAME);
-
         authorET.setText(book.getAuthor());
         titleET.setText(book.getTitle());
         callNumberET.setText(book.getCallNumber());
@@ -66,6 +81,24 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         noOfCopyET.setText(String.valueOf(book.getNoOfCopy()));
         //statusET.setText(book.getStatus());
         keywordsET.setText(book.getKeywords());
+        updateBook = (Button) findViewById(R.id.createBookSubmit);
+        updateBook.setText("Update Book");
+        imageUpload = (ImageView) findViewById(R.id.imageUpload);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        Log.v("BOOK REFERENCE ", Constants.IMAGE_FOLDER_PATH + book.getBookId() + "a.jpg");
+
+
+        StorageReference imageRef = storage.getReference(Constants.IMAGE_FOLDER_PATH + book.getBookId() + ".jpg");
+
+            Glide.with(this /* context */)
+                    .using(new FirebaseImageLoader())
+                    .load(imageRef)
+                    .into(imageUpload);
+
+
+
 
     }
 
@@ -144,9 +177,6 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         //startActivity(new Intent(AddUpdateBook.this, SearchDetailActivity.class));
 
     }
-
-
-
 
     public void showToast(String text){
         Context context = getApplicationContext();

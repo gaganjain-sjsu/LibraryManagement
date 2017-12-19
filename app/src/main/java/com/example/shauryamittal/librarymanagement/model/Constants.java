@@ -22,6 +22,10 @@ public class Constants {
     public static final String CheckedOutBooks = "checkOutBooks";
     public static final String LAST_CHECKOUT_DAY_COUNT = "lastCheckoutDayCount";
     public static final String LAST_CHECKED_OUT_DAY = "lastCheckedOutDay";
+    public static final String IMAGE_FOLDER_PATH = "bookcovers/";
+    public static final String CHECKED_OUT_COPIES_KEY = "noOfCheckedOutCopy";
+    public static final String NUMBER_OF_COPIES_KEY = "noOfCopy";
+    public static final String USER_WAITLISTED_BOOKS_KEY = "waitlistedBooks";
     public static Date todaysDate=new Date();
 
 

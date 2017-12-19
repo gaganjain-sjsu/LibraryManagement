@@ -29,6 +29,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView bookCopies;
     private DatabaseReference mDatabase;
     private String bookId ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,6 @@ public class BookDetailActivity extends AppCompatActivity {
             }
         });
 
-        
 
 
     }
