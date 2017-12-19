@@ -2,6 +2,7 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.example.shauryamittal.librarymanagement.model.DbOperations;
 import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.example.shauryamittal.librarymanagement.model.Transaction;
+import com.example.shauryamittal.librarymanagement.model.VerificationEmailData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.function.DoubleBinaryOperator;
 
 import static android.content.ContentValues.TAG;
@@ -65,6 +68,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
     Date lastCheckedOutDay;
     int lastCheckoutDayCount=0;
     User currentUserDetails;
+    ArrayList<VerificationEmailData> emailData = new ArrayList<VerificationEmailData>();
+
     String[] bookKeyList;
     SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
@@ -169,6 +174,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         for(Book book1 :checkedOutBooks){
                                                             if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
                                                                 book1.setStatus("Book not available");
+
                                                                 checkedOutStatus.add(book1);
                                                                 continue;
                                                             }
@@ -196,6 +202,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                             checkedOutStatus.add(book1);
                                                             successfulCheckedCount++;
 
+                                                            //Email code
+                                                            emailData.add(new VerificationEmailData(book1.getTitle()
+                                                                            ,new SimpleDateFormat("MM/dd/yyyy").format(d)
+                                                                            ,new SimpleDateFormat("MM/dd/yyyy").format(Constants.todaysDate)
+                                                                            ,new SimpleDateFormat("HH:mm").format(Constants.todaysDate) ));
 
                                                             SharedPreferences SP;
                                                             SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -209,6 +220,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                                 edit.commit();
                                                             }
 
+                                                        }
+
+                                                        if(emailData != null){
+                                                            String emailMessage = emailContentBuider(emailData);
+                                                            ShoppingCartActivity.AsyncTaskRunner emailSender = new ShoppingCartActivity.AsyncTaskRunner();
+                                                            emailSender.execute(CurrentUser.EMAIL, emailMessage);
                                                         }
 
                                                         // Updating User Checkedout
@@ -255,7 +272,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         intent.putExtra("book3","");
                                                     }
                                                     startActivity(intent);
-
                                                 }
                                             }
                                         }
@@ -332,4 +348,41 @@ public class ShoppingCartActivity extends AppCompatActivity {
         }
 
     }
+
+    private String emailContentBuider(ArrayList<VerificationEmailData> emailData){
+        StringBuilder message = new StringBuilder("Here are the the details of your checked out books at " + emailData.get(0).getCheckoutDate() + ", " + emailData.get(0).getCheckoutTime() + ":\n\n");
+
+        for(VerificationEmailData data :  emailData){
+            message.append("Book Name: " + data.getBookName() + "\n");
+            message.append("Due Date: " + data.getDueDate() + "\n\n");
+        }
+
+        message.append("Thank you!");
+
+        return message.toString();
+    }
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Log.v("EMAIL SENT TO:", params[0]);
+                MailUtility.sendMail(params[0], params[1]);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "Successful";
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(ShoppingCartActivity.this, "Verification Email Sent", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 }
