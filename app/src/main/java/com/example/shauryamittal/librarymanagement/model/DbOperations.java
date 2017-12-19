@@ -57,6 +57,7 @@ public class DbOperations {
         newUser.put(Constants.CheckedOutBooks, "0");
         newUser.put(Constants.LAST_CHECKOUT_DAY_COUNT, "0");
         newUser.put(Constants.LAST_CHECKED_OUT_DAY, dateToString.format(Constants.todaysDate));
+        newUser.put(Constants.USER_WAITLISTED_BOOKS_KEY, "");
 
 
         // Add a new document with a generated ID

@@ -23,7 +23,18 @@ public class Book implements Serializable {
     private String keywords="";
     private String librarianId="";
     private String bookId="";
+
+    private String wailistedUsers="";
+
     //private int checkOutCopies=0;
+
+    public String getWailistedUsers() {
+        return wailistedUsers;
+    }
+
+    public void setWailistedUsers(String wailistedUsers) {
+        this.wailistedUsers = wailistedUsers;
+    }
 
     public String getAuthor() {
         return author;

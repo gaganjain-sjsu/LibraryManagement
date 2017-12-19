@@ -19,18 +19,13 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
-import com.example.shauryamittal.librarymanagement.model.WaitlistArray;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.sun.mail.imap.protocol.UID;
-
-import java.util.ArrayList;
 
 public class SearchDetailActivity extends AppCompatActivity {
 
@@ -137,12 +132,21 @@ public class SearchDetailActivity extends AppCompatActivity {
                                                 Toast.makeText(SearchDetailActivity.this, "You are already on the waitlist", Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
-                                            userDoc.update(Constants.USER_WAITLISTED_BOOKS_KEY, document.getString(Constants.USER_WAITLISTED_BOOKS_KEY)+ ","+ bookId).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                            String bookIdExtension;
+
+                                            if(document.getString(Constants.USER_WAITLISTED_BOOKS_KEY).equals("")){
+                                                bookIdExtension = bookId;
+                                            }
+                                            else {
+                                                bookIdExtension = "," + bookId;
+                                            }
+
+                                            userDoc.update(Constants.USER_WAITLISTED_BOOKS_KEY, document.getString(Constants.USER_WAITLISTED_BOOKS_KEY)+ bookIdExtension).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
-
-                                                        Toast.makeText(SearchDetailActivity.this, "Successfully added to waitlist", Toast.LENGTH_SHORT).show();
+                                                        updateBookWaitList();
                                                     }
                                                     else {
                                                         Toast.makeText(SearchDetailActivity.this, "Unable to add to waitlist", Toast.LENGTH_SHORT).show();
@@ -157,7 +161,7 @@ public class SearchDetailActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
-                                                        Toast.makeText(SearchDetailActivity.this, "Successfully added to waitlist", Toast.LENGTH_SHORT).show();
+                                                        updateBookWaitList();
                                                     }
                                                     else {
                                                         Toast.makeText(SearchDetailActivity.this, "Unable to add to waitlist", Toast.LENGTH_SHORT).show();
@@ -277,4 +281,69 @@ public class SearchDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
+    public void updateBookWaitList(){
+        final DocumentReference bookDoc = db.document(Constants.BOOKS_COLLECTION + "/" + bookId);
+        bookDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null ) {
+                        Log.d("Doc data", "DocumentSnapshot data: " + task.getResult().getData());
+                        if(document.contains(Constants.WAITLISTED_USERS_KEY)){
+                            if(document.getString(Constants.WAITLISTED_USERS_KEY).contains(CurrentUser.UID)){
+                                Toast.makeText(SearchDetailActivity.this, "You are already on the waitlist", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            String userIdExtension;
+
+                            if(document.getString(Constants.USER_WAITLISTED_BOOKS_KEY).equals("")){
+                                userIdExtension = CurrentUser.UID;
+                            }
+                            else {
+                                userIdExtension = "," + CurrentUser.UID;
+                            }
+
+                            bookDoc.update(Constants.WAITLISTED_USERS_KEY, document.getString(Constants.WAITLISTED_USERS_KEY)+ ","+ userIdExtension).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+
+                                        Toast.makeText(SearchDetailActivity.this, "Successfully added to waitlist", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(SearchDetailActivity.this, "Unable to add to waitlist", Toast.LENGTH_SHORT).show();
+                                        Log.v("BOOK WAITLIST ERROR ", task.getException().getMessage());
+                                    }
+                                }
+                            });
+                            Log.v("WAITLIST DATA ", document.getString(Constants.WAITLISTED_USERS_KEY));
+                        }
+                        else {
+                            bookDoc.update(Constants.WAITLISTED_USERS_KEY, CurrentUser.UID).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(SearchDetailActivity.this, "Successfully added to waitlist", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(SearchDetailActivity.this, "Unable to add to waitlist", Toast.LENGTH_SHORT).show();
+                                        Log.v("BOOK WAITLIST ERROR ", task.getException().getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.d("BOOK INFO ", "BOOK DATA NOT FOUND");
+                    }
+                } else {
+                    Log.d("FAIL", "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
 }
+
