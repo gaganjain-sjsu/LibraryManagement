@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,10 +31,13 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
     private List<Transaction> transactionList;
     private String currentBookId="";
     private int currPosition;
+    private Book tempBook;
+    public static String checkedBookList="";
 
     public PatronMybookAdapter(Context ctx, List<Transaction> transactionlist) {
         this.ctx = ctx;
         transactionList = transactionlist;
+        checkedBookList="";
     }
 
     @Override
@@ -58,7 +63,8 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
         Transaction transaction;
         ImageView coverImage;
         TextView title,author,dueDate, fine;
-        Button returnBook, reissueBook;
+        CheckBox checkBook;
+        Button reissueBook;
         public PatronMybookViewHolder(View itemView) {
             super(itemView);
             coverImage=itemView.findViewById(R.id.patron_mybook_book_img);
@@ -67,7 +73,7 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
             dueDate=itemView.findViewById(R.id.patron_mybook_duedate);
             fine=itemView.findViewById(R.id.patron_mybook_fine);
 
-            returnBook= itemView.findViewById(R.id.patron_mybook_return_book);
+            checkBook= itemView.findViewById(R.id.patron_mybook_checkBox);
             reissueBook=itemView.findViewById(R.id.patron_mybook_reissue_book);
         }
 
@@ -75,10 +81,39 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
 
             transaction = transact;
             Book book=transaction.getBook();
+            tempBook=book;
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
             dueDate.setText("Due Date is "+transaction.getDueDate());
             fine.setText("Fine on book is $"+transaction.getFine());
+
+            checkBook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    if ( isChecked )
+                    {
+                        if(checkedBookList==null ||checkedBookList.trim().equals("")){
+                            checkedBookList=tempBook.getBookId();
+                        }else{
+                            checkedBookList=checkedBookList+","+tempBook.getBookId();
+                        }
+                    }else{
+                        if(checkedBookList==null){
+                            checkedBookList="";
+                        }else{
+                            checkedBookList=checkedBookList.replace(","+tempBook.getBookId(),"").replace(tempBook.getBookId()+",","").replace(tempBook.getBookId(),"");
+                        }
+                    }
+
+                    System.out.println("checkedBookList===="+checkedBookList);
+                }
+            });
+
+
+
+
 
 //            delete.setOnClickListener(new View.OnClickListener() {
 //                public void onClick(View v) {
