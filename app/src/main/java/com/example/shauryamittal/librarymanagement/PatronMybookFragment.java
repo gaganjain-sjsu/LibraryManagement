@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.ClearedWaitlist;
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class PatronMybookFragment extends Fragment {
     String[] returnBookIdArray;
     Button returnBook;
     int checkOutBooks;
+    SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
     @Nullable
     @Override
@@ -65,9 +68,6 @@ public class PatronMybookFragment extends Fragment {
                 }else{
                     if(csAdapter.checkedBookList.charAt(0)==',') csAdapter.checkedBookList=csAdapter.checkedBookList.substring(1);
                     returnBookIdArray=csAdapter.checkedBookList.split(",");
-
-
-
 
                     //1 count decrease in user.
                     DocumentReference mRefUser = db.collection("users").document(CurrentUser.UID);
@@ -105,7 +105,7 @@ public class PatronMybookFragment extends Fragment {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (DocumentSnapshot document : task.getResult()) {
-                                               // DbOperations.deleteTransaction(document.getId());
+                                                DbOperations.deleteTransaction(document.getId());
                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                             }
                                         } else {
@@ -113,12 +113,58 @@ public class PatronMybookFragment extends Fragment {
                                         }
                                     }
                                 });
+                        //3 change count in book or assign to user.
+
+                        DocumentReference mRef = db.collection("books").document(returnBookIdArray[i]);
+                        mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    Book book = doc.toObject(Book.class);
+                                    book.setBookId(doc.getId());
+                                    if(book.getWailistedUsers()==null||book.getWailistedUsers().trim().equals("")){
+                                       book.setNoOfCheckedOutCopy(book.getNoOfCheckedOutCopy()-1);
+                                        DbOperations.updateBook(book);
+                                    }else{
+                                        String allWaitlistedUsers=book.getWailistedUsers();
+                                        String assignedUser="";
+                                        if(!allWaitlistedUsers.contains(",")){
+                                            assignedUser=allWaitlistedUsers;
+                                        }else{
+                                            assignedUser=allWaitlistedUsers.substring(0,allWaitlistedUsers.indexOf(","));
+                                        }
+                                        allWaitlistedUsers=allWaitlistedUsers.replaceAll(assignedUser+",","").replaceAll(","+assignedUser,"").replaceAll(assignedUser,"");
+                                        book.setWailistedUsers(allWaitlistedUsers);
+                                        DbOperations.updateBook(book);
+                                        ClearedWaitlist clearedWaitlist= new ClearedWaitlist();
+                                        clearedWaitlist.setBookId(book.getBookId());
+                                        clearedWaitlist.setUid(assignedUser);
+                                        clearedWaitlist.setClearDate(dateToString.format(Constants.todaysDate));
+                                        clearedWaitlist.setLastDateToAcceptBook(dateToString.format(DbOperations.addDays(Constants.todaysDate,3)));
+                                        DbOperations.addClearedWaitlist(clearedWaitlist);
+                                    }
+                                }
+                            }
+                        });
+
+
+
                     }
-                    //3 change count in book or assign to user.
 
-                    
-
-
+            //Updating current View
+                    String currCheckedBook=csAdapter.checkedBookList;
+                    List<Transaction> temp = new ArrayList<>();
+                    for(Transaction trans:transactionList){
+                        if(!currCheckedBook.contains(trans.getBookId())){
+                            temp.add(trans);
+                        }
+                    }
+                    //transactionList=temp;
+                    transactionList.clear();
+                    transactionList.addAll(temp);
+                    csAdapter.notifyDataSetChanged();
+                    csAdapter.checkedBookList="";
 
 
 

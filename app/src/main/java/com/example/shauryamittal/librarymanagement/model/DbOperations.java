@@ -85,6 +85,11 @@ public class DbOperations {
     public static void addTransaction(Transaction transaction){
         db.collection("transaction").add(transaction);
     }
+    public static void addClearedWaitlist(ClearedWaitlist clearedWaitlist){
+        db.collection("clearedwaitlist").add(clearedWaitlist);
+    }
+
+
     public static void updateBook(Book book) {
        // db.collection("books").document(book.getBookId()).set(book);
         if (book.getBookId() != null) {
