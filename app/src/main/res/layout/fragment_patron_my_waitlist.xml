@@ -4,10 +4,19 @@
     android:layout_height="match_parent"
     tools:context="com.example.shauryamittal.librarymanagement.PatronMyWaitlistFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayoutPatronMyWaitlist">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/patronMyWaitlistRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
 
 </FrameLayout>
