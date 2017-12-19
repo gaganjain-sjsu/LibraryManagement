@@ -38,14 +38,6 @@ public class CheckoutStatusActivity extends AppCompatActivity {
         books.add(b3);
         }catch(Exception e){}
 
-//        Book b1= new Book();
-//        b1.setTitle("123");
-//        b1.setStatus("abs success");
-//        books.add(b1);
-//        Book b2= new Book();
-//        b2.setTitle("123");
-//        b2.setStatus("abs waitlist");
-//        books.add(b2);
         recyclerView=(RecyclerView)findViewById(R.id.checkoutStatusRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.sun.mail.imap.protocol.UID;
 
 public class SearchDetailActivity extends AppCompatActivity {
 
@@ -88,11 +89,19 @@ public class SearchDetailActivity extends AppCompatActivity {
         String bookId_sp = SP.getString(UID, null);
         SharedPreferences.Editor edit = SP.edit();
         //edit.remove(UID);
-        if (bookId_sp == null){
+        if (bookId_sp == null || bookId_sp.trim().equals("")){
             edit.putString (UID, bookId);
             showToast("Added Successfully to the cart");
         }
         else{
+            if(bookId_sp.charAt(0)==','){
+                bookId_sp=bookId_sp.substring(1);
+            }
+            if(bookId_sp.charAt(bookId_sp.length()-1)==','){
+                bookId_sp=bookId_sp.substring(0,bookId_sp.length()-1);
+            }
+            //bookId_sp=bookId_sp.replaceAll(",,",",");
+
             StringBuilder sb = new StringBuilder(bookId_sp);
             //sb = new StringBuilder();
             System.out.print("###sb.toString()==="+sb.toString()+"length="+sb.toString().split(",").length);

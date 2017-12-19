@@ -235,22 +235,25 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                             }
                                                         });
 
-//    Intent intent = new Intent(ctx, LibrarianUpdateBook.class);
-////                    EditText editText = (EditText) findViewById(R.id.editText);
-////                    String message = editText.getText().toString();
-////                    intent.putExtra(EXTRA_MESSAGE, message);
-//                                                    intent.putExtra("bookObj",mBook);
-//                                                    ctx.startActivity(intent);
                                                     Intent intent = new Intent(ShoppingCartActivity.this, CheckoutStatusActivity.class);
-                                                    ShoppingCartActivity.this.startActivity(intent);
+                                                    if(checkedOutStatus.size()>=1){
+                                                        intent.putExtra("book1",checkedOutStatus.get(0));
+                                                    }else{
+                                                        intent.putExtra("book1","");
+                                                    }
 
+                                                    if(checkedOutStatus.size()>=2){
+                                                        intent.putExtra("book2",checkedOutStatus.get(1));
+                                                    }else{
+                                                        intent.putExtra("book2","");
+                                                    }
 
-
-                                                        Toast toast = Toast.makeText(getApplicationContext(), "Checked Out Succesful", Toast.LENGTH_SHORT);
-                                                        toast.show();
-
-
-                                                    //}
+                                                    if(checkedOutStatus.size()>=3){
+                                                        intent.putExtra("book3",checkedOutStatus.get(2));
+                                                    }else{
+                                                        intent.putExtra("book3","");
+                                                    }
+                                                    startActivity(intent);
 
                                                 }
                                             }
