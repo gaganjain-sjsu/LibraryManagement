@@ -98,32 +98,32 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
             updateUI();
         }
 
-        public void pullBooks(String bookId){
-
-            if(bookId != null){
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                database.collection("books")
-                        .whereEqualTo("bookId", bookId)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    mBookList.clear();
-                                    for (DocumentSnapshot document : task.getResult()) {
-                                        Book book = document.toObject(Book.class);
-                                        book.setBookId(document.getId());
-                                        mBookList.add(book);
-                                    }
-                                    mAdapter.notifyDataSetChanged();
-                                } else {
-                                    //TODO
-                                }
-                            }
-                        });
-            }
-
-        }
+//        public void pullBooks(String bookId){
+//
+//            if(bookId != null){
+//                FirebaseFirestore database = FirebaseFirestore.getInstance();
+//                database.collection("books")
+//                        .whereEqualTo("bookId", bookId)
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if (task.isSuccessful()) {
+//                                    mBookList.clear();
+//                                    for (DocumentSnapshot document : task.getResult()) {
+//                                        Book book = document.toObject(Book.class);
+//                                        book.setBookId(document.getId());
+//                                        mBookList.add(book);
+//                                    }
+//                                    mAdapter.notifyDataSetChanged();
+//                                } else {
+//                                    //TODO
+//                                }
+//                            }
+//                        });
+//            }
+//
+//        }
 
         private void updateUI() {
 
@@ -137,37 +137,14 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
             mBookRecyclerView.setAdapter(mAdapter);
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
-            //CollectionReference mRef=database.collection("books");
-            String id = CurrentUser.UID;
-            DocumentReference docRef = database.collection("users").document(CurrentUser.UID);
-
-
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null) {
-                            String bookId = document.getString("issuedbooks");
-                            pullBooks(bookId);
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
-                    }
-                }
-            });
-
-
-
-
             database.collection("books")
+                    .whereEqualTo("librarianId", CurrentUser.UID)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+                                mBookList.clear();
                                 for (DocumentSnapshot document : task.getResult()) {
                                     Book book = document.toObject(Book.class);
                                     book.setBookId(document.getId());
@@ -179,6 +156,28 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+
+
+
+
+//            database.collection("books")
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                for (DocumentSnapshot document : task.getResult()) {
+//                                    Book book = document.toObject(Book.class);
+//                                    book.setBookId(document.getId());
+//                                    mBookList.add(book);
+//                                }
+//                                mAdapter.notifyDataSetChanged();
+//                            } else {
+//                                //TODO
+//                            }
+//                        }
+//                    });
         }
 
 
