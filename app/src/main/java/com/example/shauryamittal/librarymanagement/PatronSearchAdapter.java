@@ -23,11 +23,11 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
 
 
     private Context ctx;
-    private List<Book> mBookList;
+    private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
 
-    public PatronSearchAdapter(Context ctx, List<Book> bookList) {
+    public PatronSearchAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
         mBookList = bookList;
     }
@@ -52,7 +52,7 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
     }
 
     class PatronSearchViewHolder extends RecyclerView.ViewHolder{
-        Book mBook;
+        BookSearchItem mBook;
         ImageView coverImage;
         TextView title,author,yearOfPub;
         //Button delete, update;
@@ -76,15 +76,13 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
 
         }
 
-        public void bind(Book book){
+        public void bind(BookSearchItem book){
 
             mBook = book;
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
             yearOfPub.setText(String.valueOf(book.getYearOfPub()));
-
-
-
+            coverImage.setImageBitmap(book.getBookBitmap());
 
         }
     }

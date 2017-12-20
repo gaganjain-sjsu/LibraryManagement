@@ -94,11 +94,6 @@ public class PatronMyWaitlistFragment extends Fragment {
                     }
                 });
 
-
-
-
-
-
 // waitlist datsa
         db.collection("users")
                 .whereEqualTo("uid", CurrentUser.UID)

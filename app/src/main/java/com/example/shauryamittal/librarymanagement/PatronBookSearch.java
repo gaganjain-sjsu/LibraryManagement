@@ -1,5 +1,12 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.ContentResolver;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,16 +16,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +44,7 @@ public class PatronBookSearch extends AppCompatActivity {
     Spinner patronSpinner;
     RecyclerView recyclerView;
     PatronSearchAdapter psAdapter;
-    List<Book> books = new ArrayList<>();
+    List<BookSearchItem> books = new ArrayList<>();
     private final String UID_KEY = "uid";
     private final String FULLNAME_KEY = "fullname";
     private final String EMAIL_KEY = "email";
@@ -37,6 +54,9 @@ public class PatronBookSearch extends AppCompatActivity {
     List<String> spinnerKey = new ArrayList<String>();
     String searchKey="";
     private EditText searchKeywork;
+    FirebaseStorage storage;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,19 +126,27 @@ public class PatronBookSearch extends AppCompatActivity {
                             if (task.isSuccessful()) {
 
                                 for (DocumentSnapshot document : task.getResult()) {
-                                    Book b1= new Book();
+
                                     if(searchKey!=null && !searchKey.equals("")){
                                         String keyWord=document.getString("keywords");
                                         if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
-                                            b1 = document.toObject(Book.class);
+                                            BookSearchItem b1= new BookSearchItem(
+                                                    document.getString("author")
+                                                    , document.getString("title")
+                                                    , document.getString("bookId")
+                                                    , document.getDouble("yearOfPub").intValue());
+
                                             b1.setBookId(document.getId());
-                                            books.add(b1);
-                                            psAdapter.notifyDataSetChanged();
+                                            loadImage(document.getId(), b1);
                                         }
                                     }else{
-                                        b1 = document.toObject(Book.class);
+                                        BookSearchItem b1= new BookSearchItem(
+                                                document.getString("author")
+                                                , document.getString("title")
+                                                , document.getString("bookId")
+                                                , document.getDouble("yearOfPub").intValue());
                                         b1.setBookId(document.getId());
-                                        books.add(b1);
+                                        loadImage(document.getId(), b1);
                                     }
                                     psAdapter.notifyDataSetChanged();
                                 }
@@ -127,7 +155,6 @@ public class PatronBookSearch extends AppCompatActivity {
                             } else {
                                // Log.d(TAG, "Error getting documents: ", task.getException());
                             }
-
                         }
                     });
 
@@ -139,30 +166,118 @@ public class PatronBookSearch extends AppCompatActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot document : task.getResult()) {
-                                    Book b1= new Book();
                                     if(searchKey!=null && !searchKey.equals("")){
                                         String keyWord=document.getString("keywords");
                                         if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
-                                            b1 = document.toObject(Book.class);
+                                            BookSearchItem b1= new BookSearchItem(
+                                                    document.getString("author")
+                                                    , document.getString("title")
+                                                    , document.getString("bookId")
+                                                    , document.getDouble("yearOfPub").intValue());
+
                                             b1.setBookId(document.getId());
-                                            books.add(b1);
-                                            psAdapter.notifyDataSetChanged();
+                                            loadImage(document.getId(), b1);
                                         }
                                     }else{
-                                        b1 = document.toObject(Book.class);
-                                        b1.setBookId(document.getId());
-                                        books.add(b1);
-                                        psAdapter.notifyDataSetChanged();
-                                    }
+                                        BookSearchItem b1= new BookSearchItem(
+                                                document.getString("author")
+                                                , document.getString("title")
+                                                , document.getString("bookId")
+                                                , document.getDouble("yearOfPub").intValue());
 
+                                        b1.setBookId(document.getId());
+                                        loadImage(document.getId(), b1);
+                                    }
                                 }
                             } else {
                                 //Log.d(TAG, "Error getting documents: ", task.getException());
                             }
-
                         }
                     });
         }
 
     }
+
+    public void loadImage(String bookId, final BookSearchItem b1){
+
+        storage = FirebaseStorage.getInstance();
+
+        StorageReference storageRef = storage.getReference();
+
+        storageRef.child(Constants.IMAGE_FOLDER_PATH + bookId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                try {
+
+                    new PatronBookSearch.DownLoadImageTask(b1).execute(uri.toString());
+
+                } catch (Exception e) {
+                    Toast.makeText(PatronBookSearch.this, "Unable to load image from URI", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    Resources resources = PatronBookSearch.this.getResources();
+                    uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        b1.setBookBitmap(bitmap);
+                        books.add(b1);
+                        psAdapter.notifyDataSetChanged();
+
+                    } catch (IOException e1) {
+                        Toast.makeText(PatronBookSearch.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                try {
+                    Resources resources = PatronBookSearch.this.getResources();
+                    Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    b1.setBookBitmap(bitmap);
+                    books.add(b1);
+                    psAdapter.notifyDataSetChanged();
+
+                } catch (IOException e1) {
+                    Toast.makeText(PatronBookSearch.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        BookSearchItem b1;
+
+        public DownLoadImageTask(BookSearchItem b1){
+            this.b1 = b1;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+
+                InputStream is = new URL(urlOfImage).openStream();
+                logo = BitmapFactory.decodeStream(is);
+
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        protected void onPostExecute(Bitmap result){
+            b1.setBookBitmap(result);
+            books.add(b1);
+            psAdapter.notifyDataSetChanged();
+        }
+    }
+
+
 }

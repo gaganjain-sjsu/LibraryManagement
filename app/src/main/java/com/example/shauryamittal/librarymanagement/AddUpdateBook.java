@@ -98,27 +98,6 @@ public class AddUpdateBook extends AppCompatActivity {
         });
 
     }
-/*
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            Uri uri = data.getData();
-            StorageReference filepath = mStorage.child("test");
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(AddUpdateBook.this, "Upload Done", Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AddUpdateBook.this, "Failed", Toast.LENGTH_LONG).show();
-                }
-            });
-
-        }
-    }*/
 
     public void addBook(View view) {
         Book book = new Book();
@@ -179,11 +158,6 @@ public class AddUpdateBook extends AppCompatActivity {
             }
         }
 
-//        book.setStatus(String.valueOf(statusET.getText()).trim());
-//        if(book.getStatus()==null || book.getStatus().trim().equals("")){
-//            showToast("Enter Status");
-//            return;
-//        }
         if(Integer.parseInt(numberOfCopies) < 1){
             book.setStatus("Unavailable");
         }

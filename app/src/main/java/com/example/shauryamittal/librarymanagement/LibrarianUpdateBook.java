@@ -282,37 +282,6 @@ public class LibrarianUpdateBook extends AppCompatActivity {
 
             return;
 
-//            uploadBookProgress.setVisibility(View.GONE);
-//
-//            StorageReference storageRef = storage.getReference();
-//
-//            storageRef.child(Constants.IMAGE_FOLDER_PATH + bookId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    bookCoverReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            Toast.makeText(getApplicationContext(), "Book Added to Library", Toast.LENGTH_SHORT).show();
-//                            updateBook.setVisibility(View.VISIBLE);
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.v("BOOK IMAGE ", e.getMessage());
-//                            uploadBookProgress.setVisibility(View.GONE);
-//                            updateBook.setVisibility(View.VISIBLE);
-//                            Resources resources = LibrarianUpdateBook.this.getResources();
-//                            uriBookImage = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
-//                        }
-//                    });
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception exception) {
-//                    // Handle any errors
-//                }
-//            });
-
         }
         else {
             bookCoverReference.putFile(uriBookImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
