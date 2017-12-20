@@ -264,8 +264,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Keywords"/>
 
-
-
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

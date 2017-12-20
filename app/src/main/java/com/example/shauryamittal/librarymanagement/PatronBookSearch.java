@@ -53,7 +53,6 @@ public class PatronBookSearch extends AppCompatActivity {
 
     }
 
-
     public void searchResult(View view){
         searchKeywork=(EditText)findViewById(R.id.patronSearchtxt);
         searchKey=searchKeywork.getText().toString();
@@ -66,7 +65,6 @@ public class PatronBookSearch extends AppCompatActivity {
         psAdapter= new PatronSearchAdapter(this,books);
         recyclerView.setAdapter(psAdapter);
         getSearchedBooks(librarianId);
-
     }
 
     public void getLibrarians() {
