@@ -172,6 +172,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
 
                                             b1.setBook(document.toObject(Book.class));
                                             b1.setBookId(document.getId());
+                                            Book book = document.toObject(Book.class);
+                                            book.setBookId(document.getId());
+                                            b1.setBook(book);
                                             loadImage(document.getId(), b1);
                                         }
                                     }else{
@@ -182,6 +185,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                                 , document.getDouble("yearOfPub").intValue());
                                         b1.setBook(document.toObject(Book.class));
                                         b1.setBookId(document.getId());
+                                        Book book = document.toObject(Book.class);
+                                        book.setBookId(document.getId());
+                                        b1.setBook(book);
                                         loadImage(document.getId(), b1);
                                     }
                                     lsAdapter.notifyDataSetChanged();
@@ -217,6 +223,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
 
                                             b1.setBook(document.toObject(Book.class));
                                             b1.setBookId(document.getId());
+                                            Book book = document.toObject(Book.class);
+                                            book.setBookId(document.getId());
+                                            b1.setBook(book);
                                             loadImage(document.getId(), b1);
                                         }
                                     }else{
@@ -227,6 +236,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                                 , document.getDouble("yearOfPub").intValue());
                                         b1.setBook(document.toObject(Book.class));
                                         b1.setBookId(document.getId());
+                                        Book book = document.toObject(Book.class);
+                                        book.setBookId(document.getId());
+                                        b1.setBook(book);
                                         loadImage(document.getId(), b1);
                                     }
                                     lsAdapter.notifyDataSetChanged();
@@ -259,6 +271,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
 
                                             b1.setBook(document.toObject(Book.class));
                                             b1.setBookId(document.getId());
+                                            Book book = document.toObject(Book.class);
+                                            book.setBookId(document.getId());
+                                            b1.setBook(book);
                                             loadImage(document.getId(), b1);
                                         }
                                     }else{
@@ -269,6 +284,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                                 , document.getDouble("yearOfPub").intValue());
                                         b1.setBook(document.toObject(Book.class));
                                         b1.setBookId(document.getId());
+                                        Book book = document.toObject(Book.class);
+                                        book.setBookId(document.getId());
+                                        b1.setBook(book);
                                         loadImage(document.getId(), b1);
                                     }
                                 }

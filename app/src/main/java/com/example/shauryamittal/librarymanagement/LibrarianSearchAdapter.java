@@ -3,8 +3,10 @@ package com.example.shauryamittal.librarymanagement;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,11 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,9 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
     private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
+    private ArrayList<String> clearedList= new ArrayList<String>();
+    private BookSearchItem tempSearchItem;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public LibrarianSearchAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
@@ -74,7 +84,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
         }
 
         public void bind(BookSearchItem book){
-
+            tempSearchItem=book;
             mBook = book.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
@@ -94,20 +104,67 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
-                                    if (mBook.getNoOfCheckedOutCopy() != 0) {
-                                        Toast.makeText(ctx, "Cannot be deleted as the book has been issued by patrons", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
 
-                                    DbOperations.dropWaitList(mBook);
-                                    DbOperations.deleteBook(mBook.getBookId());
+                                    db.collection("clearedwaitlist")
+                                            .whereEqualTo("bookId", mBook.getBookId()).limit(1)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (DocumentSnapshot document : task.getResult()) {
+                                                            clearedList.add(document.getId());
+                                                           // Log.d(TAG, document.getId() + " => " + document.getData());
+                                                        }
+                                                    } else {
+                                                        //Log.d(TAG, "Error getting documents: ", task.getException());
+                                                    }
+                                                    if ((mBook.getNoOfCheckedOutCopy() -clearedList.size())> 0) {
+                                                        Toast.makeText(ctx, "Cannot be deleted as the book has been issued by patrons", Toast.LENGTH_LONG).show();
+                                                        return;
+                                                    }
+
+                                                    DbOperations.dropWaitList(mBook);
+                                                    DbOperations.deleteBook(mBook.getBookId());
+                                                    if(clearedList.size()>0){
+                                                        DbOperations.deleteClearedwaitList(clearedList.get(0));
+                                                    }
+
+                                                    mBookList.remove(tempSearchItem);
+                                                    System.out.println("Inside delete button called.  Book Id=" + mBook.getTitle());
+                                                    notifyDataSetChanged();
 
 
-                                    mBookList.remove(mBook);
-                                    System.out.println("Inside delete button called.  Book Id=" + mBook.getTitle());
-                                    notifyDataSetChanged();
+                                                }
+                                            });
+
+
+
+
+
+//                                    if (mBook.getNoOfCheckedOutCopy() != 0) {
+//                                        Toast.makeText(ctx, "Cannot be deleted as the book has been issued by patrons", Toast.LENGTH_LONG).show();
+//                                        return;
+//                                    }
+//
+//                                    DbOperations.dropWaitList(mBook);
+//                                    DbOperations.deleteBook(mBook.getBookId());
+//
+//
+//                                    mBookList.remove(mBook);
+//                                    System.out.println("Inside delete button called.  Book Id=" + mBook.getTitle());
+//                                    notifyDataSetChanged();
                                 }
                                 });
+
+
+
+
+
+
+
+
+
 
                     alertDialogBuilder.setNegativeButton("Cancel",
                             new DialogInterface.OnClickListener() {
