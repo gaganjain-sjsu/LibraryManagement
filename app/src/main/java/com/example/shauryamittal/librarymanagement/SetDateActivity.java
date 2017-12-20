@@ -118,13 +118,14 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                             DbOperations.addTimestamp(timestamp);
                             try {
                                 Constants.todaysDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date);
+                                checkDueUsers();
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
-            checkDueUsers();
+
         }
     }
     public void checkDueUsers(){
@@ -142,7 +143,7 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                                    long diff = Math.round((dueDate.getTime() - currentDate.getTime()) / (double) 86400000);
                                    int dif=(int)diff;
                                    if(dif<6){
-                                       dueDateAlartMessage=new StringBuilder("Waitlist due date of book: "+transaction.getBook().getTitle()+" Near. Please renue."+"\n\n\n");
+                                       dueDateAlartMessage=new StringBuilder(" Book: "+transaction.getBook().getTitle()+" is due in " + dif + "days . Please return/renew to avoid fine."+"\n\n\n");
                                        DocumentReference mRefUser = db.collection("users").document(transaction.getUid());
                                        mRefUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                            @Override
