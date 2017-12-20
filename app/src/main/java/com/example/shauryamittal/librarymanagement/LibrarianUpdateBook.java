@@ -237,11 +237,8 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         }
 
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-        if(book.getUpdatedBy()==null || book.getUpdatedBy().trim().equals("")){
             book.setUpdatedBy(CurrentUser.UID);
-        }else{
-            if(!book.getUpdatedBy().contains(CurrentUser.UID)) book.setUpdatedBy(book.getUpdatedBy()+","+CurrentUser.UID);
-        }
+
        // book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
         dbOperations.updateBook(book);

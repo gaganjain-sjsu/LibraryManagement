@@ -199,6 +199,51 @@ public class LibrarianBookSearch extends AppCompatActivity {
                         }
                     });
 
+
+
+            db.collection("books").whereEqualTo("updatedBy", librarianId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    if(searchKey!=null && !searchKey.equals("")){
+                                        String keyWord=document.getString("keywords");
+                                        if(keyWord!=null && searchKey!=null && keyWord.toLowerCase().contains(searchKey.toLowerCase())){
+
+                                            BookSearchItem b1= new BookSearchItem(
+                                                    document.getString("author")
+                                                    , document.getString("title")
+                                                    , document.getString("bookId")
+                                                    , document.getDouble("yearOfPub").intValue());
+
+                                            b1.setBook(document.toObject(Book.class));
+                                            b1.setBookId(document.getId());
+                                            loadImage(document.getId(), b1);
+                                        }
+                                    }else{
+                                        BookSearchItem b1= new BookSearchItem(
+                                                document.getString("author")
+                                                , document.getString("title")
+                                                , document.getString("bookId")
+                                                , document.getDouble("yearOfPub").intValue());
+                                        b1.setBook(document.toObject(Book.class));
+                                        b1.setBookId(document.getId());
+                                        loadImage(document.getId(), b1);
+                                    }
+                                    lsAdapter.notifyDataSetChanged();
+                                }
+
+
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+
+                        }
+                    });
+
         }else{
             db.collection("books")
                     .get()
