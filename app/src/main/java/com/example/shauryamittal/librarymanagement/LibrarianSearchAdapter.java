@@ -117,7 +117,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
                                 });
 
                                 AlertDialog alert = alertDialogBuilder.create();
-        alert.setTitle("Waitlist");
+        alert.setTitle("Delete Book");
         alert.show();
 
 
