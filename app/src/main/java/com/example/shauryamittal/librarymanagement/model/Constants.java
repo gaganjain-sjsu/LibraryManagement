@@ -27,7 +27,8 @@ public class Constants {
     public static final String NUMBER_OF_COPIES_KEY = "noOfCopy";
     public static final String USER_WAITLISTED_BOOKS_KEY = "waitlistedBooks";
     public static final String WAITLISTED_USERS_KEY = "wailistedUsers";
-    public static Date todaysDate=new Date();
+    public static final String TIMESTAMP = "timestamp";
+    public static Date todaysDate= new Date();
 
 
 }

@@ -268,4 +268,46 @@ public class DbOperations {
         return fine;
     }
 
+    public static void addTimestamp(Timestamp timestamp){
+
+        Map<String, String> map = new HashMap<>();
+        map.put("date", timestamp.getDate());
+        map.put("uid", timestamp.getUID());
+
+        db.document(Constants.TIMESTAMP+ "/" + "timestampid")
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
+//    public static void fetchTimestamp(){
+//        db.document(Constants.TIMESTAMP+ "timestampid")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//                            if (document != null) {
+//                                Log.d(TAG, "DocumentSnapshot data: " + task.getResult().getData());
+//                            } else {
+//                                Log.d(TAG, "No such document");
+//                            }
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
+//    }
+
 }

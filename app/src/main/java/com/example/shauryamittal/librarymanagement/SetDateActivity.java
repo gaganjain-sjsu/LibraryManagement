@@ -17,9 +17,15 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.Timestamp;
+import com.example.shauryamittal.librarymanagement.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class SetDateActivity extends AppCompatActivity implements View.OnClickListener{
@@ -27,6 +33,7 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
     Button btnDatePicker, btnTimePicker;
     EditText txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    String date, time, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +47,14 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
 
         btnDatePicker.setOnClickListener(this);
         btnTimePicker.setOnClickListener(this);
+        uid = CurrentUser.UID;
 
     }
 
     @Override
     public void onClick(View v) {
+
+
 
         if (v == btnDatePicker) {
 
@@ -62,6 +72,7 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
 
+                            date = (monthOfYear + 1) + "/" + (dayOfMonth) + "/" + year+ " ";
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
 
                         }
@@ -82,8 +93,16 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-
+                            date += hourOfDay + ":" + minute + ":00";
                             txtTime.setText(hourOfDay + ":" + minute);
+
+                            Timestamp timestamp = new Timestamp(date, uid);
+                            DbOperations.addTimestamp(timestamp);
+                            try {
+                                Constants.todaysDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();

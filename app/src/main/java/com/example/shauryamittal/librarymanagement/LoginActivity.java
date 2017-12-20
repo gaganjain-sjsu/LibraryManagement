@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.example.shauryamittal.librarymanagement.model.Timestamp;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,6 +28,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -109,6 +115,72 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Intent intent;
                                     spinner.setVisibility(View.GONE);
+
+                                    DocumentReference docRef = FirebaseFirestore.getInstance().document(Constants.TIMESTAMP + "/" + "timestampid");
+
+                                    docRef.get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                                                    //Timestamp timestamp = documentSnapshot.toObject(Timestamp.class);
+                                                    try {
+                                                        if(documentSnapshot.getString("date") != ""){
+                                                            Constants.todaysDate = dateToString.parse(documentSnapshot.getString("date"));
+                                                            System.out.print("Todays date" + Constants.todaysDate);
+                                                        }
+                                                        else{
+                                                            Constants.todaysDate = dateToString.parse(dateToString.format(new Date()));
+                                                        }
+                                                    } catch (ParseException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                                                    try {
+                                                        Constants.todaysDate = dateToString.parse(dateToString.format(new Date()));
+                                                    } catch (ParseException ex) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+
+
+
+
+
+//                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        DocumentSnapshot document = task.getResult();
+//                                                        SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+//                                                        if (document != null) {
+//                                                            Timestamp timestamp = document.toObject(Timestamp.class);
+//                                                            //SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+//                                                            try {
+//                                                                Constants.todaysDate = dateToString.parse(timestamp.getDate());
+//                                                                System.out.print("Todays date"+ Constants.todaysDate);
+//                                                            } catch (ParseException e) {
+//                                                                e.printStackTrace();
+//                                                            }
+//                                                        } else {
+//                                                            try {
+//                                                                Constants.todaysDate = dateToString.parse(dateToString.format(new Date()));
+//                                                            } catch (ParseException e) {
+//                                                                e.printStackTrace();
+//                                                            }
+//                                                        }
+//                                                    } else {
+//                                                        //Log.d("get failed with ", task.getException());
+//                                                    }
+//                                                }
+
+                                    //});
 
 
                                     if(!documentSnapshot.contains(Constants.EMAIL_VERIFIED) || !documentSnapshot.getBoolean(Constants.EMAIL_VERIFIED)){
