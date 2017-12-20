@@ -28,11 +28,11 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
 
     private Context ctx;
-    private List<Book> mBookList;
+    private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
 
-    public LibrarianSearchAdapter(Context ctx, List<Book> bookList) {
+    public LibrarianSearchAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
         mBookList = bookList;
     }
@@ -57,6 +57,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
     }
 
     class LibrarianSearchViewHolder extends RecyclerView.ViewHolder{
+
         Book mBook;
         ImageView coverImage;
         TextView title,author,yearOfPub;
@@ -72,12 +73,13 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
         }
 
-        public void bind(Book book){
+        public void bind(BookSearchItem book){
 
-            mBook = book;
+            mBook = book.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
             yearOfPub.setText(String.valueOf(book.getYearOfPub()));
+            coverImage.setImageBitmap(book.getBookBitmap());
 
             delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

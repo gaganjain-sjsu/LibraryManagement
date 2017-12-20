@@ -2,6 +2,8 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.graphics.Bitmap;
 
+import com.example.shauryamittal.librarymanagement.model.Book;
+
 /**
  * Created by shauryamittal on 12/20/17.
  */
@@ -12,6 +14,29 @@ public class BookSearchItem {
     private String title="";
     private String bookId="";
     private int yearOfPub=0;
+    Book book;
+    private String publisher="";
+    private Bitmap bookBitmap;
+
+
+
+    private int noOfCheckedOutCopy=0;
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public int getNoOfCheckedOutCopy() {
+        return noOfCheckedOutCopy;
+    }
+
+    public void setNoOfCheckedOutCopy(int noOfCheckedOutCopy) {
+        this.noOfCheckedOutCopy = noOfCheckedOutCopy;
+    }
 
     public BookSearchItem(String author, String title, String bookId, int yearOfPub) {
         this.author = author;
@@ -19,9 +44,6 @@ public class BookSearchItem {
         this.bookId = bookId;
         this.yearOfPub = yearOfPub;
     }
-
-    private String publisher="";
-    private Bitmap bookBitmap;
 
     public String getAuthor() {
         return author;
