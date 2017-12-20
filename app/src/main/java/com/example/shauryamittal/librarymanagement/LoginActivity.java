@@ -2,6 +2,7 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Constants;
@@ -31,7 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText editText_password;
     Button login;
     Button toSignup;
-    ProgressBar spinner;
+    ProgressBar spinner, loading;
+    ConstraintLayout mConstraintLayout;
+    TextView loadingText;
 
     private FirebaseAuth mAuth;
 
@@ -46,6 +50,12 @@ public class LoginActivity extends AppCompatActivity {
         spinner = (ProgressBar) findViewById(R.id.login_progressBar);
         spinner.setVisibility(View.GONE);
 
+        loading = (ProgressBar) findViewById(R.id.loadingSpinner);
+        spinner.setVisibility(View.GONE);
+
+        loadingText = (TextView) findViewById(R.id.loadingText);
+        loadingText.setVisibility(View.GONE);
+
         mAuth = FirebaseAuth.getInstance();
 
         editText_email = (EditText) findViewById(R.id.email_login);
@@ -53,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
         login = (Button) findViewById(R.id.login);
         toSignup = (Button)findViewById(R.id.go_to_signup);
+        mConstraintLayout = (ConstraintLayout) findViewById(R.id.constraint_layout_login);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
 
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
-
 
                         if(task.isSuccessful()){
 
@@ -172,6 +181,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if(currentUser != null){
 
+            editText_email.setVisibility(View.GONE);
+            editText_password.setVisibility(View.GONE);
+            toSignup.setVisibility(View.GONE);
+            login.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+            loading.setVisibility(View.VISIBLE);
+            loadingText.setVisibility(View.VISIBLE);
+
             FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
 
             DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(USER_COLLECTION + "/" + loggedInUser.getUid());
@@ -198,11 +215,8 @@ public class LoginActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();
                     startActivity(intent);
-
                 }
             });
-
-
         }
     }
 }
