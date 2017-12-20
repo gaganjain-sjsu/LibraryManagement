@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <item
-        android:id="@+id/backRedirect"
-        android:icon="@android:drawable/ic_menu_revert"
-        android:title="Back"
-        app:showAsAction="ifRoom|withText"></item>
 
     <item
         android:id="@+id/homePageRedirect"
@@ -22,9 +17,6 @@
         android:id="@+id/view_cart_option"
         >
     </item>
-    <item android:title="Delete All Cart"
-          android:id="@+id/del"
-        >
-    </item>
+
 
 </menu>

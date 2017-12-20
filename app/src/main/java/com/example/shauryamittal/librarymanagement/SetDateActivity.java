@@ -103,9 +103,6 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.backRedirect:
-                startActivity(new Intent(SetDateActivity.this, LibrarianHomepageActivity.class));
-                return true;
             case R.id.homePageRedirect:
                 startActivity(new Intent(SetDateActivity.this, LibrarianHomepageActivity.class));
                 return true;

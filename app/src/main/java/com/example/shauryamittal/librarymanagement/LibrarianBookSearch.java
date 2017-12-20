@@ -91,9 +91,6 @@ public class LibrarianBookSearch extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.backRedirect:
-                startActivity(new Intent(LibrarianBookSearch.this, LibrarianHomepageActivity.class));
-                return true;
             case R.id.homePageRedirect:
                 startActivity(new Intent(LibrarianBookSearch.this, LibrarianHomepageActivity.class));
                 return true;

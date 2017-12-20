@@ -334,15 +334,11 @@ public class SearchDetailActivity extends AppCompatActivity {
                 startActivity(new Intent(SearchDetailActivity.this, ShoppingCartActivity.class));
                 break;
 
-            case R.id.del:
-                SharedPreferences SP;
-                String UID = CurrentUser.UID;
-                SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String bookId_sp = SP.getString(UID, null);
-                SharedPreferences.Editor edit = SP.edit();
-                edit.remove(UID);
-                edit.commit();
-                break;
+            case R.id.homePageRedirect:
+                startActivity(new Intent(SearchDetailActivity.this, ViewBooksActivity.class));
+                return true;
+
+
         }
 
         return super.onOptionsItemSelected(item);

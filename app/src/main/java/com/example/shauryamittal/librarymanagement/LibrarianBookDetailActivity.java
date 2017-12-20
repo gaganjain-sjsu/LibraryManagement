@@ -314,47 +314,35 @@ public class LibrarianBookDetailActivity extends AppCompatActivity {
             toast.show();
         }
 
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-            getMenuInflater().inflate(R.menu.topmenu, menu);
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
 
-            return true;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+//            case R.id.backRedirect:
+//                startActivity(new Intent(LibrarianViewBooksActivity.this, LibrarianHomepageActivity.class));
+//                return true;
+            case R.id.homePageRedirect:
+                startActivity(new Intent(LibrarianBookDetailActivity.this, LibrarianHomepageActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(LibrarianBookDetailActivity.this, LoginActivity.class));
         }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-
-            int id = item.getItemId();
-
-            switch (id){
-                case R.id.homePageRedirect:
-                    startActivity(new Intent(LibrarianBookDetailActivity.this, LibrarianHomepageActivity.class));
-                    return true;
-                case R.id.logout:
-                    FirebaseAuth.getInstance().signOut();
-                    finish();
-                    CurrentUser.destroyCurrentUser();
-                    startActivity(new Intent(LibrarianBookDetailActivity.this, LoginActivity.class));
-                    break;
-                case R.id.view_cart_option:
-                    startActivity(new Intent(LibrarianBookDetailActivity.this, ShoppingCartActivity.class));
-                    break;
-
-                case R.id.del:
-                    SharedPreferences SP;
-                    String UID = CurrentUser.UID;
-                    SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                    String bookId_sp = SP.getString(UID, null);
-                    SharedPreferences.Editor edit = SP.edit();
-                    edit.remove(UID);
-                    edit.commit();
-                    break;
-            }
-
-            return super.onOptionsItemSelected(item);
-
-        }
+        return true;
+    }
 
         public void updateBookWaitList(){
             final DocumentReference bookDoc = db.document(Constants.BOOKS_COLLECTION + "/" + bookId);
