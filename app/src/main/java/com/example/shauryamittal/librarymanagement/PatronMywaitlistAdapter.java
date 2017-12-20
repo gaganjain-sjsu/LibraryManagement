@@ -86,7 +86,7 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
             author=itemView.findViewById(R.id.patron_mywaitlist_author);
             yearOfPub=itemView.findViewById(R.id.patron_mywaitlist_yearOfPub);
             remove= itemView.findViewById(R.id.patron_mywaitlist_remove_book);
-            waitlistClearRemove= itemView.findViewById(R.id.patron_mywaitlist_waitlist_clear_remove_book);
+           // waitlistClearRemove= itemView.findViewById(R.id.patron_mywaitlist_waitlist_clear_remove_book);
             checkout= itemView.findViewById(R.id.patron_mywaitlist_checkout_book);
         }
 
@@ -101,7 +101,7 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
                 //book.setStatus("");
                 remove.setVisibility(View.INVISIBLE);
             } else {
-                waitlistClearRemove.setVisibility(View.INVISIBLE);
+               // waitlistClearRemove.setVisibility(View.INVISIBLE);
                 checkout.setVisibility(View.INVISIBLE);
             }
 
@@ -182,7 +182,6 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
                 public void onClick(View v) {
 
                     final String clearedwaitlistId= book.getStatus().substring(book.getStatus().lastIndexOf("#")+1);
-
 
 
                     DocumentReference mRefUser = db.collection("users").document(CurrentUser.UID);
@@ -271,13 +270,13 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
             });
 
 
-            waitlistClearRemove.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-
-
-
-                }
-            });
+//            waitlistClearRemove.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//
+//
+//
+//                }
+//            });
 
         }
     }

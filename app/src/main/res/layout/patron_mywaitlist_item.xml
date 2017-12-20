@@ -79,19 +79,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
-                android:id="@+id/patron_mywaitlist_waitlist_clear_remove_book"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Remove"
-                android:textColor="@color/login_background"
-                android:textSize="12sp"
-                android:paddingRight="5dp"
-                app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"
-                app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <!--<Button-->
+                <!--android:id="@+id/patron_mywaitlist_waitlist_clear_remove_book"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:layout_marginEnd="16dp"-->
+                <!--android:text="Remove"-->
+                <!--android:textColor="@color/login_background"-->
+                <!--android:textSize="12sp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"-->
+                <!--app:layout_constraintEnd_toEndOf="parent" />-->
 
             <Button
                 android:id="@+id/patron_mywaitlist_checkout_book"
