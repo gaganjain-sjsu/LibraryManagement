@@ -26,11 +26,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
 
     private Context ctx;
-    private List<Book> mBookList;
+    private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
 
-    public ShoppingCartAdapter(Context ctx, List<Book> bookList) {
+    public ShoppingCartAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
         mBookList = bookList;
     }
@@ -68,11 +68,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         }
 
-        public void bind(Book book){
+        public void bind(BookSearchItem book){
 
-            mBook = book;
+            mBook = book.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
+            coverImage.setImageBitmap(book.getBookBitmap());
 
             delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -89,9 +90,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     SharedPreferences.Editor edit = SP.edit();
                     edit.putString (CurrentUser.UID, currentCartItems);
                     edit.commit();
-
-
-
 
                     System.out.println("Inside delete button called.  Book Id="+mBook.getTitle());
                     notifyDataSetChanged();

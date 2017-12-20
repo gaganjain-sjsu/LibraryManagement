@@ -1,9 +1,15 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +36,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -47,7 +58,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     public static ShoppingCartAdapter adapter;
-    public static List<Book> cartItems = new ArrayList<Book>();
+    public static List<BookSearchItem> cartItems = new ArrayList<BookSearchItem>();
     String bookIds[];
     private String BOOKS_COLLECTION = "books";
     private static final String USER_COLLECTION = "users";
@@ -69,6 +80,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     int lastCheckoutDayCount=0;
     User currentUserDetails;
     ArrayList<VerificationEmailData> emailData = new ArrayList<VerificationEmailData>();
+    FirebaseStorage storage;
 
     String[] bookKeyList;
     SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -164,7 +176,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                                         for(Book book1 :checkedOutBooks){
                                                             if(book1.getNoOfCopy()<=book1.getNoOfCheckedOutCopy()){
                                                                 book1.setStatus("Book not available");
-
                                                                 checkedOutStatus.add(book1);
                                                                 continue;
                                                             }
@@ -302,7 +313,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         adapter = null;
         bookIds = null;
-        cartItems = new ArrayList<Book>();
+        cartItems = new ArrayList<BookSearchItem>();
         if(CurrentUser.UID==null) return;
 
         SharedPreferences SP;
@@ -318,7 +329,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             bookIds = currentCartItems.split(",");
         }
 
-        adapter = new ShoppingCartAdapter(this,cartItems);
+        adapter = new ShoppingCartAdapter(ShoppingCartActivity.this, cartItems);
         recyclerView.setAdapter(adapter);
 
 
@@ -331,10 +342,16 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
-                           Book b1 = document.toObject(Book.class);
-                           b1.setBookId(document.getId());
-                            cartItems.add(b1);
-                            adapter.notifyDataSetChanged();
+                            BookSearchItem b1= new BookSearchItem(
+                                    document.getString("author")
+                                    , document.getString("title")
+                                    , document.getString("bookId")
+                                    , document.getDouble("yearOfPub").intValue());
+
+                            b1.setBookId(document.getId());
+                            b1.setBook(document.toObject(Book.class));
+                            b1.setBookId(document.getId());
+                            loadImage(document.getId(), b1);
 
                             Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());
                         } else {
@@ -383,6 +400,87 @@ public class ShoppingCartActivity extends AppCompatActivity {
             Toast.makeText(ShoppingCartActivity.this, "Verification Email Sent", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void loadImage(String bookId, final BookSearchItem b1){
+
+        storage = FirebaseStorage.getInstance();
+
+        StorageReference storageRef = storage.getReference();
+
+        storageRef.child(Constants.IMAGE_FOLDER_PATH + bookId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                try {
+
+                    new ShoppingCartActivity.DownLoadImageTask(b1).execute(uri.toString());
+
+                } catch (Exception e) {
+                    Toast.makeText(ShoppingCartActivity.this, "Unable to load image from URI", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    Resources resources = ShoppingCartActivity.this.getResources();
+                    uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        b1.setBookBitmap(bitmap);
+                        cartItems.add(b1);
+                        adapter.notifyDataSetChanged();
+
+                    } catch (IOException e1) {
+                        Toast.makeText(ShoppingCartActivity.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                try {
+                    Resources resources = ShoppingCartActivity.this.getResources();
+                    Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    b1.setBookBitmap(bitmap);
+                    cartItems.add(b1);
+                    adapter.notifyDataSetChanged();
+
+                } catch (IOException e1) {
+                    Toast.makeText(ShoppingCartActivity.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        BookSearchItem b1;
+
+        public DownLoadImageTask(BookSearchItem b1){
+            this.b1 = b1;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+
+                InputStream is = new URL(urlOfImage).openStream();
+                logo = BitmapFactory.decodeStream(is);
+
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        protected void onPostExecute(Bitmap result){
+            b1.setBookBitmap(result);
+            cartItems.add(b1);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 }
