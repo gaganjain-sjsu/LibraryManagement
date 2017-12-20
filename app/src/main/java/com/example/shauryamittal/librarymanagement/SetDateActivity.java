@@ -1,8 +1,11 @@
 package com.example.shauryamittal.librarymanagement;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import android.app.DatePickerDialog;
@@ -17,16 +20,28 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.Timestamp;
 import com.example.shauryamittal.librarymanagement.model.User;
+import com.example.shauryamittal.librarymanagement.model.Transaction;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 public class SetDateActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -34,6 +49,9 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
     EditText txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
     String date, time, uid;
+    static FirebaseFirestore db = FirebaseFirestore.getInstance();
+    SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    StringBuilder dueDateAlartMessage= new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +124,59 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
+            checkDueUsers();
         }
     }
+    public void checkDueUsers(){
+        db.collection("transaction")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Transaction transaction = document.toObject(Transaction.class);
+                                Date currentDate=Constants.todaysDate;
+                                try {
+                                    Date dueDate=dateToString.parse(transaction.getDueDate());
+                                   long diff = Math.round((dueDate.getTime() - currentDate.getTime()) / (double) 86400000);
+                                   int dif=(int)diff;
+                                   if(dif<6){
+                                       dueDateAlartMessage=new StringBuilder("Waitlist due date of book: "+transaction.getBook().getTitle()+" Near. Please renue."+"\n\n\n");
+                                       DocumentReference mRefUser = db.collection("users").document(transaction.getUid());
+                                       mRefUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   DocumentSnapshot doc = task.getResult();
+                                                   String sendToMailId=doc.getString("email");
+                                                   SetDateActivity.AsyncTaskRunner emailSender = new SetDateActivity.AsyncTaskRunner();
+                                                   emailSender.execute(sendToMailId, dueDateAlartMessage.toString());
+                                                   System.out.println("Mail Sent...");
+                                               }
+                                           }
+                                       });
+
+
+
+
+                                   }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -133,5 +202,21 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return true;
+    }
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Log.v("EMAIL SENT TO:", params[0]);
+                MailUtility.sendMail(params[0], params[1]);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "Successful";
+        }
     }
 }
