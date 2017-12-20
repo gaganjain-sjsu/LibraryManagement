@@ -104,6 +104,7 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                notifyDataSetChanged();
                                                 Log.v("WAITLIST ", "WAITLIST UPDATED for user");
                                             }
                                             else {
@@ -156,26 +157,6 @@ public class PatronMywaitlistAdapter extends RecyclerView.Adapter<PatronMywaitli
                             }
                         }
                     });
-
-
-
-
-
-
-
-//                    SharedPreferences SP;
-//                    SP = PreferenceManager.getDefaultSharedPreferences(ctx);
-//                    String currentCartItems = SP.getString(CurrentUser.UID, null);
-//                    String bookToRemove=mBook.getBookId();
-//                    if(bookToRemove!=null && currentCartItems!=null){
-//                        String newCartItems = currentCartItems.replaceAll(bookToRemove+",","").replaceAll(""+","+bookToRemove,"").replaceAll(bookToRemove, "");
-//                        SharedPreferences.Editor edit = SP.edit();
-//                        edit.putString (CurrentUser.UID, newCartItems);
-//                        Log.v("SHARED PREFERENCE:", newCartItems);
-//                        edit.commit();
-//                    }
-//                    mBookList.remove(mBook);
-//                    notifyDataSetChanged();
                 }
             });
 //
