@@ -75,6 +75,13 @@ public class LibrarianBookSearch extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+//            case R.id.backRedirect:
+//                startActivity(new Intent(LibrarianBookSearch.this, LibrarianHomepageActivity.class));
+//                return true;
+            case R.id.homePageRedirect:
+                startActivity(new Intent(LibrarianBookSearch.this, LibrarianHomepageActivity.class));
+                return true;
+
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -201,12 +208,5 @@ public class LibrarianBookSearch extends AppCompatActivity {
 
 
     }
-//public void createSearchList(){
-//    recyclerView=(RecyclerView)findViewById(R.id.librarianSearchRecyclerView);
-//    recyclerView.setHasFixedSize(true);
-//    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//    lsAdapter= new LibrarianSearchAdapter(this,books);
-//    recyclerView.setAdapter(lsAdapter);
-//    }
 
 }
