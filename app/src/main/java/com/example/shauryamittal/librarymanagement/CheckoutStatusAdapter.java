@@ -27,11 +27,11 @@ public class CheckoutStatusAdapter extends RecyclerView.Adapter<CheckoutStatusAd
 
 
     private Context ctx;
-    private List<Book> mBookList;
+    private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
 
-    public CheckoutStatusAdapter(Context ctx, List<Book> bookList) {
+    public CheckoutStatusAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
         mBookList = bookList;
     }
@@ -61,7 +61,9 @@ public class CheckoutStatusAdapter extends RecyclerView.Adapter<CheckoutStatusAd
         TextView title,author,status;
         Button delete, addToWaitList;
         public CheckoutStatusViewHolder(View itemView) {
+
             super(itemView);
+
             coverImage=itemView.findViewById(R.id.checkout_book_img);
             title=itemView.findViewById(R.id.checkout_book_name);
             author=itemView.findViewById(R.id.checkout_author);
@@ -71,15 +73,17 @@ public class CheckoutStatusAdapter extends RecyclerView.Adapter<CheckoutStatusAd
 
         }
 
-        public void bind(Book book){
+        public void bind(BookSearchItem book){
 
-            mBook = book;
+            mBook = book.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
-            if(book.getStatus()!=null && book.getStatus().toLowerCase().contains("available")){
-                status.setText(book.getStatus());
+            coverImage.setImageBitmap(book.getBookBitmap());
+
+            if(book.getBook().getStatus()!=null && book.getBook().getStatus().toLowerCase().contains("available")){
+                status.setText(book.getBook().getStatus());
             }else{
-              status.setText(book.getStatus());
+              status.setText(book.getBook().getStatus());
               delete.setVisibility(View.GONE);
                 addToWaitList.setVisibility(View.GONE);
             }
