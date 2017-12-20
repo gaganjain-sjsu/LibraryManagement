@@ -29,6 +29,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
+    private BookSearchItem bsi;
 
     public ShoppingCartAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
@@ -69,7 +70,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         }
 
         public void bind(BookSearchItem book){
-
+            bsi=book;
             mBook = book.getBook();
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
@@ -77,7 +78,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
             delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    mBookList.remove(mBook);
+                    mBookList.remove(bsi);
                     SharedPreferences SP;
                     SP = PreferenceManager.getDefaultSharedPreferences(ctx);
                     String currentCartItems = SP.getString(CurrentUser.UID, null);
