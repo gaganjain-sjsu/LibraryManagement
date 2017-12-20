@@ -58,10 +58,12 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
         //Button delete, update;
         public PatronSearchViewHolder(View itemView) {
             super(itemView);
+
             coverImage=itemView.findViewById(R.id.PatronBookCoverImage);
             title=itemView.findViewById(R.id.PatronTitle);
             author=itemView.findViewById(R.id.PatronAuthor);
             yearOfPub=itemView.findViewById(R.id.PatronYearOfPub);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -69,12 +71,8 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
                     System.out.println("Inside bind-----------------"+mBook.getBookId());
                     intent.putExtra("bookId",mBook.getBookId());
                     ctx.startActivity(intent);
-
-
                 }
             });
-            //delete= itemView.findViewById(R.id.deleteBook);
-            //update=itemView.findViewById(R.id.updateSeatchBook);
 
         }
 
@@ -85,24 +83,9 @@ public class PatronSearchAdapter extends RecyclerView.Adapter<PatronSearchAdapte
             author.setText(book.getAuthor());
             yearOfPub.setText(String.valueOf(book.getYearOfPub()));
 
-//            delete.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    DbOperations.deleteBook(mBook.getBookId());
-//                    mBookList.remove(mBook);
-//                    System.out.println("Inside delete button called.  Book Id="+mBook.getTitle());
-//                    notifyDataSetChanged();
-//                }
-//            });
 
-//            update.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//
-//                    Intent intent = new Intent(ctx, LibrarianUpdateBook.class);
-//                    intent.putExtra("bookObj",mBook);
-//                    ctx.startActivity(intent);
-//
-//                }
-//            });
+
+
         }
     }
 }
