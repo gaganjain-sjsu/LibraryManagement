@@ -167,10 +167,15 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                             BookSearchItem b1= new BookSearchItem(
                                                     document.getString("author")
                                                     , document.getString("title")
-                                                    , document.getString("bookId")
+                                                    , document.getString(document.getId())
                                                     , document.getDouble("yearOfPub").intValue());
 
+
+
                                             b1.setBook(document.toObject(Book.class));
+
+                                            b1.getBook().setBookId(document.getId());
+
                                             b1.setBookId(document.getId());
                                             Book book = document.toObject(Book.class);
                                             book.setBookId(document.getId());
@@ -181,9 +186,9 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                         BookSearchItem b1= new BookSearchItem(
                                                 document.getString("author")
                                                 , document.getString("title")
-                                                , document.getString("bookId")
+                                                , document.getString(document.getId())
                                                 , document.getDouble("yearOfPub").intValue());
-                                        b1.setBook(document.toObject(Book.class));
+                                        b1.getBook().setBookId(document.getId());;
                                         b1.setBookId(document.getId());
                                         Book book = document.toObject(Book.class);
                                         book.setBookId(document.getId());
@@ -218,10 +223,11 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                             BookSearchItem b1= new BookSearchItem(
                                                     document.getString("author")
                                                     , document.getString("title")
-                                                    , document.getString("bookId")
+                                                    , document.getString(document.getId())
                                                     , document.getDouble("yearOfPub").intValue());
 
                                             b1.setBook(document.toObject(Book.class));
+                                            b1.getBook().setBookId(document.getId());
                                             b1.setBookId(document.getId());
                                             Book book = document.toObject(Book.class);
                                             book.setBookId(document.getId());
@@ -232,9 +238,10 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                         BookSearchItem b1= new BookSearchItem(
                                                 document.getString("author")
                                                 , document.getString("title")
-                                                , document.getString("bookId")
+                                                , document.getString(document.getId())
                                                 , document.getDouble("yearOfPub").intValue());
                                         b1.setBook(document.toObject(Book.class));
+                                        b1.getBook().setBookId(document.getId());
                                         b1.setBookId(document.getId());
                                         Book book = document.toObject(Book.class);
                                         book.setBookId(document.getId());
@@ -266,10 +273,11 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                             BookSearchItem b1= new BookSearchItem(
                                                     document.getString("author")
                                                     , document.getString("title")
-                                                    , document.getString("bookId")
+                                                    , document.getString(document.getId())
                                                     , document.getDouble("yearOfPub").intValue());
 
                                             b1.setBook(document.toObject(Book.class));
+                                            b1.getBook().setBookId(document.getId());
                                             b1.setBookId(document.getId());
                                             Book book = document.toObject(Book.class);
                                             book.setBookId(document.getId());
@@ -280,9 +288,10 @@ public class LibrarianBookSearch extends AppCompatActivity {
                                         BookSearchItem b1= new BookSearchItem(
                                                 document.getString("author")
                                                 , document.getString("title")
-                                                , document.getString("bookId")
+                                                , document.getString(document.getId())
                                                 , document.getDouble("yearOfPub").intValue());
                                         b1.setBook(document.toObject(Book.class));
+                                        b1.getBook().setBookId(document.getId());
                                         b1.setBookId(document.getId());
                                         Book book = document.toObject(Book.class);
                                         book.setBookId(document.getId());

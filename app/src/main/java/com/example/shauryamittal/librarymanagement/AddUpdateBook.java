@@ -3,10 +3,14 @@ package com.example.shauryamittal.librarymanagement;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +22,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.shauryamittal.librarymanagement.model.Book;
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
@@ -35,8 +46,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class AddUpdateBook extends AppCompatActivity {
 
@@ -202,6 +222,111 @@ public class AddUpdateBook extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        //check we have a valid result
+        if (scanningResult != null) {
+            //get content from Intent Result
+            final String scanContent = scanningResult.getContents();
+            //get format name of data scanned
+            String scanFormat = scanningResult.getFormatName();
+
+            titleET.setText("");
+            authorET.setText("");
+            publisherET.setText("");
+            yearOfPubET.setText("");
+            keywordsET.setText("");
+
+            Log.v("SCAN", "content: "+scanContent+" - format: "+scanFormat);
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:" + scanContent;
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                if(Integer.parseInt((response.get("totalItems")).toString()) == 0){
+                                    Toast.makeText(AddUpdateBook.this, "No data found for ISBN "+ scanContent, Toast.LENGTH_SHORT).show();
+                                }
+
+                                else {
+                                    final JSONArray items= (JSONArray) response.get("items");
+                                    JSONObject bookDetails = (JSONObject) items.get(0);
+                                    JSONObject volumeInfo = bookDetails.getJSONObject("volumeInfo");
+                                    String title = volumeInfo.getString("title");
+
+                                    JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+
+                                    if(imageLinks != null){
+                                        imageUpload.setVisibility(View.GONE);
+                                        imageLoading.setVisibility(View.VISIBLE);
+                                        String url = imageLinks.getString("thumbnail");
+                                        if(url != null){
+                                            new AddUpdateBook.DownLoadImageTask(imageUpload).execute(url);
+                                        }
+                                    }
+
+                                    if(title != null) titleET.setText(title);
+
+                                    JSONArray authors = (JSONArray) volumeInfo.getJSONArray("authors");
+
+                                    if(authors != null && authors.length() > 0){
+                                        String author = authors.get(0).toString();
+                                        authorET.setText(author);
+                                    }
+
+                                    if(volumeInfo.has("publisher")){
+                                        String publisher = volumeInfo.getString("publisher");
+                                        if(publisher != null) publisherET.setText(publisher);
+                                    }
+
+                                    if(volumeInfo.has("publishedDate")){
+                                        String publishedDate = volumeInfo.getString("publishedDate");
+                                        if(publishedDate != null) yearOfPubET.setText(publishedDate.split("-")[0]);
+                                    }
+
+                                }
+
+//                                final JSONArray list= (JSONArray) response.get("list");
+//                                JSONObject data =  (JSONObject) list.get(0);
+//                                final String utcTime = data.get("dt_txt").toString();
+//                                final String timeStamp = data.get("dt").toString();
+//                                RequestQueue googleTimezoneQueue = Volley.newRequestQueue(getApplicationContext());
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+
+                            Log.v("ERROR:", error.toString());
+
+                        }
+                    });
+
+            queue.add(jsObjRequest);
+
+
+        }
+        else{
+            //invalid scan data or scan canceled
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No book scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+
     }
 
     private void uploadImage(final String bookId) {
@@ -211,7 +336,6 @@ public class AddUpdateBook extends AppCompatActivity {
         if(uriBookImage == null){
             Resources resources = this.getResources();
             uriBookImage = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
-
         }
 
         bookCoverReference.putFile(uriBookImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -270,6 +394,10 @@ public class AddUpdateBook extends AppCompatActivity {
                 finish();
                 CurrentUser.destroyCurrentUser();
                 startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
+
+            case R.id.bookscan:
+                IntentIntegrator scanIntegrator = new IntentIntegrator(AddUpdateBook.this);
+                scanIntegrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -285,4 +413,40 @@ public class AddUpdateBook extends AppCompatActivity {
             startActivity(new Intent(AddUpdateBook.this, LoginActivity.class));
         }
     }
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        protected void onPostExecute(Bitmap result){
+            imageView.setImageBitmap(result);
+            imageLoading.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 }

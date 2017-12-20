@@ -135,6 +135,9 @@ public class DbOperations {
     }
 
     public static void deleteBook(String bookId){
+
+
+
         db.collection("books").document(bookId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override

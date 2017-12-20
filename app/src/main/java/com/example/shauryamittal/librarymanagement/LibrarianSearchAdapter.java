@@ -93,6 +93,9 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
         public void bind(BookSearchItem book){
             tempSearchItem=book;
             mBook = book.getBook();
+
+            Log.v("DELETE ", mBook.getBookId());
+
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
             yearOfPub.setText(String.valueOf(book.getYearOfPub()));
@@ -100,6 +103,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
 
             delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+
 
 
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
