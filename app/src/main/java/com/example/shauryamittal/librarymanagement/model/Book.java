@@ -22,6 +22,7 @@ public class Book implements Serializable {
     private String status="";
     private String keywords="";
     private String librarianId="";
+    private String updatedBy="";
     private String bookId="";
 
     private String wailistedUsers="";
@@ -125,7 +126,15 @@ public class Book implements Serializable {
         this.bookId = bookId;
     }
 
-//    public int getCheckOutCopies() {
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    //    public int getCheckOutCopies() {
 //        return checkOutCopies;
 //    }
 //

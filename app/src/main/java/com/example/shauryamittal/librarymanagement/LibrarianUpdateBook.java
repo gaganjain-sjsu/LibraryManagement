@@ -237,7 +237,12 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         }
 
         book.setKeywords(String.valueOf(keywordsET.getText()).trim());
-        book.setLibrarianId(CurrentUser.UID);
+        if(book.getUpdatedBy()==null || book.getUpdatedBy().trim().equals("")){
+            book.setUpdatedBy(CurrentUser.UID);
+        }else{
+            if(!book.getUpdatedBy().contains(CurrentUser.UID)) book.setUpdatedBy(book.getUpdatedBy()+","+CurrentUser.UID);
+        }
+       // book.setLibrarianId(CurrentUser.UID);
         DbOperations dbOperations = new DbOperations();
         dbOperations.updateBook(book);
 
@@ -247,7 +252,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
 
         Toast toast = Toast.makeText(getApplicationContext(), "Book Update Succesful", Toast.LENGTH_SHORT);
         toast.show();
-        //startActivity(new Intent(AddUpdateBook.this, SearchDetailActivity.class));
+        startActivity(new Intent(LibrarianUpdateBook.this, LibrarianViewBooksActivity.class));
 
     }
 
