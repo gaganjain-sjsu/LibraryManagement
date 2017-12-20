@@ -91,6 +91,7 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
                     mBookList.remove(mBook);
                     System.out.println("Inside delete button called.  Book Id="+mBook.getTitle());
                     notifyDataSetChanged();
+
                 }
             });
 

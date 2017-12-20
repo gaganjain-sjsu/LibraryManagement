@@ -135,7 +135,6 @@ public class LibrarianBookSearch extends AppCompatActivity {
                 });
     }
 
-
     public void getSearchedBooks(String librarianId) {
         System.out.println("librarianId==="+librarianId);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
