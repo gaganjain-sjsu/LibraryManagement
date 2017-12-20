@@ -109,8 +109,14 @@ public class ViewBooksActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+
+            case R.id.refresh:
+                Intent intent = new Intent(this, ViewBooksActivity.class);
+                startActivity(intent);
+                return true;
+
             case R.id.search:
-                Intent intent = new Intent(this, PatronBookSearch.class);
+                intent = new Intent(this, PatronBookSearch.class);
                 startActivity(intent);
                 return true;
 

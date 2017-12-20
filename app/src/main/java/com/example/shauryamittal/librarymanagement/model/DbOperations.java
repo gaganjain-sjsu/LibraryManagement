@@ -146,6 +146,19 @@ public class DbOperations {
 
     }
 
+
+    public static void deleteClearedwaitList(String clearedwaitlistId){
+        db.collection("clearedwaitlist").document(clearedwaitlistId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "Deleted books-----"+ task.getResult());
+
+            }
+        });
+
+    }
+
     public static void deleteTransaction(String transactionId){
         db.collection("transaction").document(transactionId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
 

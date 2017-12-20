@@ -8,12 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.ClearedWaitlist;
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +51,55 @@ public class PatronMyWaitlistFragment extends Fragment {
     }
 
     public void getPatronMywaitlistFromDb(){
+        //data from cleared waitlist
+
+        db.collection("clearedwaitlist")
+                .whereEqualTo("uid", CurrentUser.UID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                final String cwaitListId=document.getId();
+                                ClearedWaitlist cw = document.toObject(ClearedWaitlist.class);
+                                final String bookId=cw.getBookId();
+                                DocumentReference docRef = db.collection(Constants.BOOKS_COLLECTION).document(bookId);
+                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document != null) {
+                                                Book b1 = document.toObject(Book.class);
+                                                b1.setBookId(document.getId());
+                                                b1.setStatus("clearedwaitlist#"+cwaitListId);
+                                                bookList.add(b1);
+                                                csAdapter.notifyDataSetChanged();
+
+                                                Log.d("DOCUMENT SNAPSHOT", "DocumentSnapshot data: " + task.getResult().getData());
+                                            } else {
+                                                Log.d("DOCUMENT SNAPSHOT", "No such document");
+                                            }
+                                        } else {
+                                            Log.d("DOCUMENT SNAPSHOT", "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
+
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
+
+
+
+// waitlist datsa
         db.collection("users")
                 .whereEqualTo("uid", CurrentUser.UID)
                 .get()
@@ -60,8 +111,8 @@ public class PatronMyWaitlistFragment extends Fragment {
                                 document.getId();
                                 String waitlistedbook=document.getString(Constants.USER_WAITLISTED_BOOKS_KEY);
                                 if(waitlistedbook==null||waitlistedbook.trim().equals("")){
-                                    Toast toast = Toast.makeText(getContext(), "No books in Waitlist", Toast.LENGTH_SHORT);
-                                    toast.show();
+                                    //Toast toast = Toast.makeText(getContext(), "No books in Waitlist", Toast.LENGTH_SHORT);
+                                   // toast.show();
                                 }else{
                                     waitlistedbook=waitlistedbook.replaceAll(",,",",");
                                     String[] waitlistBookStrArr=waitlistedbook.split(",");
@@ -78,12 +129,9 @@ public class PatronMyWaitlistFragment extends Fragment {
                                                     bookList.add(book);
                                                     csAdapter.notifyDataSetChanged();
                                                 }
-
-
                                             }
 
                                         });
-
                                     }
                                 }
 
