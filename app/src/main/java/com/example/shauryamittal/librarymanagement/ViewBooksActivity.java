@@ -350,7 +350,7 @@ public class ViewBooksActivity extends AppCompatActivity {
                     itemView.setOnLongClickListener(this);
 
                     mBookCover = (ImageView) itemView.findViewById(R.id.book_cover);
-                    mBookTitle = (TextView) itemView.findViewById(R.id.book_title);
+                    mBookTitle = (TextView)  itemView.findViewById(R.id.book_title);
                     mBookAuthor = (TextView) itemView.findViewById(R.id.book_author_name);
                     mCheckBox = (CheckBox) itemView.findViewById(R.id.return_user_input);
                    // mReturns = (TextView) itemView.findViewById(R.id.return_book);

@@ -51,6 +51,7 @@ public class PatronMybookFragment extends Fragment {
     Button returnBook;
     int checkOutBooks;
     SimpleDateFormat dateToString = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    StringBuilder clearWaitlistMessage=new StringBuilder();
 
     @Nullable
     @Override
@@ -148,6 +149,27 @@ public class PatronMybookFragment extends Fragment {
                                         clearedWaitlist.setClearDate(dateToString.format(Constants.todaysDate));
                                         clearedWaitlist.setLastDateToAcceptBook(dateToString.format(DbOperations.addDays(Constants.todaysDate,3)));
                                         DbOperations.addClearedWaitlist(clearedWaitlist);
+
+
+                                        clearWaitlistMessage=new StringBuilder("Waitlist For book "+book.getTitle()+" Cleared. Please goto your waitlist books and checkout the book in within 3 days."+"\n\n\n");
+//
+                                        DocumentReference mRefUser = db.collection("users").document(assignedUser);
+                                        mRefUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                 @Override
+                                                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                     if (task.isSuccessful()) {
+                                                                                         DocumentSnapshot doc = task.getResult();
+                                                                                         String sendToMailId=doc.getString("email");
+                                                                                         PatronMybookFragment.AsyncTaskRunner emailSender = new PatronMybookFragment.AsyncTaskRunner();
+                                                                                         emailSender.execute(sendToMailId, clearWaitlistMessage.toString());
+                                                                                         System.out.println("Waitlist clear mail Sent. Email Id= "+sendToMailId+" Mail ="+clearWaitlistMessage.toString());
+                                                                                     }
+                                                                                 }
+                                                                             });
+
+
+
+
                                     }
                                 }
                             }
