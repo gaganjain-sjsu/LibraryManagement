@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
@@ -37,11 +38,14 @@ public class CheckoutStatusActivity extends AppCompatActivity {
     CheckoutStatusAdapter csAdapter;
     List<BookSearchItem> books = new ArrayList<>();
     FirebaseStorage storage;
+    ProgressBar status_bar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_status);
+        status_bar = (ProgressBar) findViewById(R.id.status_bar);
         Intent intent = getIntent();
 
         try {
@@ -158,6 +162,7 @@ public class CheckoutStatusActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap result){
             b1.setBookBitmap(result);
             books.add(b1);
+            status_bar.setVisibility(View.GONE);
             csAdapter.notifyDataSetChanged();
         }
     }

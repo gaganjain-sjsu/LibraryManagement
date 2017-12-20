@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -61,11 +62,11 @@ public class LibrarianBookSearch extends AppCompatActivity {
     String searchKey="";
     private EditText searchKeywork;
     FirebaseStorage storage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_librarian_book_search);
+
         librarionSpinner = (Spinner) findViewById(R.id.librarionSpinner);
         spinnerList.add("Select Librarian");
         spinnerKey.add("0");
@@ -74,8 +75,6 @@ public class LibrarianBookSearch extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, spinnerList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         librarionSpinner.setAdapter(dataAdapter);
-
-
 
     }
     @Override

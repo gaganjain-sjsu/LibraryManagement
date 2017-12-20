@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
@@ -30,6 +31,7 @@ public class CheckoutStatusAdapter extends RecyclerView.Adapter<CheckoutStatusAd
     private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
+
 
     public CheckoutStatusAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
