@@ -148,6 +148,7 @@ public class LibrarianBookDetailActivity extends AppCompatActivity {
 
                         DocumentSnapshot doc = task.getResult();
                         bookObj = task.getResult().toObject(Book.class);
+                        bookObj.setBookId(doc.getId());
                         int year = doc.getDouble("yearOfPub").intValue();
                         int copies = doc.getDouble("noOfCopy").intValue();
                         Log.d("test", doc.getString("author"));
@@ -327,6 +328,9 @@ public class LibrarianBookDetailActivity extends AppCompatActivity {
             int id = item.getItemId();
 
             switch (id){
+                case R.id.homePageRedirect:
+                    startActivity(new Intent(LibrarianBookDetailActivity.this, LibrarianHomepageActivity.class));
+                    return true;
                 case R.id.logout:
                     FirebaseAuth.getInstance().signOut();
                     finish();

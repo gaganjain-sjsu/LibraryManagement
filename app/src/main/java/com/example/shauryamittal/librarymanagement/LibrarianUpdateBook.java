@@ -252,7 +252,11 @@ public class LibrarianUpdateBook extends AppCompatActivity {
 
         Toast toast = Toast.makeText(getApplicationContext(), "Book Update Succesful", Toast.LENGTH_SHORT);
         toast.show();
-        startActivity(new Intent(LibrarianUpdateBook.this, LibrarianViewBooksActivity.class));
+        //startActivity(new Intent(LibrarianUpdateBook.this, LibrarianViewBooksActivity.class));
+
+        Intent intent = new Intent(LibrarianUpdateBook.this, LibrarianBookDetailActivity.class);
+        intent.putExtra("bookId", book.getBookId());
+        startActivity(intent);
 
     }
 
@@ -330,6 +334,9 @@ public class LibrarianUpdateBook extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.homePageRedirect:
+                startActivity(new Intent(LibrarianUpdateBook.this, LibrarianHomepageActivity.class));
+                return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
