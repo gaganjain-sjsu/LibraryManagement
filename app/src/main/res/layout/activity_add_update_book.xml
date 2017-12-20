@@ -26,6 +26,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <ProgressBar
+            android:id="@+id/imageLoadingProgress"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:theme="@style/CircularProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="68dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tapBelow"/>
+
         <ImageView
             android:id="@+id/imageUpload"
             android:layout_width="match_parent"
@@ -45,11 +58,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="190dp"
             android:text="Book Details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageUpload"/>
+            app:layout_constraintTop_toBottomOf="@+id/tapBelow"/>
 
         <View
             android:id="@+id/view"
@@ -250,6 +263,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Keywords"/>
+
+
 
     </android.support.constraint.ConstraintLayout>
 

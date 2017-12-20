@@ -54,7 +54,7 @@ public class AddUpdateBook extends AppCompatActivity {
     private StorageReference mStorage;
     private ImageView imageUpload;
     Uri uriBookImage;
-    ProgressBar uploadBookProgress;
+    ProgressBar uploadBookProgress, imageLoading;
     Button submit;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -70,7 +70,8 @@ public class AddUpdateBook extends AppCompatActivity {
         Book b = (Book)intent.getSerializableExtra("bookObj");
         System.out.print("b==="+b);
 
-
+        imageLoading = (ProgressBar) findViewById(R.id.imageLoadingProgress);
+        imageLoading.setVisibility(View.GONE);
         mStorage = FirebaseStorage.getInstance().getReference();
         authorET=findViewById(R.id.Author);
         titleET=findViewById(R.id.Title);
