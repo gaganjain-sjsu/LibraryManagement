@@ -17,15 +17,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Book;
+import com.example.shauryamittal.librarymanagement.model.ClearedWaitlist;
+import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.Transaction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Harshit on 12/5/17.
@@ -38,9 +44,10 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
     private List<BookSearchItem> mBookList;
     private String currentBookId="";
     private int currPosition;
-    private ArrayList<String> clearedList= new ArrayList<String>();
+    private ArrayList<ClearedWaitlist> clearedListTrans= new ArrayList<ClearedWaitlist>();
     private BookSearchItem tempSearchItem;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String clearBookId="";
 
     public LibrarianSearchAdapter(Context ctx, List<BookSearchItem> bookList) {
         this.ctx = ctx;
@@ -113,21 +120,65 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                     if (task.isSuccessful()) {
                                                         for (DocumentSnapshot document : task.getResult()) {
-                                                            clearedList.add(document.getId());
-                                                           // Log.d(TAG, document.getId() + " => " + document.getData());
+                                                            ClearedWaitlist clearedWaitlist = document.toObject(ClearedWaitlist.class);
+                                                            clearedWaitlist.setClearDate(document.getId());
+                                                            clearedListTrans.add(clearedWaitlist);
                                                         }
                                                     } else {
-                                                        //Log.d(TAG, "Error getting documents: ", task.getException());
+
                                                     }
-                                                    if ((mBook.getNoOfCheckedOutCopy() -clearedList.size())> 0) {
+                                                    if ((mBook.getNoOfCheckedOutCopy() -clearedListTrans.size())> 0) {
                                                         Toast.makeText(ctx, "Cannot be deleted as the book has been issued by patrons", Toast.LENGTH_LONG).show();
                                                         return;
                                                     }
 
                                                     DbOperations.dropWaitList(mBook);
                                                     DbOperations.deleteBook(mBook.getBookId());
-                                                    if(clearedList.size()>0){
-                                                        DbOperations.deleteClearedwaitList(clearedList.get(0));
+                                                    if(clearedListTrans.size()>0){
+                                                        DbOperations.deleteClearedwaitList(clearedListTrans.get(0).getClearDate());
+                                                        //this.dropWaitList(clearedListTrans.get(0).getBookId(),clearedListTrans.get(0).getUid());
+                                                        clearBookId=clearedListTrans.get(0).getBookId();
+
+
+                                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                        final DocumentReference userRef = db.document(Constants.USER_COLLECTION + "/" + clearedListTrans.get(0).getUid());
+                                                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DocumentSnapshot document = task.getResult();
+                                                                    if (document != null) {
+                                                                        String waitlist = document.getString(Constants.USER_WAITLISTED_BOOKS_KEY);
+                                                                        if(waitlist.contains(clearBookId)){
+                                                                            waitlist=waitlist.replace(","+clearBookId,"").replace(clearBookId+",","").replace(clearBookId,"");
+                                                                            userRef.update(Constants.USER_WAITLISTED_BOOKS_KEY, waitlist).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    if(task.isSuccessful()){
+                                                                                        Log.v("WAITLIST ", "WAITLIST UPDATED for user");
+                                                                                    }
+                                                                                    else {
+                                                                                        Log.v("WAITLIST PROBLEM ", task.getException().getMessage());
+                                                                                    }
+                                                                                }
+                                                                            }) ;
+
+                                                                        }
+
+
+                                                                        Log.d("Document Data", "DocumentSnapshot data: " + task.getResult().getData());
+                                                                    } else {
+                                                                        Log.d("NOT FOUND", "No such document");
+                                                                    }
+                                                                } else {
+                                                                    Log.d(TAG, "get failed with ", task.getException());
+                                                                }
+                                                            }
+                                                        });
+
+
+
+
                                                     }
 
                                                     mBookList.remove(tempSearchItem);
@@ -196,4 +247,46 @@ public class LibrarianSearchAdapter extends RecyclerView.Adapter<LibrarianSearch
             });
         }
     }
+
+    public static void dropWaitList(final String bookId, final String userId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+            final DocumentReference userRef = db.document(Constants.USER_COLLECTION + "/" + userId);
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            String waitlist = document.getString(Constants.USER_WAITLISTED_BOOKS_KEY);
+                            if(waitlist.contains(bookId)){
+                                waitlist=waitlist.replace(","+bookId,"").replace(bookId+",","").replace(bookId,"");
+                                userRef.update(Constants.USER_WAITLISTED_BOOKS_KEY, waitlist).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Log.v("WAITLIST ", "WAITLIST UPDATED for user");
+                                        }
+                                        else {
+                                            Log.v("WAITLIST PROBLEM ", task.getException().getMessage());
+                                        }
+                                    }
+                                }) ;
+
+                            }
+
+
+                            Log.d("Document Data", "DocumentSnapshot data: " + task.getResult().getData());
+                        } else {
+                            Log.d("NOT FOUND", "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+
+
+
+    }
+
 }
