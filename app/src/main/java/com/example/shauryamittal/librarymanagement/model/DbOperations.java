@@ -112,7 +112,27 @@ public class DbOperations {
             Log.w(TAG, "Book Id in null in book object. So cannot update");
         }
     }
+    public static void updateTransaction(Transaction transaction) {
+        if (transaction!=null && transaction.getTransactionId()!=null && !transaction.getTransactionId().trim().equals("")) {
+            db.collection("transaction").document(transaction.getTransactionId())
+                    .set(transaction)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
 
+        } else {
+            Log.w(TAG, "Book Id in null in book object. So cannot update");
+        }
+    }
 
     public static void deleteBook(String bookId){
         db.collection("books").document(bookId).delete().addOnCompleteListener(new OnCompleteListener<Void>() {

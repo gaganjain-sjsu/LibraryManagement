@@ -212,8 +212,9 @@ public class PatronMybookFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot document : task.getResult()) {
-                                document.getId();
+
                                 Transaction transaction = document.toObject(Transaction.class);
+                                transaction.setTransactionId(document.getId());
                                 transactionList.add(transaction);
                                 csAdapter.notifyDataSetChanged();
 
