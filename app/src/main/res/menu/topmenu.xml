@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/backRedirect"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="Back"
+        app:showAsAction="ifRoom|withText"></item>
+
+    <item
+        android:id="@+id/homePageRedirect"
+        android:icon="@drawable/home_icon"
+        android:title="Home"
+        app:showAsAction="ifRoom|withText"></item>
 
     <item android:title="Logout"
         android:id="@+id/logout"

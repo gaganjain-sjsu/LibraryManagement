@@ -85,6 +85,9 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.homePageRedirect:
+                startActivity(new Intent(LibrarianHomepageActivity.this, LibrarianHomepageActivity.class));
+                return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -93,7 +96,5 @@ public class LibrarianHomepageActivity extends AppCompatActivity {
         }
 
         return true;
-
-
     }
 }

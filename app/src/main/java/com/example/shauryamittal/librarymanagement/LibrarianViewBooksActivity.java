@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +22,7 @@ import com.example.shauryamittal.librarymanagement.model.BookFactory;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -283,5 +286,35 @@ public class LibrarianViewBooksActivity extends AppCompatActivity {
                 return mBookList.size();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.backRedirect:
+                startActivity(new Intent(LibrarianViewBooksActivity.this, LibrarianHomepageActivity.class));
+                return true;
+            case R.id.homePageRedirect:
+                startActivity(new Intent(LibrarianViewBooksActivity.this, LibrarianHomepageActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(LibrarianViewBooksActivity.this, LoginActivity.class));
+        }
+
+        return true;
     }
 }

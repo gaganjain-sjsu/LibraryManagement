@@ -1,5 +1,6 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.example.shauryamittal.librarymanagement.model.CurrentUser;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -84,5 +88,34 @@ public class SetDateActivity extends AppCompatActivity implements View.OnClickLi
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.librarian_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.backRedirect:
+                startActivity(new Intent(SetDateActivity.this, LibrarianHomepageActivity.class));
+                return true;
+            case R.id.homePageRedirect:
+                startActivity(new Intent(SetDateActivity.this, LibrarianHomepageActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                CurrentUser.destroyCurrentUser();
+                startActivity(new Intent(SetDateActivity.this, LoginActivity.class));
+        }
+
+        return true;
     }
 }
