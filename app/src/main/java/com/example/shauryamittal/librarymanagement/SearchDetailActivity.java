@@ -1,10 +1,17 @@
 package com.example.shauryamittal.librarymanagement;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,18 +21,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class SearchDetailActivity extends AppCompatActivity {
 
@@ -38,23 +55,20 @@ public class SearchDetailActivity extends AppCompatActivity {
     private TextView bookCopies;
     private String bookId ;
     int numberOfCopies;
+    FirebaseStorage storage;
     int checkedOutCopies;
     private Button addToCart;
+    ProgressBar imageLoading;
+    ImageView bookImage;
     private boolean waitlist = false;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_detail);
-//
-//        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-//        String bookId_sp = SP.getString(CurrentUser.UID, null);
-//        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
-////        SharedPreferences.Editor edit = SP.edit();
-////        edit.remove(CurrentUser.UID);
-////        edit.commit();
-//        Toast.makeText(this, bookId_sp, Toast.LENGTH_SHORT).show();
+        setContentView(R.layout.activity_details);
+
+        setTitle("Book Details");
 
         bookTitle=findViewById(R.id.book_title);
         bookYear=findViewById(R.id.book_year_published);
@@ -66,7 +80,60 @@ public class SearchDetailActivity extends AppCompatActivity {
         addToCart = (Button) findViewById(R.id.add_to_cart);
         Intent intent = getIntent();
         bookId = intent.getStringExtra("bookId");
-        //bookId = "LoqMjSzUjT6qWCOXtfnt";
+
+        imageLoading = (ProgressBar) findViewById(R.id.bookImageload);
+
+
+        bookImage = (ImageView) findViewById(R.id.bookImage);
+        bookImage.setVisibility(View.GONE);
+
+        storage = FirebaseStorage.getInstance();
+
+        StorageReference storageRef = storage.getReference();
+
+        storageRef.child(Constants.IMAGE_FOLDER_PATH + bookId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                try {
+                    new SearchDetailActivity.DownLoadImageTask(bookImage).execute(uri.toString());
+
+                } catch (Exception e) {
+                    Toast.makeText(SearchDetailActivity.this, "Unable to load image from URI", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    Resources resources = SearchDetailActivity.this.getResources();
+                    uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        bookImage.setImageBitmap(bitmap);
+                        bookImage.setVisibility(View.VISIBLE);
+                        imageLoading.setVisibility(View.GONE);
+
+                    } catch (IOException e1) {
+                        Toast.makeText(SearchDetailActivity.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                imageLoading.setVisibility(View.GONE);
+                try {
+                    Resources resources = SearchDetailActivity.this.getResources();
+                    Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(R.drawable.bookcover) + '/' + resources.getResourceTypeName(R.drawable.bookcover) + '/' + resources.getResourceEntryName(R.drawable.bookcover) );
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    bookImage.setImageBitmap(bitmap);
+                    bookImage.setVisibility(View.VISIBLE);
+
+                } catch (IOException e1) {
+                    Toast.makeText(SearchDetailActivity.this, "Problem loading image", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
         FirebaseFirestore database= FirebaseFirestore.getInstance();
         DocumentReference mRef=database.collection("books").document(bookId);
         mRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -343,6 +410,41 @@ public class SearchDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        protected void onPostExecute(Bitmap result){
+            imageView.setImageBitmap(result);
+            imageLoading.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            imageLoading.setVisibility(View.GONE);
+        }
     }
 
 }

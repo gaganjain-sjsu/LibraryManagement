@@ -393,11 +393,7 @@ public class LibrarianUpdateBook extends AppCompatActivity {
             }
             return logo;
         }
-
-        /*
-            onPostExecute(Result result)
-                Runs on the UI thread after doInBackground(Params...).
-         */
+        
         protected void onPostExecute(Bitmap result){
             imageView.setImageBitmap(result);
             imageLoading.setVisibility(View.GONE);

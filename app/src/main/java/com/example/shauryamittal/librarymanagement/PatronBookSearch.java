@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PatronBookSearch extends AppCompatActivity {
+
     Spinner patronSpinner;
     RecyclerView recyclerView;
     PatronSearchAdapter psAdapter;
@@ -40,6 +41,7 @@ public class PatronBookSearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patron_book_search);
+        setTitle("Book Search");
         patronSpinner = (Spinner) findViewById(R.id.patronSpinner);
         spinnerList.add("Select Librarian");
         spinnerKey.add("0");

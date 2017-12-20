@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         spinner.setVisibility(View.GONE);
 
         loading = (ProgressBar) findViewById(R.id.loadingSpinner);
-        spinner.setVisibility(View.GONE);
+        loading.setVisibility(View.GONE);
 
         loadingText = (TextView) findViewById(R.id.loadingText);
         loadingText.setVisibility(View.GONE);
