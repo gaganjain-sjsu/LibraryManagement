@@ -2,6 +2,7 @@ package com.example.shauryamittal.librarymanagement;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,9 @@ import com.example.shauryamittal.librarymanagement.model.ClearedWaitlist;
 import com.example.shauryamittal.librarymanagement.model.Constants;
 import com.example.shauryamittal.librarymanagement.model.CurrentUser;
 import com.example.shauryamittal.librarymanagement.model.DbOperations;
+import com.example.shauryamittal.librarymanagement.model.MailUtility;
 import com.example.shauryamittal.librarymanagement.model.Transaction;
+import com.example.shauryamittal.librarymanagement.model.VerificationEmailData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,8 +33,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -154,17 +159,38 @@ public class PatronMybookFragment extends Fragment {
 
             //Updating current View
                     String currCheckedBook=csAdapter.checkedBookList;
+                    StringBuilder emailMessage=new StringBuilder("Books return successful. Details of transactions are:"+"\n\n\n");
                     List<Transaction> temp = new ArrayList<>();
                     for(Transaction trans:transactionList){
                         if(!currCheckedBook.contains(trans.getBookId())){
                             temp.add(trans);
+                        }else{
+                            emailMessage.append("Book Name: " + trans.getBook().getTitle() + "\n");
+                            emailMessage.append("Book Author: " + trans.getBook().getAuthor() + "\n");
+                            Date dueDate= new Date();
+                            try {
+                                dueDate=dateToString.parse(trans.getDueDate());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            emailMessage.append("Fine on this book is: " + DbOperations.calculateFine(dueDate) + "\n\n");
                         }
                     }
+
+                    //Sending EmailStatus
+                    emailMessage.append("\n\n   Thank You!! ");
+                    PatronMybookFragment.AsyncTaskRunner emailSender = new PatronMybookFragment.AsyncTaskRunner();
+                    emailSender.execute(CurrentUser.EMAIL, emailMessage.toString());
+
+
                     //transactionList=temp;
                     transactionList.clear();
                     transactionList.addAll(temp);
                     csAdapter.notifyDataSetChanged();
                     csAdapter.checkedBookList="";
+                    Toast toast = Toast.makeText(getContext(), "Return successful", Toast.LENGTH_SHORT);
+                    toast.show();
 
 
 
@@ -198,7 +224,21 @@ public class PatronMybookFragment extends Fragment {
                     }
                 });
     }
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
 
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Log.v("EMAIL SENT TO:", params[0]);
+                MailUtility.sendMail(params[0], params[1]);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "Successful";
+        }
+    }
 
 
 

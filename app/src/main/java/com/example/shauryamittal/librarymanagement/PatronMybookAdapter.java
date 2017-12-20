@@ -31,13 +31,13 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
     private List<Transaction> transactionList;
     private String currentBookId="";
     private int currPosition;
-    private Book tempBook;
+    //private Book tempBook;
     public static String checkedBookList="";
 
     public PatronMybookAdapter(Context ctx, List<Transaction> transactionlist) {
         this.ctx = ctx;
         transactionList = transactionlist;
-        checkedBookList="";
+        //checkedBookList="";
     }
 
     @Override
@@ -81,7 +81,7 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
 
             transaction = transact;
             Book book=transaction.getBook();
-            tempBook=book;
+            //tempBook=book;
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
             dueDate.setText("Due Date is "+transaction.getDueDate());
@@ -95,15 +95,15 @@ public class PatronMybookAdapter extends RecyclerView.Adapter<PatronMybookAdapte
                     if ( isChecked )
                     {
                         if(checkedBookList==null ||checkedBookList.trim().equals("")){
-                            checkedBookList=tempBook.getBookId();
+                            checkedBookList=transaction.getBook().getBookId();
                         }else{
-                            checkedBookList=checkedBookList+","+tempBook.getBookId();
+                            checkedBookList=checkedBookList+","+transaction.getBook().getBookId();
                         }
                     }else{
                         if(checkedBookList==null){
                             checkedBookList="";
                         }else{
-                            checkedBookList=checkedBookList.replace(","+tempBook.getBookId(),"").replace(tempBook.getBookId()+",","").replace(tempBook.getBookId(),"");
+                            checkedBookList=checkedBookList.replace(","+transaction.getBook().getBookId(),"").replace(transaction.getBook().getBookId()+",","").replace(transaction.getBook().getBookId(),"");
                         }
                     }
 

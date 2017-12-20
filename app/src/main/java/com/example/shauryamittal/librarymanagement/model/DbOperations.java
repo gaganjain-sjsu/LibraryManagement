@@ -227,6 +227,12 @@ public class DbOperations {
         if(values.contains( "," + id )) return values.replace("," + id , "");
         else return values.replace(id , "");
     }
-
+    public static int calculateFine(Date returnDate){
+        double diff=(Constants.todaysDate.getTime()-returnDate.getTime())/(24*60*60 * 1000);
+        int fine=(int)diff;
+        System.out.println("Difference in Date==="+diff+"fine===="+fine);
+        if(fine<=0) return 0;
+        return fine;
+    }
 
 }
