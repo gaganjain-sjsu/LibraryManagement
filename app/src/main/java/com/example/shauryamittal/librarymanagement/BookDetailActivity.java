@@ -28,7 +28,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView bookAuthor;
     private TextView bookCopies;
     private DatabaseReference mDatabase;
-    private String bookId ;
+    private String bookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,10 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN"/>
-             <category android:name="android.intent.category.DEFAULT"/>
-             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity android:name=".LibrarianBookSearch">
             <intent-filter>
@@ -91,19 +92,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ErrorActivity"></activity>
-        <activity android:name=".LibrarianViewBooksActivity"></activity>
+        <activity android:name=".ErrorActivity" />
+        <activity android:name=".LibrarianViewBooksActivity" />
         <activity android:name=".ShoppingCartActivity" />
         <activity android:name=".EmailVerificationActivity" />
         <activity android:name=".OtpVerificationActivity" />
         <activity android:name=".SetDateActivity" />
-        <activity
-            android:name=".CheckoutStatusActivity">
+        <activity android:name=".CheckoutStatusActivity">
             <intent-filter>
                 <action android:name="com.example.shauryamittal.librarymanagement.CheckoutStatusActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".LibrarianBookDetailActivity"></activity>
     </application>
 
 </manifest>
