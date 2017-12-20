@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,11 +10,16 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="8dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/cardview_light_background"
             tools:layout_editor_absoluteX="48dp"
             tools:layout_editor_absoluteY="0dp">
 
@@ -23,20 +28,22 @@
                 android:id="@+id/patron_mywaitlist_book_img"
                 android:layout_width="100dp"
                 android:layout_height="120dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:adjustViewBounds="true"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/patron_mybook_checkBox"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sampleimage"
-                android:adjustViewBounds="true"/>
+                app:srcCompat="@drawable/bookimage"/>
 
             <TextView
                 android:id="@+id/patron_mywaitlist_book_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
                 android:text="Cracking The Coding Interview"
                 android:textColor="@color/background_dark"
@@ -48,7 +55,7 @@
                 android:id="@+id/patron_mywaitlist_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="12dp"
                 android:text="Gayle"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"
@@ -58,7 +65,7 @@
                 android:id="@+id/patron_mywaitlist_yearOfPub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="12dp"
                 android:text="Gayle"
                 android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"
@@ -67,50 +74,36 @@
 
             <Button
                 android:id="@+id/patron_mywaitlist_remove_book"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Remove"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+                android:text="Remove Book from Waitlist"
                 android:textColor="@color/login_background"
-                android:textSize="12sp"
-                android:paddingRight="5dp"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"
-                app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <!--<Button-->
-                <!--android:id="@+id/patron_mywaitlist_waitlist_clear_remove_book"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:layout_marginEnd="16dp"-->
-                <!--android:text="Remove"-->
-                <!--android:textColor="@color/login_background"-->
-                <!--android:textSize="12sp"-->
-                <!--android:paddingRight="5dp"-->
-                <!--app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"-->
-                <!--app:layout_constraintEnd_toEndOf="parent" />-->
+                app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"/>
 
             <Button
                 android:id="@+id/patron_mywaitlist_checkout_book"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Checkout"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+                android:text="Checkout Book"
                 android:textColor="@color/login_background"
-                android:textSize="12sp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_waitlist_clear_remove_book"
-                app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"
-                app:layout_constraintEnd_toEndOf="parent" />
-
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/patron_mywaitlist_book_img"
+                app:layout_constraintTop_toBottomOf="@+id/patron_mywaitlist_yearOfPub"/>
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

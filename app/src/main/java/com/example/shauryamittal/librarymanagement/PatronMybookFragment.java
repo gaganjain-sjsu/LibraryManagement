@@ -69,7 +69,7 @@ public class PatronMybookFragment extends Fragment {
             public void onClick(View v) {
                 if(csAdapter.checkedBookList==null ||csAdapter.checkedBookList.trim().equals("")){
                     Toast toast = Toast.makeText(getContext(), "Please check atlease 1 book", Toast.LENGTH_SHORT);
-                   toast.show();
+                    toast.show();
                 }else{
                     if(csAdapter.checkedBookList.charAt(0)==',') csAdapter.checkedBookList=csAdapter.checkedBookList.substring(1);
                     returnBookIdArray=csAdapter.checkedBookList.split(",");
@@ -77,28 +77,28 @@ public class PatronMybookFragment extends Fragment {
                     //1 count decrease in user.
                     DocumentReference mRefUser = db.collection("users").document(CurrentUser.UID);
                     mRefUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                             @Override
-                                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                 if (task.isSuccessful()) {
-                                                                     DocumentSnapshot doc = task.getResult();
-                                                                     checkOutBooks = Integer.parseInt(doc.getString(Constants.CheckedOutBooks));
-                                                                     DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(Constants.USER_COLLECTION+ "/" + CurrentUser.UID);
-                                                                     currentUserDocument.
-                                                                             update(Constants.CheckedOutBooks,String.valueOf(checkOutBooks-returnBookIdArray.length))
-                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                 @Override
-                                                                                 public void onSuccess(Void aVoid) {
-                                                                                     Log.v("User No Of Books Update", "Successful");
-                                                                                 }
-                                                                             }).addOnFailureListener(new OnFailureListener() {
-                                                                         @Override
-                                                                         public void onFailure(@NonNull Exception e) {
-                                                                             Log.w(TAG, "Error writing document No Of Books", e);
-                                                                         }
-                                                                     });
-                                                                 }
-                                                             }
-                                                         });
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot doc = task.getResult();
+                                checkOutBooks = Integer.parseInt(doc.getString(Constants.CheckedOutBooks));
+                                DocumentReference currentUserDocument = FirebaseFirestore.getInstance().document(Constants.USER_COLLECTION+ "/" + CurrentUser.UID);
+                                currentUserDocument.
+                                        update(Constants.CheckedOutBooks,String.valueOf(checkOutBooks-returnBookIdArray.length))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.v("User No Of Books Update", "Successful");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error writing document No Of Books", e);
+                                    }
+                                });
+                            }
+                        }
+                    });
 
                     //2 delete entry in transaction.
                     for(int i=0;i<returnBookIdArray.length;i++){
@@ -129,7 +129,7 @@ public class PatronMybookFragment extends Fragment {
                                     Book book = doc.toObject(Book.class);
                                     book.setBookId(doc.getId());
                                     if(book.getWailistedUsers()==null||book.getWailistedUsers().trim().equals("")){
-                                       book.setNoOfCheckedOutCopy(book.getNoOfCheckedOutCopy()-1);
+                                        book.setNoOfCheckedOutCopy(book.getNoOfCheckedOutCopy()-1);
                                         DbOperations.updateBook(book);
                                     }else{
                                         String allWaitlistedUsers=book.getWailistedUsers();
@@ -157,7 +157,7 @@ public class PatronMybookFragment extends Fragment {
 
                     }
 
-            //Updating current View
+                    //Updating current View
                     String currCheckedBook=csAdapter.checkedBookList;
                     StringBuilder emailMessage=new StringBuilder("Books return successful. Details of transactions are:"+"\n\n\n");
                     List<Transaction> temp = new ArrayList<>();
